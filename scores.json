@@ -1,0 +1,4 @@
+[
+  {"username": "Player1", "snake": 10, "tictactoe": 3, "pong": 5},
+  {"username": "Player2", "snake": 15, "tictactoe": 1, "pong": 8}
+]
