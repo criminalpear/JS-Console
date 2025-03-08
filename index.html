@@ -41,8 +41,8 @@
       position: fixed;
       top: 0;
       width: 100%;
-      height: 50px; /* Fixed height */
-      overflow-x: auto; /* Scroll horizontally if needed */
+      height: 50px;
+      overflow-x: auto;
       overflow-y: hidden;
       z-index: 1000;
       box-sizing: border-box;
@@ -64,7 +64,7 @@
     .bookmark:hover { background-color: var(--bookmark-hover); }
     .bookmark .remove { margin-left: 5px; color: red; font-weight: bold; cursor: pointer; }
     .bookmark .remove:hover { color: darkred; }
-    .container { display: flex; flex-direction: column; height: calc(100vh - 60px); margin-top: 60px; box-sizing: border-box; } /* Adjusted margin-top */
+    .container { display: flex; flex-direction: column; height: calc(100vh - 60px); margin-top: 60px; box-sizing: border-box; }
     h1 { margin: 10px 0; text-align: center; font-size: 24px; flex-shrink: 0; color: var(--text-color); }
     .console-container { flex: 1; display: flex; overflow: hidden; }
     .console { 
@@ -270,7 +270,7 @@
         sounds[type]?.play();
       }
 
-      const functions = ['squares', 'ponies', 'sawyer', 'aiden', 'aadyn', 'eli', 'elijah', 'ronin', 'ronin1', 'ronin2', 'check', 'idiot', 'elements', 'elementshelp', 'list', 'snake', 'updates', 'setColor', 'tictactoe', 'share', 'reset', 'highscores'];
+      const functions = ['squares', 'ponies', 'sawyer', 'aiden', 'aadyn', 'eli', 'elijah', 'ronin', 'ronin1', 'ronin2', 'check', 'idiot', 'elements', 'elementshelp', 'list', 'snake', 'updates', 'setColor', 'tictactoe', 'share', 'reset', 'highscores', 'shareHighScores'];
 
       function setupAutocomplete() {
         const autocomplete = document.getElementById('autocomplete');
@@ -355,10 +355,29 @@
       }
 
       function highscores() {
+        const localHighScores = JSON.parse(localStorage.getItem('highScores') || '{}');
+        const urlParams = new URLSearchParams(window.location.search);
+        const sharedHighScores = urlParams.get('scores') ? JSON.parse(decodeURIComponent(urlParams.get('scores'))) : {};
+
+        appendLog('Your High Scores:', 'info');
+        appendLog(`Snake: ${localHighScores.snake || 0}`, 'info');
+        appendLog(`Tic-Tac-Toe Wins: ${localHighScores.tictactoe || 0}`, 'info');
+
+        if (Object.keys(sharedHighScores).length > 0) {
+          appendLog('Shared High Scores (from URL):', 'info');
+          appendLog(`Snake: ${sharedHighScores.snake || 0}`, 'info');
+          appendLog(`Tic-Tac-Toe Wins: ${sharedHighScores.tictactoe || 0}`, 'info');
+        } else {
+          appendLog('No shared high scores available. Use "shareHighScores();" to share yours!', 'info');
+        }
+      }
+
+      function shareHighScores() {
         const highScores = JSON.parse(localStorage.getItem('highScores') || '{}');
-        appendLog('High Scores:', 'info');
-        appendLog(`Snake: ${highScores.snake || 0}`, 'info');
-        appendLog(`Tic-Tac-Toe Wins: ${highScores.tictactoe || 0}`, 'info');
+        const encoded = encodeURIComponent(JSON.stringify(highScores));
+        const url = `${window.location.origin}${window.location.pathname}?scores=${encoded}`;
+        navigator.clipboard.writeText(url);
+        appendLog('High scores URL copied to clipboard! Share it to let others see your scores.', 'info');
       }
 
       function snake() {
@@ -517,7 +536,6 @@
       function reset() {
         clearConsole();
         localStorage.removeItem('customBookmarks');
-        localStorage.removeItem('highScores');
         localStorage.removeItem('theme');
         document.body.classList.remove('dark');
         if (isGameRunning) {
@@ -525,7 +543,7 @@
           document.getElementById('gameCanvas').style.display = 'none';
         }
         document.querySelectorAll('.bookmark:not(#addBookmarkBtn):not(#saveBookmarksBtn)').forEach(bm => bm.remove());
-        appendLog('Console reset to factory settings!', 'info');
+        appendLog('Console reset to factory settings! High scores preserved.', 'info');
       }
 
       function squares() {
@@ -979,8 +997,9 @@
         console.log("setColor('type', 'color');, Changes console log type color (e.g., 'log', 'error').");
         console.log("tictactoe();, Play a simple Tic-Tac-Toe game.");
         console.log("share();, Copies a URL to share your console logs.");
-        console.log("reset();, Resets console, bookmarks, and games to factory settings.");
-        console.log("highscores();, Shows top scores for Snake and Tic-Tac-Toe.");
+        console.log("reset();, Resets console and bookmarks (high scores preserved).");
+        console.log("highscores();, Shows your and shared high scores for Snake and Tic-Tac-Toe.");
+        console.log("shareHighScores();, Copies a URL to share your high scores.");
       }
 
       const bookmarksBar = document.getElementById('bookmarksBar');
@@ -1004,7 +1023,8 @@
         { name: "Tic-Tac-Toe", type: "bookmarklet", value: "tictactoe()" },
         { name: "Share Logs", type: "bookmarklet", value: "share()" },
         { name: "Reset", type: "bookmarklet", value: "reset()" },
-        { name: "High Scores", type: "bookmarklet", value: "highscores()" }
+        { name: "High Scores", type: "bookmarklet", value: "highscores()" },
+        { name: "Share Scores", type: "bookmarklet", value: "shareHighScores()" }
       ];
 
       predefinedBookmarks.forEach(bm => {
