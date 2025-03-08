@@ -14,27 +14,39 @@ document.addEventListener('DOMContentLoaded', function() {
   console.warn = function(message) { appendLog(message, 'warn'); };
   console.info = function(message) { appendLog(message, 'info'); };
 
-  function installPWA() {
-    if ('BeforeInstallPromptEvent' in window) {
-      window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault(); // Prevent the mini-infobar from appearing
-        const promptEvent = e;
-        // Add a button or trigger manually
-        document.getElementById('installBtn').addEventListener('click', () => {
-          promptEvent.prompt();
-          promptEvent.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-              appendLog('User accepted the install prompt', 'info');
-            } else {
-              appendLog('User dismissed the install prompt', 'info');
-            }
-          });
+ function installPWA() {
+  if ('BeforeInstallPromptEvent' in window) {
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault(); // Prevent the mini-infobar from appearing
+      const promptEvent = e;
+      appendLog('Install prompt is available! Click the "Install App" button.', 'info');
+
+      // Add or update the install button event
+      const installBtn = document.getElementById('installBtn');
+      if (installBtn) {
+        installBtn.addEventListener('click', () => {
+          if (promptEvent) {
+            promptEvent.prompt();
+            appendLog('Install prompt shown. Please choose to install or cancel.', 'info');
+            promptEvent.userChoice.then((choiceResult) => {
+              if (choiceResult.outcome === 'accepted') {
+                appendLog('User accepted the install prompt. App should be installed!', 'info');
+              } else {
+                appendLog('User dismissed the install prompt.', 'info');
+              }
+            });
+          } else {
+            appendLog('Install prompt is not ready yet.', 'error');
+          }
         });
-      });
-    } else {
-      appendLog('Install prompt not supported on this browser.', 'info');
-    }
+      } else {
+        appendLog('Install button not found in DOM.', 'error');
+      }
+    });
+  } else {
+    appendLog('Install prompt not supported on this browser or PWA conditions not met.', 'error');
   }
+}
 
   function executeCode() {
     const input = document.getElementById('inputField').value.trim();
