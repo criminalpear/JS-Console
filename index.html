@@ -99,7 +99,7 @@
 <body>
   <div id="bookmarksBar"></div>
   <div class="container">
-    <h1 id="consoleTitle">JavaScript Console</h1>
+    <h1 id="consoleTitle">JavaScript Console v1.0</h1> <!-- Version Number -->
     <div class="tabs">
       <div id="jsTab" class="tab active-tab">JavaScript</div>
     </div>
@@ -132,7 +132,7 @@
         currentTab = tab;
         if (tab === 'js') {
           document.title = "JavaScript Console";
-          document.getElementById('consoleTitle').textContent = 'JavaScript Console';
+          document.getElementById('consoleTitle').textContent = 'JavaScript Console v1.0';
           document.getElementById('jsTab').classList.add('active-tab');
         }
       }
@@ -153,11 +153,16 @@
         consoleDiv.appendChild(line);
         consoleDiv.scrollTop = consoleDiv.scrollHeight;
         if (typeof MathJax !== 'undefined') MathJax.typeset();
+        // Save to localStorage
+        const logs = JSON.parse(localStorage.getItem('consoleLogs') || '[]');
+        logs.push({ message, type, isHtml });
+        localStorage.setItem('consoleLogs', JSON.stringify(logs));
       }
 
       function clearConsole() {
         const consoleDiv = document.getElementById(`${currentTab}Console`);
         if (consoleDiv) consoleDiv.innerHTML = '';
+        localStorage.removeItem('consoleLogs');
       }
 
       console.log = function(message) { appendLog(message, 'log'); };
@@ -288,7 +293,9 @@
         sounds[type]?.play();
       }
 
-      const functions = ['squares', 'ponies', 'sawyer', 'aiden', 'aadyn', 'eli', 'elijah', 'ronin', 'ronin1', 'ronin2', 'check', 'idiot', 'elements', 'elementshelp', 'list', 'snake'];
+      // Updated functions list with new additions
+      const functions = ['squares', 'ponies', 'sawyer', 'aiden', 'aadyn', 'eli', 'elijah', 'ronin', 'ronin1', 'ronin2', 'check', 'idiot', 'elements', 'elementshelp', 'list', 'snake', 'updates', 'setColor', 'tictactoe', 'share'];
+
       function setupAutocomplete() {
         const autocomplete = document.getElementById('autocomplete');
         const inputField = document.getElementById('inputField');
@@ -345,10 +352,31 @@
         });
       }
 
+      // New Feature: Updates Log
+      function updates() {
+        appendLog('Update Log:', 'info');
+        appendLog('v1.0 (Mar 07, 2025): Initial release on GitHub Pages with theme toggle, Snake game, and more!', 'info');
+        appendLog('v1.1 (Mar 07, 2025): Added setColor, Tic-Tac-Toe, sharing, and saved logs.', 'info');
+        appendLog('Type "list();" to see all commands.', 'info');
+      }
+
+      // New Feature: Customizable Console Colors
+      function setColor(type, color) {
+        const validTypes = ['log', 'error', 'warn', 'info'];
+        if (!validTypes.includes(type)) {
+          appendLog(`Error: Type must be one of ${validTypes.join(', ')}`, 'error');
+          return;
+        }
+        document.querySelectorAll(`.console .${type}`).forEach(el => el.style.color = color);
+        appendLog(`Set ${type} color to ${color}`, 'info');
+      }
+
+      // Game: Snake (unchanged except canvas size tweak)
       function snake() {
         if (isGameRunning) return;
         isGameRunning = true;
         const canvas = document.getElementById('gameCanvas');
+        canvas.width = 400; canvas.height = 400; // Consistent size
         const ctx = canvas.getContext('2d');
         canvas.style.display = 'block';
 
@@ -413,6 +441,75 @@
         document.addEventListener('keydown', keyHandler);
         draw();
         setTimeout(move, 100);
+      }
+
+      // New Game: Tic-Tac-Toe
+      function tictactoe() {
+        if (isGameRunning) return;
+        isGameRunning = true;
+        const canvas = document.getElementById('gameCanvas');
+        canvas.width = 300; canvas.height = 300;
+        const ctx = canvas.getContext('2d');
+        canvas.style.display = 'block';
+        let board = Array(9).fill(null);
+        let player = 'X';
+        drawBoard();
+        function drawBoard() {
+          ctx.fillStyle = document.body.classList.contains('dark') ? '#000000' : '#f4f4f4';
+          ctx.fillRect(0, 0, 300, 300);
+          ctx.strokeStyle = 'gray';
+          ctx.lineWidth = 5;
+          for (let i = 1; i < 3; i++) {
+            ctx.beginPath(); ctx.moveTo(i * 100, 0); ctx.lineTo(i * 100, 300); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(0, i * 100); ctx.lineTo(300, i * 100); ctx.stroke();
+          }
+          board.forEach((cell, i) => {
+            if (cell) {
+              ctx.fillStyle = cell === 'X' ? 'blue' : 'red';
+              ctx.font = '60px Arial';
+              ctx.fillText(cell, (i % 3) * 100 + 35, Math.floor(i / 3) * 100 + 70);
+            }
+          });
+        }
+        canvas.onclick = e => {
+          const rect = canvas.getBoundingClientRect();
+          const x = Math.floor((e.clientX - rect.left) / 100);
+          const y = Math.floor((e.clientY - rect.top) / 100);
+          const idx = y * 3 + x;
+          if (!board[idx]) {
+            board[idx] = player;
+            drawBoard();
+            if (checkWin()) {
+              appendLog(`${player} wins!`, 'info');
+              endGame();
+            } else if (!board.includes(null)) {
+              appendLog('Draw!', 'info');
+              endGame();
+            } else {
+              player = player === 'X' ? 'O' : 'X';
+            }
+          }
+        };
+        function checkWin() {
+          const wins = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]];
+          return wins.some(w => w.every(i => board[i] === player));
+        }
+        function endGame() {
+          isGameRunning = false;
+          canvas.style.display = 'none';
+        }
+        document.addEventListener('keydown', e => {
+          if (e.key === 'Escape' && isGameRunning) endGame(), appendLog('Game exited.', 'info');
+        });
+      }
+
+      // New Feature: Share Console State
+      function share() {
+        const logs = JSON.parse(localStorage.getItem('consoleLogs') || '[]');
+        const encoded = encodeURIComponent(JSON.stringify(logs));
+        const url = `${window.location.origin}${window.location.pathname}?logs=${encoded}`;
+        navigator.clipboard.writeText(url);
+        appendLog('Share URL copied to clipboard! Paste it to share your console.', 'info');
       }
 
       function squares() {
@@ -862,6 +959,10 @@
         console.log("elementshelp();, Teaches you how to use elements() in a simple way.");
         console.log("list();, Tells you all of the functions and what they do.");
         console.log("snake();, Play a simple Snake game.");
+        console.log("updates();, Shows the update log for this console.");
+        console.log("setColor('type', 'color');, Changes console log type color (e.g., 'log', 'error').");
+        console.log("tictactoe();, Play a simple Tic-Tac-Toe game.");
+        console.log("share();, Copies a URL to share your console logs.");
       }
 
       const bookmarksBar = document.getElementById('bookmarksBar');
@@ -880,7 +981,10 @@
         { name: "List Functions", type: "bookmarklet", value: "list()" },
         { name: "Elements", type: "bookmarklet", value: "elements()" },
         { name: "Elements Help", type: "bookmarklet", value: "elementshelp()" },
-        { name: "Snake Game", type: "bookmarklet", value: "snake()" }
+        { name: "Snake Game", type: "bookmarklet", value: "snake()" },
+        { name: "Updates", type: "bookmarklet", value: "updates()" },
+        { name: "Tic-Tac-Toe", type: "bookmarklet", value: "tictactoe()" },
+        { name: "Share Logs", type: "bookmarklet", value: "share()" }
       ];
 
       predefinedBookmarks.forEach(bm => {
@@ -985,7 +1089,19 @@
         bookmarksBar.insertBefore(bookmark, saveBookmarksBtn);
       });
 
-      appendLog('Welcome to the JavaScript Console on GitHub Pages!', 'info');
+      // Load saved logs and shared logs
+      const urlParams = new URLSearchParams(window.location.search);
+      const sharedLogs = urlParams.get('logs');
+      if (sharedLogs) {
+        const logs = JSON.parse(decodeURIComponent(sharedLogs));
+        logs.forEach(log => appendLog(log.message, log.type, log.isHtml));
+      } else {
+        const savedLogs = JSON.parse(localStorage.getItem('consoleLogs') || '[]');
+        savedLogs.forEach(log => appendLog(log.message, log.type, log.isHtml));
+      }
+      appendLog('Welcome to the JavaScript Console v1.1 on GitHub Pages!', 'info');
+      appendLog('Type "updates();" for what’s new or "list();" for all commands.', 'info');
+
       if (localStorage.getItem('theme') === 'dark') {
         document.body.classList.add('dark');
       }
@@ -996,7 +1112,6 @@
       document.getElementById('clearBtn').addEventListener('click', clearConsole);
       document.getElementById('exportBtn').addEventListener('click', exportLog);
       document.getElementById('themeBtn').addEventListener('click', toggleTheme);
-
       document.getElementById('jsTab').addEventListener('click', () => switchTab('js'));
     });
   </script>
