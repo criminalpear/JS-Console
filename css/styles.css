@@ -17,7 +17,7 @@ body.dark {
   --bookmark-bg: #000000;
   --bookmark-hover: #333333;
 }
-html, body, .console, #inputField, #autocomplete {
+html, body, .console, #inputField, #autocomplete, button, .bookmark {
   background-color: var(--bg-color);
   color: var(--text-color);
 }
@@ -40,13 +40,11 @@ html, body, .console, #inputField, #autocomplete {
 .bookmark {
   padding: 5px 10px;
   margin: 2px 5px;
-  background-color: var(--bookmark-bg);
   border: 1px solid var(--border-color);
   border-radius: 3px;
   cursor: pointer;
   font-size: 14px;
   text-decoration: none;
-  color: var(--text-color);
   display: inline-flex;
   align-items: center;
 }
@@ -64,7 +62,6 @@ h1 { margin: 10px 0; text-align: center; font-size: 24px; flex-shrink: 0; color:
   white-space: pre-wrap; 
   overflow-y: auto; 
   box-sizing: border-box; 
-  color: var(--text-color);
 }
 .console .log { color: var(--text-color); }
 body.dark .console .log { color: #ffffff; }
