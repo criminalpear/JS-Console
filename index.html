@@ -4,195 +4,37 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JavaScript Console</title>
-  <!-- MathJax for equation rendering -->
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      overflow: hidden;
-      transition: background-color 0.3s, color 0.3s;
-    }
-    :root {
-      --bg-color: #f4f4f4;
-      --text-color: black;
-      --border-color: #ccc;
-      --bar-bg: #f1f1f1;
-      --bookmark-bg: #e0e0e0;
-      --bookmark-hover: #d0d0d0;
-      --button-bg: #4CAF50;
-      --tab-bg: #f0f0f0;
-    }
-    body.dark {
-      --bg-color: #1e1e1e;
-      --text-color: white;
-      --border-color: #444;
-      --bar-bg: #2a2a2a;
-      --bookmark-bg: #3a3a3a;
-      --bookmark-hover: #4a4a4a;
-      --button-bg: #388E3C;
-      --tab-bg: #333;
-    }
-    #bookmarksBar {
-      background-color: var(--bar-bg);
-      padding: 5px;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      position: fixed;
-      top: 0;
-      width: 100%;
-      z-index: 1000;
-      box-sizing: border-box;
-    }
-    .bookmark {
-      padding: 5px 10px;
-      margin: 2px 5px;
-      background-color: var(--bookmark-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 3px;
-      cursor: pointer;
-      font-size: 14px;
-      text-decoration: none;
-      color: var(--text-color);
-      display: flex;
-      align-items: center;
-    }
-    .bookmark:hover {
-      background-color: var(--bookmark-hover);
-    }
-    .bookmark .remove {
-      margin-left: 5px;
-      color: red;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .bookmark .remove:hover {
-      color: darkred;
-    }
-    .container {
-      display: flex;
-      flex-direction: column;
-      height: calc(100vh - 40px);
-      margin-top: 40px;
-      box-sizing: border-box;
-    }
-    h1 {
-      margin: 10px 0;
-      text-align: center;
-      font-size: 24px;
-      flex-shrink: 0;
-      color: var(--text-color);
-    }
-    .tabs {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 10px;
-      flex-shrink: 0;
-    }
-    .tab {
-      padding: 10px 20px;
-      background-color: var(--tab-bg);
-      cursor: pointer;
-      margin: 0 5px;
-      border: 1px solid var(--border-color);
-      color: var(--text-color);
-    }
-    .active-tab {
-      background-color: var(--button-bg);
-      color: white;
-    }
-    .console-container {
-      flex: 1;
-      display: flex;
-      overflow: hidden;
-    }
-    .console {
-      flex: 1;
-      border: 1px solid var(--border-color);
-      background-color: var(--bg-color);
-      padding: 10px;
-      font-family: monospace;
-      white-space: pre-wrap;
-      overflow-y: auto;
-      box-sizing: border-box;
-      color: var(--text-color);
-    }
+    html, body { height: 100%; margin: 0; padding: 0; font-family: Arial, sans-serif; overflow: hidden; transition: background-color 0.3s, color 0.3s; }
+    :root { --bg-color: #f4f4f4; --text-color: black; --border-color: #ccc; --bar-bg: #f1f1f1; --bookmark-bg: #e0e0e0; --bookmark-hover: #d0d0d0; --button-bg: #4CAF50; --tab-bg: #f0f0f0; }
+    body.dark { --bg-color: #1e1e1e; --text-color: white; --border-color: #444; --bar-bg: #2a2a2a; --bookmark-bg: #3a3a3a; --bookmark-hover: #4a4a4a; --button-bg: #388E3C; --tab-bg: #333; }
+    #bookmarksBar { background-color: var(--bar-bg); padding: 5px; border-bottom: 1px solid var(--border-color); display: flex; flex-wrap: wrap; align-items: center; position: fixed; top: 0; width: 100%; z-index: 1000; box-sizing: border-box; }
+    .bookmark { padding: 5px 10px; margin: 2px 5px; background-color: var(--bookmark-bg); border: 1px solid var(--border-color); border-radius: 3px; cursor: pointer; font-size: 14px; text-decoration: none; color: var(--text-color); display: flex; align-items: center; }
+    .bookmark:hover { background-color: var(--bookmark-hover); }
+    .bookmark .remove { margin-left: 5px; color: red; font-weight: bold; cursor: pointer; }
+    .bookmark .remove:hover { color: darkred; }
+    .container { display: flex; flex-direction: column; height: calc(100vh - 40px); margin-top: 40px; box-sizing: border-box; }
+    h1 { margin: 10px 0; text-align: center; font-size: 24px; flex-shrink: 0; color: var(--text-color); }
+    .tabs { display: flex; justify-content: center; margin-bottom: 10px; flex-shrink: 0; }
+    .tab { padding: 10px 20px; background-color: var(--tab-bg); cursor: pointer; margin: 0 5px; border: 1px solid var(--border-color); color: var(--text-color); }
+    .active-tab { background-color: var(--button-bg); color: white; }
+    .console-container { flex: 1; display: flex; overflow: hidden; }
+    .console { flex: 1; border: 1px solid var(--border-color); background-color: var(--bg-color); padding: 10px; font-family: monospace; white-space: pre-wrap; overflow-y: auto; box-sizing: border-box; color: var(--text-color); }
     .console .log { color: var(--text-color); }
     .console .error { color: red; }
     .console .warn { color: #ffcc00; }
     .console .info { color: blue; }
-    .input-container {
-      display: flex;
-      flex-shrink: 0;
-      padding: 10px;
-      box-sizing: border-box;
-      position: relative;
-    }
-    #inputField {
-      flex: 1;
-      padding: 10px;
-      font-size: 16px;
-      margin-right: 10px;
-      box-sizing: border-box;
-      font-family: monospace;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      border: 1px solid var(--border-color);
-      resize: vertical;
-      min-height: 40px;
-    }
-    button {
-      padding: 10px;
-      background-color: var(--button-bg);
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 16px;
-      margin: 0 5px;
-      flex-shrink: 0;
-    }
-    .element-link {
-      color: blue;
-      cursor: pointer;
-      text-decoration: underline;
-      margin-left: 5px;
-    }
-    .element-link:hover {
-      color: darkblue;
-    }
-    #autocomplete {
-      position: absolute;
-      bottom: 60px;
-      left: 10px;
-      background-color: var(--bg-color);
-      border: 1px solid var(--border-color);
-      max-height: 150px;
-      overflow-y: auto;
-      display: none;
-      z-index: 100;
-    }
-    .autocomplete-item {
-      padding: 5px;
-      cursor: pointer;
-      color: var(--text-color);
-    }
-    .autocomplete-item:hover {
-      background-color: var(--bookmark-hover);
-    }
-    #gameCanvas {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      border: 1px solid var(--border-color);
-      display: none;
-      z-index: 2000;
-    }
+    .input-container { display: flex; flex-shrink: 0; padding: 10px; box-sizing: border-box; position: relative; }
+    #inputField { flex: 1; padding: 10px; font-size: 16px; margin-right: 10px; box-sizing: border-box; font-family: monospace; background-color: var(--bg-color); color: var(--text-color); border: 1px solid var(--border-color); resize: vertical; min-height: 40px; }
+    button { padding: 10px; background-color: var(--button-bg); color: white; border: none; cursor: pointer; font-size: 16px; margin: 0 5px; flex-shrink: 0; }
+    .element-link { color: blue; cursor: pointer; text-decoration: underline; margin-left: 5px; }
+    .element-link:hover { color: darkblue; }
+    #autocomplete { position: absolute; bottom: 60px; left: 10px; background-color: var(--bg-color); border: 1px solid var(--border-color); max-height: 150px; overflow-y: auto; display: none; z-index: 100; }
+    .autocomplete-item { padding: 5px; cursor: pointer; color: var(--text-color); }
+    .autocomplete-item:hover { background-color: var(--bookmark-hover); }
+    #gameCanvas { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 1px solid var(--border-color); display: none; z-index: 2000; }
   </style>
 </head>
 <body>
@@ -221,14 +63,12 @@
     document.addEventListener('DOMContentLoaded', function() {
       console.log('DOM fully loaded');
 
-      // Global variables
       let currentTab = 'js';
       let elementList = [];
       let commandHistory = [];
       let historyIndex = -1;
       let isGameRunning = false;
 
-      // Core functions
       function switchTab(tab) {
         currentTab = tab;
         if (tab === 'js') {
@@ -286,7 +126,11 @@
           } else if (input.includes('=') && input.includes('x')) {
             const [leftSide, rightSide] = input.split('=').map(part => part.trim());
             const solution = solveEquation(leftSide, rightSide);
-            appendLog(`Equation: \\(${leftSide} = ${rightSide}\\), Solution: \\(x = ${solution}\\)', 'log', true);
+            appendLog(
+              `Equation: \\\\(${leftSide} = ${rightSide}\\\\), Solution: \\\\(x = ${solution}\\\\)`,
+              'log',
+              true
+            );
             playSound('success');
           } else if (window.editElement && /\d+\s/.test(input)) {
             window.editElement(input);
@@ -355,13 +199,11 @@
         return finalConstant / finalCoeffX;
       }
 
-      // Theme Toggle
       function toggleTheme() {
         document.body.classList.toggle('dark');
         localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
       }
 
-      // Export Log
       function exportLog() {
         const consoleDiv = document.getElementById('jsConsole');
         const text = Array.from(consoleDiv.children).map(line => line.textContent).join('\n');
@@ -372,7 +214,6 @@
         a.click();
       }
 
-      // Sound Effects
       function playSound(type) {
         const sounds = {
           execute: new Audio('https://www.myinstants.com/media/sounds/click.mp3'),
@@ -382,7 +223,6 @@
         sounds[type]?.play();
       }
 
-      // Autocomplete
       const functions = ['squares', 'ponies', 'sawyer', 'aiden', 'aadyn', 'eli', 'elijah', 'ronin', 'ronin1', 'ronin2', 'check', 'idiot', 'elements', 'elementshelp', 'list', 'snake'];
       function setupAutocomplete() {
         const autocomplete = document.getElementById('autocomplete');
@@ -418,7 +258,6 @@
         document.getElementById('autocomplete').style.display = 'none';
       }
 
-      // History and Multi-Line Input Handling
       function setupInput() {
         const inputField = document.getElementById('inputField');
         inputField.addEventListener('keydown', (event) => {
@@ -441,7 +280,6 @@
         });
       }
 
-      // Mini-Game: Snake
       function snake() {
         if (isGameRunning) return;
         isGameRunning = true;
@@ -557,67 +395,67 @@
         animate();
       }
 
-     function ponies() {
-  (function(srcs, cfg) {
-    let cbcount = 1;
-    const callback = () => {
-      cbcount--;
-      if (cbcount === 0) {
-        window.BrowserPonies.setBaseUrl(cfg.baseurl);
-        if (!window.BrowserPoniesBaseConfig.loaded) {
-          window.BrowserPonies.loadConfig(window.BrowserPoniesBaseConfig);
-          window.BrowserPoniesBaseConfig.loaded = true;
-        }
-        window.BrowserPonies.loadConfig(cfg);
-        if (!window.BrowserPonies.running()) window.BrowserPonies.start();
-      }
-    };
+      function ponies() {
+        (function(srcs, cfg) {
+          let cbcount = 1;
+          const callback = () => {
+            cbcount--;
+            if (cbcount === 0) {
+              window.BrowserPonies.setBaseUrl(cfg.baseurl);
+              if (!window.BrowserPoniesBaseConfig.loaded) {
+                window.BrowserPonies.loadConfig(window.BrowserPoniesBaseConfig);
+                window.BrowserPoniesBaseConfig.loaded = true;
+              }
+              window.BrowserPonies.loadConfig(cfg);
+              if (!window.BrowserPonies.running()) window.BrowserPonies.start();
+            }
+          };
 
-    if (typeof window.BrowserPoniesConfig === 'undefined') window.BrowserPoniesConfig = {};
-    if (typeof window.BrowserPoniesBaseConfig === 'undefined') {
-      cbcount++;
-      window.BrowserPoniesConfig.onbasecfg = callback;
-    }
-    if (typeof window.BrowserPonies === 'undefined') {
-      cbcount++;
-      window.BrowserPoniesConfig.oninit = callback;
-    }
+          if (typeof window.BrowserPoniesConfig === 'undefined') window.BrowserPoniesConfig = {};
+          if (typeof window.BrowserPoniesBaseConfig === 'undefined') {
+            cbcount++;
+            window.BrowserPoniesConfig.onbasecfg = callback;
+          }
+          if (typeof window.BrowserPonies === 'undefined') {
+            cbcount++;
+            window.BrowserPoniesConfig.oninit = callback;
+          }
 
-    const node = document.body || document.documentElement || document.getElementsByTagName('head')[0];
-    for (const id in srcs) {
-      if (document.getElementById(id)) continue;
-      if (node) {
-        const s = document.createElement('script');
-        s.type = 'text/javascript';
-        s.id = id;
-        s.src = srcs[id];
-        node.appendChild(s);
+          const node = document.body || document.documentElement || document.getElementsByTagName('head')[0];
+          for (const id in srcs) {
+            if (document.getElementById(id)) continue;
+            if (node) {
+              const s = document.createElement('script');
+              s.type = 'text/javascript';
+              s.id = id;
+              s.src = srcs[id];
+              node.appendChild(s);
+            }
+          }
+          callback();
+        })({
+          "browser-ponies-script": "https://panzi.github.io/Browser-Ponies/browserponies.js",
+          "browser-ponies-config": "https://panzi.github.io/Browser-Ponies/basecfg.js"
+        }, {
+          baseurl: "https://panzi.github.io/Browser-Ponies/",
+          fadeDuration: 500,
+          volume: 1,
+          fps: 25,
+          speed: 3,
+          audioEnabled: false,
+          showFps: false,
+          showLoadProgress: true,
+          speakProbability: 0.1,
+          spawn: {
+            "applejack": 1,
+            "fluttershy": 1,
+            "pinkie pie": 1,
+            "rainbow dash": 1,
+            "rarity": 1,
+            "twilight sparkle": 1
+          }
+        });
       }
-    }
-    callback();
-  })({
-    "browser-ponies-script": "https://panzi.github.io/Browser-Ponies/browserponies.js",
-    "browser-ponies-config": "https://panzi.github.io/Browser-Ponies/basecfg.js"
-  }, {
-    baseurl: "https://panzi.github.io/Browser-Ponies/",
-    fadeDuration: 500,
-    volume: 1,
-    fps: 25,
-    speed: 3,
-    audioEnabled: false,
-    showFps: false,
-    showLoadProgress: true,
-    speakProbability: 0.1,
-    spawn: {
-      "applejack": 1,
-      "fluttershy": 1,
-      "pinkie pie": 1,
-      "rainbow dash": 1,
-      "rarity": 1,
-      "twilight sparkle": 1
-    }
-  });
-}
 
       var gifSrc = 'https://media.giphy.com/media/uDgOkInszKwt7B3Ql1/giphy.gif';
       var gifsPerRow = 13;
@@ -950,7 +788,6 @@
         console.log("snake();, Play a simple Snake game.");
       }
 
-      // Bookmarks Bar
       const bookmarksBar = document.getElementById('bookmarksBar');
       const predefinedBookmarks = [
         { name: "Bouncing Squares", type: "bookmarklet", value: "squares()" },
@@ -1072,7 +909,6 @@
         bookmarksBar.insertBefore(bookmark, saveBookmarksBtn);
       });
 
-      // Initialization
       appendLog('Welcome to the JavaScript Console on GitHub Pages!', 'info');
       if (localStorage.getItem('theme') === 'dark') {
         document.body.classList.add('dark');
@@ -1080,13 +916,11 @@
       setupInput();
       setupAutocomplete();
 
-      // Button event listeners
       document.getElementById('executeBtn').addEventListener('click', executeCode);
       document.getElementById('clearBtn').addEventListener('click', clearConsole);
       document.getElementById('exportBtn').addEventListener('click', exportLog);
       document.getElementById('themeBtn').addEventListener('click', toggleTheme);
 
-      // Tab switch listener
       document.getElementById('jsTab').addEventListener('click', () => switchTab('js'));
     });
   </script>
