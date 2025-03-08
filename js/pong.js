@@ -6,18 +6,19 @@ function pong() {
   canvas.width = 600; canvas.height = 400;
   const ctx = canvas.getContext('2d');
   canvas.style.display = 'block';
+  appendLog('Pong: Use Arrow Up/Down to move paddle, Escape to exit.', 'info');
   gtag('event', 'start_game', { 'event_category': 'Game', 'event_label': 'pong' });
 
   const paddleWidth = 10, paddleHeight = 60, ballSize = 10;
   let player = { x: 50, y: canvas.height / 2 - paddleHeight / 2, dy: 5 };
-  let ai = { x: canvas.width - 50 - paddleWidth, y: canvas.height / 2 - paddleHeight / 2, dy: 4 };
+  let ai = { x: canvas.width - 50 - paddleWidth, y: canvas.height / 2 - paddleHeight / 2, dy: 3 }; // Slower AI
   let ball = { x: canvas.width / 2, y: canvas.height / 2, dx: 5, dy: 5 };
   let score = 0;
 
   function draw() {
-    ctx.fillStyle = document.body.classList.contains('dark') ? '#000000' : '#f4f4f4';
+    ctx.fillStyle = document.documentElement.style.getPropertyValue('--bg-color') || '#f4f4f4';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = 'white';
+    ctx.fillStyle = document.documentElement.style.getPropertyValue('--text-color') || 'black';
     ctx.fillRect(player.x, player.y, paddleWidth, paddleHeight);
     ctx.fillRect(ai.x, ai.y, paddleWidth, paddleHeight);
     ctx.fillRect(ball.x - ballSize / 2, ball.y - ballSize / 2, ballSize, ballSize);
@@ -29,7 +30,7 @@ function pong() {
 
     if (ball.y < ballSize / 2 || ball.y > canvas.height - ballSize / 2) ball.dy = -ball.dy;
     if (ball.x < player.x + paddleWidth && ball.y > player.y && ball.y < player.y + paddleHeight) {
-      ball.dx = -ball.dx;
+      ball.dx = -ball.dx * 1.05; // Slight speed increase
       score++;
     }
     if (ball.x > ai.x && ball.y > ai.y && ball.y < ai.y + paddleHeight) ball.dx = -ball.dx;
