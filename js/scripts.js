@@ -117,11 +117,11 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function setTheme(bgColor, textColor) {
-    document.body.classList.remove('dark'); // Reset dark mode
+    document.body.classList.remove('dark');
     document.documentElement.style.setProperty('--bg-color', bgColor);
     document.documentElement.style.setProperty('--text-color', textColor);
     localStorage.setItem('customTheme', JSON.stringify({ bgColor, textColor }));
-    localStorage.removeItem('theme'); // Clear toggle theme
+    localStorage.removeItem('theme');
     appendLog(`Custom theme set: bg=${bgColor}, text=${textColor}`, 'info');
     gtag('event', 'set_theme', { 'event_category': 'UI', 'event_label': `${bgColor},${textColor}` });
   }
@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const functions = [
     'squares', 'ponies', 'sawyer', 'aiden', 'aadyn', 'eli', 'elijah', 'ronin', 'ronin1', 'ronin2',
     'check', 'idiot', 'elements', 'elementshelp', 'list', 'snake', 'updates', 'setColor', 'tictactoe',
-    'share', 'reset', 'highscores', 'shareHighScores', 'leaderboard', 'pong', 'setUsername', 'setTheme', 'toggleSound', 'more'
+    'share', 'reset', 'highscores', 'shareHighScores', 'leaderboard', 'setUsername', 'setTheme', 'toggleSound', 'more'
   ];
 
   function setupAutocomplete() {
@@ -202,16 +202,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function updates() {
     appendLog('Update Log:', 'info');
-    appendLog('v1.0 (Mar 07, 2025): Initial release on GitHub Pages with theme toggle, Snake game, and more!', 'info');
-    appendLog('v1.1 (Mar 07, 2025): Added setColor, Tic-Tac-Toe, sharing, saved logs, reset, and high scores.', 'info');
-    appendLog('v1.2 (Mar 07, 2025): Fixed title overlap with bookmarks and Tic-Tac-Toe high score stuck at 0.', 'info');
-    appendLog('v1.3 (Mar 07, 2025): High scores persist after reset; added shareHighScores() for leaderboard sharing.', 'info');
-    appendLog('v1.4 (Mar 07, 2025): Added leaderboard() to view global scores from scores.json.', 'info');
-    appendLog('v1.5 (Mar 07, 2025): Added Pong game with high score tracking.', 'info');
-    appendLog('v1.6 (Mar 07, 2025): Added setUsername() for user profiles; high scores now show usernames.', 'info');
-    appendLog('v1.7 (Mar 07, 2025): Added setTheme() for custom background and text colors.', 'info');
-    appendLog('v1.8 (Mar 07, 2025): Added toggleSound() to enable/disable sound effects.', 'info');
-    appendLog('v1.9 (Mar 07, 2025): Fixed setTheme(), Pong controls, and prioritized bookmarks.', 'info');
+    appendLog('v1.0 (Mar 07, 2025): Initial release with theme toggle, Snake, and more!', 'info');
+    appendLog('v1.1 (Mar 07, 2025): Added setColor, Tic-Tac-Toe, sharing, logs, reset, scores.', 'info');
+    appendLog('v1.2 (Mar 07, 2025): Fixed title overlap and Tic-Tac-Toe score bug.', 'info');
+    appendLog('v1.3 (Mar 07, 2025): Scores persist after reset; added shareHighScores().', 'info');
+    appendLog('v1.4 (Mar 07, 2025): Added leaderboard() for global scores.', 'info');
+    appendLog('v1.5 (Mar 07, 2025): Added Pong (later removed).', 'info');
+    appendLog('v1.6 (Mar 07, 2025): Added setUsername() for profiles.', 'info');
+    appendLog('v1.7 (Mar 07, 2025): Added setTheme() for custom colors.', 'info');
+    appendLog('v1.8 (Mar 07, 2025): Added toggleSound() for sound control.', 'info');
+    appendLog('v1.9 (Mar 07, 2025): Removed Pong, fixed setTheme(), prioritized bookmarks.', 'info');
     appendLog('Type "list();" to see all commands.', 'info');
   }
 
@@ -240,12 +240,10 @@ document.addEventListener('DOMContentLoaded', function() {
     appendLog(`Your High Scores (${username}):`, 'info');
     appendLog(`Snake: ${localHighScores.snake || 0}`, 'info');
     appendLog(`Tic-Tac-Toe Wins: ${localHighScores.tictactoe || 0}`, 'info');
-    appendLog(`Pong: ${localHighScores.pong || 0}`, 'info');
     if (sharedData.username) {
       appendLog(`Shared High Scores (${sharedData.username}):`, 'info');
       appendLog(`Snake: ${sharedData.scores.snake || 0}`, 'info');
       appendLog(`Tic-Tac-Toe Wins: ${sharedData.scores.tictactoe || 0}`, 'info');
-      appendLog(`Pong: ${sharedData.scores.pong || 0}`, 'info');
     } else {
       appendLog('No shared high scores available. Use "shareHighScores();" to share yours!', 'info');
     }
@@ -269,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function() {
       .then(data => {
         appendLog('Global Leaderboard:', 'info');
         data.sort((a, b) => (b.snake || 0) - (a.snake || 0)).slice(0, 5).forEach((entry, i) => {
-          appendLog(`${i + 1}. ${entry.username}: Snake=${entry.snake || 0}, Tic-Tac-Toe=${entry.tictactoe || 0}, Pong=${entry.pong || 0}`, 'info');
+          appendLog(`${i + 1}. ${entry.username}: Snake=${entry.snake || 0}, Tic-Tac-Toe=${entry.tictactoe || 0}`, 'info');
         });
         gtag('event', 'view_leaderboard', { 'event_category': 'Game' });
       })
@@ -761,10 +759,9 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("tictactoe();, Play a simple Tic-Tac-Toe game.");
     console.log("share();, Copies a URL to share your console logs.");
     console.log("reset();, Resets console and bookmarks (high scores preserved).");
-    console.log("highscores();, Shows your and shared high scores for Snake, Tic-Tac-Toe, and Pong.");
+    console.log("highscores();, Shows your and shared high scores for Snake and Tic-Tac-Toe.");
     console.log("shareHighScores();, Copies a URL to share your high scores with username.");
     console.log("leaderboard();, Shows top global scores from scores.json.");
-    console.log("pong();, Play a simple Pong game.");
     console.log("setUsername('name');, Sets your username for high scores.");
     console.log("setTheme('bgColor', 'textColor');, Sets custom background and text colors.");
     console.log("toggleSound();, Enables or disables sound effects.");
@@ -793,7 +790,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const popularBookmarks = [
     { name: "Snake Game", type: "bookmarklet", value: "snake()" },
     { name: "Tic-Tac-Toe", type: "bookmarklet", value: "tictactoe()" },
-    { name: "Pong Game", type: "bookmarklet", value: "pong()" },
     { name: "High Scores", type: "bookmarklet", value: "highscores()" },
     { name: "Leaderboard", type: "bookmarklet", value: "leaderboard()" },
     { name: "Updates", type: "bookmarklet", value: "updates()" },
