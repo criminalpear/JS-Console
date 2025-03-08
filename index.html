@@ -6,6 +6,13 @@
   <title>JavaScript Console</title>
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=YOUR-GA-ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-X1QVWZVDC3');
+</script>
   <style>
     html, body { height: 100%; margin: 0; padding: 0; font-family: Arial, sans-serif; overflow: hidden; transition: background-color 0.3s, color 0.3s; }
     :root {
@@ -17,7 +24,6 @@
       --bookmark-hover: #d0d0d0;
       --button-bg: #4CAF50;
       --button-hover: #45a049;
-      --tab-bg: #f0f0f0;
     }
     body.dark {
       --bg-color: #000000;
@@ -28,7 +34,6 @@
       --bookmark-hover: #333333;
       --button-bg: #4CAF50;
       --button-hover: #45a049;
-      --tab-bg: #000000;
     }
     html, body, .console, #inputField, #autocomplete {
       background-color: var(--bg-color);
@@ -65,9 +70,6 @@
     .bookmark .remove:hover { color: darkred; }
     .container { display: flex; flex-direction: column; height: calc(100vh - 40px); margin-top: 40px; box-sizing: border-box; }
     h1 { margin: 10px 0; text-align: center; font-size: 24px; flex-shrink: 0; color: var(--text-color); }
-    .tabs { display: flex; justify-content: center; margin-bottom: 10px; flex-shrink: 0; }
-    .tab { padding: 10px 20px; background-color: var(--tab-bg); cursor: pointer; margin: 0 5px; border: 1px solid var(--border-color); color: var(--text-color); }
-    .active-tab { background-color: var(--button-bg); color: #ffffff; }
     .console-container { flex: 1; display: flex; overflow: hidden; }
     .console { 
       flex: 1; 
@@ -99,10 +101,7 @@
 <body>
   <div id="bookmarksBar"></div>
   <div class="container">
-    <h1 id="consoleTitle">JavaScript Console v1.0</h1> <!-- Version Number -->
-    <div class="tabs">
-      <div id="jsTab" class="tab active-tab">JavaScript</div>
-    </div>
+    <h1 id="consoleTitle">JavaScript Console v1.1</h1>
     <div class="console-container">
       <div id="jsConsole" class="console"></div>
     </div>
@@ -122,45 +121,27 @@
     document.addEventListener('DOMContentLoaded', function() {
       console.log('DOM fully loaded');
 
-      let currentTab = 'js';
       let elementList = [];
       let commandHistory = [];
       let historyIndex = -1;
       let isGameRunning = false;
 
-      function switchTab(tab) {
-        currentTab = tab;
-        if (tab === 'js') {
-          document.title = "JavaScript Console";
-          document.getElementById('consoleTitle').textContent = 'JavaScript Console v1.0';
-          document.getElementById('jsTab').classList.add('active-tab');
-        }
-      }
-
       function appendLog(message, type = 'log', isHtml = false) {
-        const consoleDiv = document.getElementById(`${currentTab}Console`);
-        if (!consoleDiv) {
-          console.error('Console div not found');
-          return;
-        }
+        const consoleDiv = document.getElementById('jsConsole');
+        if (!consoleDiv) return;
         const line = document.createElement('div');
         line.className = type;
-        if (isHtml) {
-          line.innerHTML = message;
-        } else {
-          line.textContent = message;
-        }
+        if (isHtml) line.innerHTML = message; else line.textContent = message;
         consoleDiv.appendChild(line);
         consoleDiv.scrollTop = consoleDiv.scrollHeight;
         if (typeof MathJax !== 'undefined') MathJax.typeset();
-        // Save to localStorage
         const logs = JSON.parse(localStorage.getItem('consoleLogs') || '[]');
         logs.push({ message, type, isHtml });
         localStorage.setItem('consoleLogs', JSON.stringify(logs));
       }
 
       function clearConsole() {
-        const consoleDiv = document.getElementById(`${currentTab}Console`);
+        const consoleDiv = document.getElementById('jsConsole');
         if (consoleDiv) consoleDiv.innerHTML = '';
         localStorage.removeItem('consoleLogs');
       }
@@ -293,8 +274,7 @@
         sounds[type]?.play();
       }
 
-      // Updated functions list with new additions
-      const functions = ['squares', 'ponies', 'sawyer', 'aiden', 'aadyn', 'eli', 'elijah', 'ronin', 'ronin1', 'ronin2', 'check', 'idiot', 'elements', 'elementshelp', 'list', 'snake', 'updates', 'setColor', 'tictactoe', 'share'];
+      const functions = ['squares', 'ponies', 'sawyer', 'aiden', 'aadyn', 'eli', 'elijah', 'ronin', 'ronin1', 'ronin2', 'check', 'idiot', 'elements', 'elementshelp', 'list', 'snake', 'updates', 'setColor', 'tictactoe', 'share', 'reset', 'highscores'];
 
       function setupAutocomplete() {
         const autocomplete = document.getElementById('autocomplete');
@@ -352,15 +332,13 @@
         });
       }
 
-      // New Feature: Updates Log
       function updates() {
         appendLog('Update Log:', 'info');
         appendLog('v1.0 (Mar 07, 2025): Initial release on GitHub Pages with theme toggle, Snake game, and more!', 'info');
-        appendLog('v1.1 (Mar 07, 2025): Added setColor, Tic-Tac-Toe, sharing, and saved logs.', 'info');
+        appendLog('v1.1 (Mar 07, 2025): Added setColor, Tic-Tac-Toe, sharing, saved logs, reset, and high scores.', 'info');
         appendLog('Type "list();" to see all commands.', 'info');
       }
 
-      // New Feature: Customizable Console Colors
       function setColor(type, color) {
         const validTypes = ['log', 'error', 'warn', 'info'];
         if (!validTypes.includes(type)) {
@@ -371,12 +349,27 @@
         appendLog(`Set ${type} color to ${color}`, 'info');
       }
 
-      // Game: Snake (unchanged except canvas size tweak)
+      function updateHighScore(game, score) {
+        const highScores = JSON.parse(localStorage.getItem('highScores') || '{}');
+        if (!highScores[game] || score > highScores[game]) {
+          highScores[game] = score;
+          localStorage.setItem('highScores', JSON.stringify(highScores));
+          appendLog(`New high score for ${game}: ${score}!`, 'info');
+        }
+      }
+
+      function highscores() {
+        const highScores = JSON.parse(localStorage.getItem('highScores') || '{}');
+        appendLog('High Scores:', 'info');
+        appendLog(`Snake: ${highScores.snake || 0}`, 'info');
+        appendLog(`Tic-Tac-Toe Wins: ${highScores.tictactoe || 0}`, 'info');
+      }
+
       function snake() {
         if (isGameRunning) return;
         isGameRunning = true;
         const canvas = document.getElementById('gameCanvas');
-        canvas.width = 400; canvas.height = 400; // Consistent size
+        canvas.width = 400; canvas.height = 400;
         const ctx = canvas.getContext('2d');
         canvas.style.display = 'block';
 
@@ -401,6 +394,7 @@
           const head = { x: snake[0].x + dx, y: snake[0].y + dy };
           if (!firstMove && (head.x < 0 || head.x >= canvas.width / gridSize || head.y < 0 || head.y >= canvas.height / gridSize || snake.some(s => s.x === head.x && s.y === head.y))) {
             appendLog(`Game Over! Score: ${score}`, 'info');
+            updateHighScore('snake', score);
             isGameRunning = false;
             canvas.style.display = 'none';
             document.removeEventListener('keydown', keyHandler);
@@ -443,7 +437,6 @@
         setTimeout(move, 100);
       }
 
-      // New Game: Tic-Tac-Toe
       function tictactoe() {
         if (isGameRunning) return;
         isGameRunning = true;
@@ -453,6 +446,7 @@
         canvas.style.display = 'block';
         let board = Array(9).fill(null);
         let player = 'X';
+        let wins = JSON.parse(localStorage.getItem('highScores') || '{}').tictactoe || 0;
         drawBoard();
         function drawBoard() {
           ctx.fillStyle = document.body.classList.contains('dark') ? '#000000' : '#f4f4f4';
@@ -481,6 +475,8 @@
             drawBoard();
             if (checkWin()) {
               appendLog(`${player} wins!`, 'info');
+              if (player === 'X') wins++;
+              updateHighScore('tictactoe', wins);
               endGame();
             } else if (!board.includes(null)) {
               appendLog('Draw!', 'info');
@@ -503,13 +499,26 @@
         });
       }
 
-      // New Feature: Share Console State
       function share() {
         const logs = JSON.parse(localStorage.getItem('consoleLogs') || '[]');
         const encoded = encodeURIComponent(JSON.stringify(logs));
         const url = `${window.location.origin}${window.location.pathname}?logs=${encoded}`;
         navigator.clipboard.writeText(url);
         appendLog('Share URL copied to clipboard! Paste it to share your console.', 'info');
+      }
+
+      function reset() {
+        clearConsole();
+        localStorage.removeItem('customBookmarks');
+        localStorage.removeItem('highScores');
+        localStorage.removeItem('theme');
+        document.body.classList.remove('dark');
+        if (isGameRunning) {
+          isGameRunning = false;
+          document.getElementById('gameCanvas').style.display = 'none';
+        }
+        document.querySelectorAll('.bookmark:not(#addBookmarkBtn):not(#saveBookmarksBtn)').forEach(bm => bm.remove());
+        appendLog('Console reset to factory settings!', 'info');
       }
 
       function squares() {
@@ -963,6 +972,8 @@
         console.log("setColor('type', 'color');, Changes console log type color (e.g., 'log', 'error').");
         console.log("tictactoe();, Play a simple Tic-Tac-Toe game.");
         console.log("share();, Copies a URL to share your console logs.");
+        console.log("reset();, Resets console, bookmarks, and games to factory settings.");
+        console.log("highscores();, Shows top scores for Snake and Tic-Tac-Toe.");
       }
 
       const bookmarksBar = document.getElementById('bookmarksBar');
@@ -984,7 +995,9 @@
         { name: "Snake Game", type: "bookmarklet", value: "snake()" },
         { name: "Updates", type: "bookmarklet", value: "updates()" },
         { name: "Tic-Tac-Toe", type: "bookmarklet", value: "tictactoe()" },
-        { name: "Share Logs", type: "bookmarklet", value: "share()" }
+        { name: "Share Logs", type: "bookmarklet", value: "share()" },
+        { name: "Reset", type: "bookmarklet", value: "reset()" },
+        { name: "High Scores", type: "bookmarklet", value: "highscores()" }
       ];
 
       predefinedBookmarks.forEach(bm => {
@@ -999,12 +1012,14 @@
 
       const addBookmarkBtn = document.createElement('div');
       addBookmarkBtn.className = 'bookmark';
+      addBookmarkBtn.id = 'addBookmarkBtn';
       addBookmarkBtn.textContent = 'Add Bookmark';
       addBookmarkBtn.addEventListener('click', addBookmark);
       bookmarksBar.appendChild(addBookmarkBtn);
 
       const saveBookmarksBtn = document.createElement('div');
       saveBookmarksBtn.className = 'bookmark';
+      saveBookmarksBtn.id = 'saveBookmarksBtn';
       saveBookmarksBtn.textContent = 'Save Bookmarks';
       saveBookmarksBtn.addEventListener('click', saveBookmarks);
       bookmarksBar.appendChild(saveBookmarksBtn);
@@ -1089,7 +1104,6 @@
         bookmarksBar.insertBefore(bookmark, saveBookmarksBtn);
       });
 
-      // Load saved logs and shared logs
       const urlParams = new URLSearchParams(window.location.search);
       const sharedLogs = urlParams.get('logs');
       if (sharedLogs) {
@@ -1112,7 +1126,6 @@
       document.getElementById('clearBtn').addEventListener('click', clearConsole);
       document.getElementById('exportBtn').addEventListener('click', exportLog);
       document.getElementById('themeBtn').addEventListener('click', toggleTheme);
-      document.getElementById('jsTab').addEventListener('click', () => switchTab('js'));
     });
   </script>
 </body>
