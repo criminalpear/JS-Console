@@ -14,6 +14,28 @@ document.addEventListener('DOMContentLoaded', function() {
   console.warn = function(message) { appendLog(message, 'warn'); };
   console.info = function(message) { appendLog(message, 'info'); };
 
+  function installPWA() {
+    if ('BeforeInstallPromptEvent' in window) {
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault(); // Prevent the mini-infobar from appearing
+        const promptEvent = e;
+        // Add a button or trigger manually
+        document.getElementById('installBtn').addEventListener('click', () => {
+          promptEvent.prompt();
+          promptEvent.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+              appendLog('User accepted the install prompt', 'info');
+            } else {
+              appendLog('User dismissed the install prompt', 'info');
+            }
+          });
+        });
+      });
+    } else {
+      appendLog('Install prompt not supported on this browser.', 'info');
+    }
+  }
+
   function executeCode() {
     const input = document.getElementById('inputField').value.trim();
     if (input === '') {
@@ -211,7 +233,7 @@ document.addEventListener('DOMContentLoaded', function() {
     appendLog('v1.6 (Mar 07, 2025): Added setUsername() for profiles.', 'info');
     appendLog('v1.7 (Mar 07, 2025): Added setTheme() for custom colors.', 'info');
     appendLog('v1.8 (Mar 07, 2025): Added toggleSound() for sound control.', 'info');
-    appendLog('v1.9 (Mar 07, 2025): Removed Pong, fixed setTheme(), prioritized bookmarks.', 'info');
+    appendLog('v1.9 (Mar 07, 2025): Removed Pong, fixed setTheme(), prioritized bookmarks, added PWA support.', 'info');
     appendLog('Type "list();" to see all commands.', 'info');
   }
 
@@ -927,8 +949,16 @@ document.addEventListener('DOMContentLoaded', function() {
   } else if (localStorage.getItem('theme') === 'dark') {
     document.body.classList.add('dark');
   }
+
+  // Add the Install App button
+  const installBtn = document.createElement('button');
+  installBtn.id = 'installBtn';
+  installBtn.textContent = 'Install App';
+  document.querySelector('.input-container').appendChild(installBtn);
+
   setupInput();
   setupAutocomplete();
+  installPWA();
 
   document.getElementById('executeBtn').addEventListener('click', executeCode);
   document.getElementById('clearBtn').addEventListener('click', clearConsole);
