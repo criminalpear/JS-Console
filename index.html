@@ -328,12 +328,14 @@
         });
       }
 
-      function updates() {
-        appendLog('Update Log:', 'info');
-        appendLog('v1.0 (Mar 07, 2025): Initial release on GitHub Pages with theme toggle, Snake game, and more!', 'info');
-        appendLog('v1.1 (Mar 07, 2025): Added setColor, Tic-Tac-Toe, sharing, saved logs, reset, and high scores.', 'info');
-        appendLog('Type "list();" to see all commands.', 'info');
-      }
+     function updates() {
+  appendLog('Update Log:', 'info');
+  appendLog('v1.0 (Mar 07, 2025): Initial release on GitHub Pages with theme toggle, Snake game, and more!', 'info');
+  appendLog('v1.1 (Mar 07, 2025): Added setColor, Tic-Tac-Toe, sharing, saved logs, reset, and high scores.', 'info');
+  appendLog('v1.2 (Mar 07, 2025): Fixed title overlap with bookmarks and Tic-Tac-Toe high score stuck at 0.', 'info');
+  appendLog('v1.3 (Mar 07, 2025): High scores persist after reset; added shareHighScores() for leaderboard sharing.', 'info');
+  appendLog('Type "list();" to see all commands.', 'info');
+}
 
       function setColor(type, color) {
         const validTypes = ['log', 'error', 'warn', 'info'];
