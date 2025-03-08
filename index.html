@@ -73,12 +73,12 @@
     .console .log { color: #ffffff; }
     .console .error { color: #ff5555; }
     .console .warn { color: #ffff55; }
-    .console .info { color: #55aaff; }
+    .console .info { color: #00ccff; } /* Brighter blue */
     .input-container { display: flex; flex-shrink: 0; padding: 10px; box-sizing: border-box; position: relative; }
     #inputField { flex: 1; padding: 10px; font-size: 16px; margin-right: 10px; box-sizing: border-box; font-family: monospace; border: 1px solid var(--border-color); resize: vertical; min-height: 40px; }
     button { padding: 10px; background-color: var(--button-bg); color: white; border: none; cursor: pointer; font-size: 16px; margin: 0 5px; flex-shrink: 0; }
     button:hover { background-color: var(--button-hover); }
-    .element-link { color: #55aaff; cursor: pointer; text-decoration: underline; margin-left: 5px; }
+    .element-link { color: #00ccff; cursor: pointer; text-decoration: underline; margin-left: 5px; }
     .element-link:hover { color: #77ccff; }
     #autocomplete { position: absolute; bottom: 60px; left: 10px; border: 1px solid var(--border-color); max-height: 150px; overflow-y: auto; display: none; z-index: 100; }
     .autocomplete-item { padding: 5px; cursor: pointer; color: var(--text-color); }
@@ -345,8 +345,10 @@
         const gridSize = 20;
         let snake = [{ x: 10, y: 10 }];
         let food = { x: 15, y: 15 };
-        let dx = 0, dy = 0;
+        let dx = 1;
+        let dy = 0;
         let score = 0;
+        let firstMove = true;
 
         function draw() {
           ctx.fillStyle = document.body.classList.contains('dark') ? '#000000' : '#f4f4f4';
@@ -359,16 +361,22 @@
 
         function move() {
           const head = { x: snake[0].x + dx, y: snake[0].y + dy };
-          if (head.x < 0 || head.x >= canvas.width / gridSize || head.y < 0 || head.y >= canvas.height / gridSize || snake.some(s => s.x === head.x && s.y === head.y)) {
+          if (!firstMove && (head.x < 0 || head.x >= canvas.width / gridSize || head.y < 0 || head.y >= canvas.height / gridSize || snake.some(s => s.x === head.x && s.y === head.y))) {
             appendLog(`Game Over! Score: ${score}`, 'info');
             isGameRunning = false;
             canvas.style.display = 'none';
+            document.removeEventListener('keydown', keyHandler);
             return;
           }
+          firstMove = false;
+
           snake.unshift(head);
           if (head.x === food.x && head.y === food.y) {
             score++;
             food = { x: Math.floor(Math.random() * (canvas.width / gridSize)), y: Math.floor(Math.random() * (canvas.height / gridSize)) };
+            while (snake.some(s => s.x === food.x && s.y === food.y)) {
+              food = { x: Math.floor(Math.random() * (canvas.width / gridSize)), y: Math.floor(Math.random() * (canvas.height / gridSize)) };
+            }
           } else {
             snake.pop();
           }
@@ -376,20 +384,23 @@
           setTimeout(move, 100);
         }
 
-        document.addEventListener('keydown', function handler(e) {
-          if (!isGameRunning) {
-            document.removeEventListener('keydown', handler);
-            return;
-          }
+        function keyHandler(e) {
+          if (!isGameRunning) return;
           switch (e.key) {
             case 'ArrowUp': if (dy !== 1) { dx = 0; dy = -1; } break;
             case 'ArrowDown': if (dy !== -1) { dx = 0; dy = 1; } break;
             case 'ArrowLeft': if (dx !== 1) { dx = -1; dy = 0; } break;
             case 'ArrowRight': if (dx !== -1) { dx = 1; dy = 0; } break;
-            case 'Escape': isGameRunning = false; canvas.style.display = 'none'; break;
+            case 'Escape': 
+              isGameRunning = false; 
+              canvas.style.display = 'none'; 
+              document.removeEventListener('keydown', keyHandler); 
+              appendLog('Game exited.', 'info'); 
+              break;
           }
-        });
+        }
 
+        document.addEventListener('keydown', keyHandler);
         draw();
         setTimeout(move, 100);
       }
