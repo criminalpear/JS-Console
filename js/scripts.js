@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
   console.warn = function(message) { appendLog(message, 'warn'); };
   console.info = function(message) { appendLog(message, 'info'); };
 
- function installPWA() {
+function installPWA() {
   if ('BeforeInstallPromptEvent' in window) {
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault(); // Prevent the mini-infobar from appearing
@@ -47,7 +47,6 @@ document.addEventListener('DOMContentLoaded', function() {
     appendLog('Install prompt not supported on this browser or PWA conditions not met.', 'error');
   }
 }
-
   function executeCode() {
     const input = document.getElementById('inputField').value.trim();
     if (input === '') {
