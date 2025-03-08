@@ -6,13 +6,6 @@
   <title>JavaScript Console</title>
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=YOUR-GA-ID"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-X1QVWZVDC3');
-</script>
   <style>
     html, body { height: 100%; margin: 0; padding: 0; font-family: Arial, sans-serif; overflow: hidden; transition: background-color 0.3s, color 0.3s; }
     :root {
@@ -44,13 +37,16 @@
       padding: 5px;
       border-bottom: 1px solid var(--border-color);
       display: flex;
-      flex-wrap: wrap;
       align-items: center;
       position: fixed;
       top: 0;
       width: 100%;
+      height: 50px; /* Fixed height */
+      overflow-x: auto; /* Scroll horizontally if needed */
+      overflow-y: hidden;
       z-index: 1000;
       box-sizing: border-box;
+      white-space: nowrap;
     }
     .bookmark {
       padding: 5px 10px;
@@ -62,13 +58,13 @@
       font-size: 14px;
       text-decoration: none;
       color: var(--text-color);
-      display: flex;
+      display: inline-flex;
       align-items: center;
     }
     .bookmark:hover { background-color: var(--bookmark-hover); }
     .bookmark .remove { margin-left: 5px; color: red; font-weight: bold; cursor: pointer; }
     .bookmark .remove:hover { color: darkred; }
-    .container { display: flex; flex-direction: column; height: calc(100vh - 40px); margin-top: 40px; box-sizing: border-box; }
+    .container { display: flex; flex-direction: column; height: calc(100vh - 60px); margin-top: 60px; box-sizing: border-box; } /* Adjusted margin-top */
     h1 { margin: 10px 0; text-align: center; font-size: 24px; flex-shrink: 0; color: var(--text-color); }
     .console-container { flex: 1; display: flex; overflow: hidden; }
     .console { 
@@ -446,8 +442,9 @@
         canvas.style.display = 'block';
         let board = Array(9).fill(null);
         let player = 'X';
-        let wins = JSON.parse(localStorage.getItem('highScores') || '{}').tictactoe || 0;
-        drawBoard();
+        let highScores = JSON.parse(localStorage.getItem('highScores') || '{}');
+        let wins = highScores.tictactoe || 0;
+
         function drawBoard() {
           ctx.fillStyle = document.body.classList.contains('dark') ? '#000000' : '#f4f4f4';
           ctx.fillRect(0, 0, 300, 300);
@@ -465,6 +462,8 @@
             }
           });
         }
+        drawBoard();
+
         canvas.onclick = e => {
           const rect = canvas.getBoundingClientRect();
           const x = Math.floor((e.clientX - rect.left) / 100);
@@ -475,8 +474,10 @@
             drawBoard();
             if (checkWin()) {
               appendLog(`${player} wins!`, 'info');
-              if (player === 'X') wins++;
-              updateHighScore('tictactoe', wins);
+              if (player === 'X') {
+                wins++;
+                updateHighScore('tictactoe', wins);
+              }
               endGame();
             } else if (!board.includes(null)) {
               appendLog('Draw!', 'info');
@@ -486,16 +487,22 @@
             }
           }
         };
+
         function checkWin() {
           const wins = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]];
           return wins.some(w => w.every(i => board[i] === player));
         }
+
         function endGame() {
           isGameRunning = false;
           canvas.style.display = 'none';
         }
+
         document.addEventListener('keydown', e => {
-          if (e.key === 'Escape' && isGameRunning) endGame(), appendLog('Game exited.', 'info');
+          if (e.key === 'Escape' && isGameRunning) {
+            endGame();
+            appendLog('Game exited.', 'info');
+          }
         });
       }
 
