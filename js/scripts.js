@@ -110,14 +110,19 @@ document.addEventListener('DOMContentLoaded', function() {
   function toggleTheme() {
     document.body.classList.toggle('dark');
     localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    document.documentElement.style.removeProperty('--bg-color');
+    document.documentElement.style.removeProperty('--text-color');
+    localStorage.removeItem('customTheme');
     gtag('event', 'toggle_theme', { 'event_category': 'UI', 'event_label': document.body.classList.contains('dark') ? 'dark' : 'light' });
   }
 
   function setTheme(bgColor, textColor) {
+    document.body.classList.remove('dark'); // Reset dark mode
     document.documentElement.style.setProperty('--bg-color', bgColor);
     document.documentElement.style.setProperty('--text-color', textColor);
     localStorage.setItem('customTheme', JSON.stringify({ bgColor, textColor }));
-    appendLog(`Theme set: bg=${bgColor}, text=${textColor}`, 'info');
+    localStorage.removeItem('theme'); // Clear toggle theme
+    appendLog(`Custom theme set: bg=${bgColor}, text=${textColor}`, 'info');
     gtag('event', 'set_theme', { 'event_category': 'UI', 'event_label': `${bgColor},${textColor}` });
   }
 
@@ -142,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const functions = [
     'squares', 'ponies', 'sawyer', 'aiden', 'aadyn', 'eli', 'elijah', 'ronin', 'ronin1', 'ronin2',
     'check', 'idiot', 'elements', 'elementshelp', 'list', 'snake', 'updates', 'setColor', 'tictactoe',
-    'share', 'reset', 'highscores', 'shareHighScores', 'leaderboard', 'pong', 'setUsername', 'setTheme', 'toggleSound'
+    'share', 'reset', 'highscores', 'shareHighScores', 'leaderboard', 'pong', 'setUsername', 'setTheme', 'toggleSound', 'more'
   ];
 
   function setupAutocomplete() {
@@ -206,6 +211,7 @@ document.addEventListener('DOMContentLoaded', function() {
     appendLog('v1.6 (Mar 07, 2025): Added setUsername() for user profiles; high scores now show usernames.', 'info');
     appendLog('v1.7 (Mar 07, 2025): Added setTheme() for custom background and text colors.', 'info');
     appendLog('v1.8 (Mar 07, 2025): Added toggleSound() to enable/disable sound effects.', 'info');
+    appendLog('v1.9 (Mar 07, 2025): Fixed setTheme(), Pong controls, and prioritized bookmarks.', 'info');
     appendLog('Type "list();" to see all commands.', 'info');
   }
 
@@ -762,40 +768,42 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("setUsername('name');, Sets your username for high scores.");
     console.log("setTheme('bgColor', 'textColor');, Sets custom background and text colors.");
     console.log("toggleSound();, Enables or disables sound effects.");
+    console.log("more();, Shows additional functions not in the top bookmarks.");
     gtag('event', 'run_function', { 'event_category': 'Utility', 'event_label': 'list' });
   }
 
+  function more() {
+    appendLog('Additional Functions:', 'info');
+    appendLog("squares(); - Bouncing squares animation", 'info');
+    appendLog("ponies(); - Magical ponies on screen", 'info');
+    appendLog("sawyer(); - Sawyer GIFs", 'info');
+    appendLog("aiden(); - Aiden GIFs", 'info');
+    appendLog("aadyn(); - Aadyn GIFs", 'info');
+    appendLog("eli();/elijah(); - Eli/Elijah GIFs", 'info');
+    appendLog("ronin(); - Ronin GIFs", 'info');
+    appendLog("ronin1(); - Ronin GIFs (variant 1)", 'info');
+    appendLog("ronin2(); - Ronin GIFs (variant 2)", 'info');
+    appendLog("check(); - Show your public IP", 'info');
+    appendLog("idiot(); - Visit youareanidiot.cc", 'info');
+    appendLog("Type any of these in the input field to run them!", 'info');
+    gtag('event', 'run_function', { 'event_category': 'Utility', 'event_label': 'more' });
+  }
+
   const bookmarksBar = document.getElementById('bookmarksBar');
-  const predefinedBookmarks = [
-    { name: "Bouncing Squares", type: "bookmarklet", value: "squares()" },
-    { name: "Ponies", type: "bookmarklet", value: "ponies()" },
-    { name: "Sawyer GIFs", type: "bookmarklet", value: "sawyer()" },
-    { name: "Aiden GIFs", type: "bookmarklet", value: "aiden()" },
-    { name: "Aadyn GIFs", type: "bookmarklet", value: "aadyn()" },
-    { name: "Eli GIFs", type: "bookmarklet", value: "eli()" },
-    { name: "Ronin GIFs", type: "bookmarklet", value: "ronin()" },
-    { name: "Ronin1 GIFs", type: "bookmarklet", value: "ronin1()" },
-    { name: "Ronin2 GIFs", type: "bookmarklet", value: "ronin2()" },
-    { name: "Check IP", type: "bookmarklet", value: "check()" },
-    { name: "Idiot", type: "bookmarklet", value: "idiot()" },
-    { name: "List Functions", type: "bookmarklet", value: "list()" },
-    { name: "Elements", type: "bookmarklet", value: "elements()" },
-    { name: "Elements Help", type: "bookmarklet", value: "elementshelp()" },
+  const popularBookmarks = [
     { name: "Snake Game", type: "bookmarklet", value: "snake()" },
-    { name: "Updates", type: "bookmarklet", value: "updates()" },
     { name: "Tic-Tac-Toe", type: "bookmarklet", value: "tictactoe()" },
-    { name: "Share Logs", type: "bookmarklet", value: "share()" },
-    { name: "Reset", type: "bookmarklet", value: "reset()" },
-    { name: "High Scores", type: "bookmarklet", value: "highscores()" },
-    { name: "Share Scores", type: "bookmarklet", value: "shareHighScores()" },
-    { name: "Leaderboard", type: "bookmarklet", value: "leaderboard()" },
     { name: "Pong Game", type: "bookmarklet", value: "pong()" },
+    { name: "High Scores", type: "bookmarklet", value: "highscores()" },
+    { name: "Leaderboard", type: "bookmarklet", value: "leaderboard()" },
+    { name: "Updates", type: "bookmarklet", value: "updates()" },
     { name: "Set Username", type: "bookmarklet", value: "setUsername(prompt('Enter your username:'))" },
     { name: "Set Theme", type: "bookmarklet", value: "setTheme(prompt('Background color:'), prompt('Text color:'))" },
-    { name: "Toggle Sound", type: "bookmarklet", value: "toggleSound()" }
+    { name: "Toggle Sound", type: "bookmarklet", value: "toggleSound()" },
+    { name: "More", type: "bookmarklet", value: "more()" }
   ];
 
-  predefinedBookmarks.forEach(bm => {
+  popularBookmarks.forEach(bm => {
     const bookmark = document.createElement('div');
     bookmark.className = 'bookmark';
     const span = document.createElement('span');
@@ -912,11 +920,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const savedLogs = JSON.parse(localStorage.getItem('consoleLogs') || '[]');
     savedLogs.forEach(log => appendLog(log.message, log.type, log.isHtml));
   }
-  appendLog('Welcome to the JavaScript Console v1.8 on GitHub Pages!', 'info');
+  appendLog('Welcome to the JavaScript Console v1.9 on GitHub Pages!', 'info');
   appendLog('Type "updates();" for what’s new or "list();" for all commands.', 'info');
 
   const customTheme = JSON.parse(localStorage.getItem('customTheme'));
   if (customTheme) {
+    document.body.classList.remove('dark');
     document.documentElement.style.setProperty('--bg-color', customTheme.bgColor);
     document.documentElement.style.setProperty('--text-color', customTheme.textColor);
   } else if (localStorage.getItem('theme') === 'dark') {
