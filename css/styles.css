@@ -72,6 +72,19 @@ body.dark .console .log { color: #ffffff; }
 #inputField { flex: 1; padding: 10px; font-size: 16px; margin-right: 10px; box-sizing: border-box; font-family: monospace; border: 1px solid var(--border-color); resize: vertical; min-height: 40px; }
 button { padding: 10px; background-color: var(--button-bg); color: white; border: none; cursor: pointer; font-size: 16px; margin: 0 5px; flex-shrink: 0; }
 button:hover { background-color: var(--button-hover); }
+#installBtn {
+  padding: 10px;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 0 5px;
+  flex-shrink: 0;
+}
+#installBtn:hover {
+  background-color: #1976D2;
+}
 .element-link { color: #00ccff; cursor: pointer; text-decoration: underline; margin-left: 5px; }
 .element-link:hover { color: #77ccff; }
 #autocomplete { position: absolute; bottom: 60px; left: 10px; border: 1px solid var(--border-color); max-height: 150px; overflow-y: auto; display: none; z-index: 100; }
