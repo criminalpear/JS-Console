@@ -69,11 +69,20 @@
     .tab { padding: 10px 20px; background-color: var(--tab-bg); cursor: pointer; margin: 0 5px; border: 1px solid var(--border-color); color: var(--text-color); }
     .active-tab { background-color: var(--button-bg); color: #ffffff; }
     .console-container { flex: 1; display: flex; overflow: hidden; }
-    .console { flex: 1; border: 1px solid var(--border-color); padding: 10px; font-family: monospace; white-space: pre-wrap; overflow-y: auto; box-sizing: border-box; }
-    .console .log { color: #ffffff; }
+    .console { 
+      flex: 1; 
+      border: 1px solid var(--border-color); 
+      padding: 10px; 
+      font-family: monospace; 
+      white-space: pre-wrap; 
+      overflow-y: auto; 
+      box-sizing: border-box; 
+      color: var(--text-color);
+    }
+    body.dark .console .log { color: #ffffff; }
     .console .error { color: #ff5555; }
     .console .warn { color: #ffff55; }
-    .console .info { color: #00ccff; } /* Brighter blue */
+    .console .info { color: #00ccff; }
     .input-container { display: flex; flex-shrink: 0; padding: 10px; box-sizing: border-box; position: relative; }
     #inputField { flex: 1; padding: 10px; font-size: 16px; margin-right: 10px; box-sizing: border-box; font-family: monospace; border: 1px solid var(--border-color); resize: vertical; min-height: 40px; }
     button { padding: 10px; background-color: var(--button-bg); color: white; border: none; cursor: pointer; font-size: 16px; margin: 0 5px; flex-shrink: 0; }
