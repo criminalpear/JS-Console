@@ -48,17 +48,19 @@
   <script src="js/scripts.js"></script>
   <!-- Register Service Worker -->
   <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js')
-          .then(registration => {
-            console.log('Service Worker registered with scope:', registration.scope);
-          })
-          .catch(error => {
-            console.log('Service Worker registration failed:', error);
-          });
+ if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(registration => {
+        console.log('Service Worker registered with scope:', registration.scope);
+        appendLog('Service Worker registered with scope: ' + registration.scope, 'info');
+      })
+      .catch(error => {
+        console.log('Service Worker registration failed:', error.message);
+        appendLog(`Service Worker registration failed: ${error.message}`, 'error');
       });
-    }
+  });
+}
   </script>
 </body>
 </html>
