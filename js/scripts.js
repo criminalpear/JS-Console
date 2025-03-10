@@ -15,29 +15,22 @@ document.addEventListener('DOMContentLoaded', function() {
   console.info = function(message) { appendLog(message, 'info'); };
 
 function installPWA() {
-  let deferredPrompt; // Store the prompt event
+  let deferredPrompt;
   const installBtn = document.getElementById('installBtn');
-
-  // Hide the button initially until we know the PWA can be installed
   installBtn.style.display = 'none';
 
-  // Listen for the beforeinstallprompt event
   window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault(); // Prevent the default mini-infobar
-    deferredPrompt = e; // Save the event for later use
-
-    // Show the install button since the PWA is installable
+    e.preventDefault();
+    deferredPrompt = e;
     installBtn.style.display = 'inline-block';
     appendLog('This app can be installed! Click "Install App" to add it to your device.', 'info');
+    console.log('beforeinstallprompt fired'); // Debug log
   });
 
-  // Handle the button click
   installBtn.addEventListener('click', () => {
     if (deferredPrompt) {
-      deferredPrompt.prompt(); // Show the install prompt
+      deferredPrompt.prompt();
       appendLog('Install prompt displayed. Choose to install or cancel.', 'info');
-
-      // Handle the user's response
       deferredPrompt.userChoice.then((choiceResult) => {
         if (choiceResult.outcome === 'accepted') {
           appendLog('App installed successfully!', 'info');
@@ -46,21 +39,19 @@ function installPWA() {
           appendLog('Install prompt dismissed.', 'info');
           gtag('event', 'pwa_install', { 'event_category': 'PWA', 'event_label': 'dismissed' });
         }
-        deferredPrompt = null; // Clear the prompt
+        deferredPrompt = null;
       });
     } else {
       appendLog('Install prompt not available yet. Try refreshing the page.', 'error');
     }
   });
 
-  // Detect if the app is already installed (standalone mode)
   if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
     installBtn.style.display = 'none';
     appendLog('App is already running as a standalone PWA!', 'info');
   }
 }
 
-// Call this function when the DOM is ready
 installPWA();
   function executeCode() {
     const input = document.getElementById('inputField').value.trim();
