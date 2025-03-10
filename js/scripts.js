@@ -44,10 +44,10 @@ function installPWA() {
   });
 
   window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    updateButtonVisibility();
-  });
+  e.preventDefault();
+  deferredPrompt = e;
+  updateButtonVisibility();
+});
 
   window.addEventListener('appinstalled', () => {
     appendLog('App installed successfully!', 'info');
