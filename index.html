@@ -4,58 +4,58 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#4CAF50">
+  <meta name="description" content="A JavaScript console with games and utilities">
   <title>JavaScript Console</title>
-  <link rel="stylesheet" href="/JS-Console/css/styles.css">
-  <link rel="manifest" href="/JS-Console/manifest.json">
-  <link rel="icon" href="/JS-Console/images/icon-192x192.png" type="image/png">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7Y5Y2S2P6N"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-X1QVWZVDC3"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'G-7Y5Y2S2P6N');
+    gtag('config', 'G-X1QVWZVDC3');
   </script>
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json">
+  <!-- iOS Support -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="apple-touch-icon" href="/images/icon-192x192.png">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+  <div id="bookmarksBar"></div>
   <div class="container">
-    <h1>JavaScript Console</h1>
-    <div id="logs"></div>
-    <div class="input-container">
-      <input type="text" id="codeInput" placeholder="Enter JavaScript code...">
-      <button id="executeBtn">Execute</button>
-      <button id="clearBtn">Clear</button>
-      <button id="themeBtn">Toggle Theme</button>
-      <button id="soundBtn">Sound: On</button>
-      <button id="installBtn">Install App</button>
+    <h1 id="consoleTitle">JavaScript Console v1.9</h1>
+    <div class="console-container">
+      <div id="jsConsole" class="console"></div>
     </div>
-    <div class="bookmark-bar">
-      <button onclick="executeCode('snake()')">Snake</button>
-      <button onclick="executeCode('tictactoe()')">Tic-Tac-Toe</button>
-      <button onclick="executeCode('squares()')">Squares</button>
-      <button onclick="executeCode('list()')">List Commands</button>
-      <button onclick="executeCode('updates()')">Updates</button>
+    <div class="input-container">
+      <textarea id="inputField" placeholder="Enter code here..."></textarea>
+      <button id="executeBtn">Execute Code</button>
+      <button id="clearBtn">Clear Console</button>
+      <button id="exportBtn">Export Log</button>
+      <button id="themeBtn">Toggle Theme</button>
+      <button id="installBtn">Install App</button> <!-- Added statically for testing -->
+      <div id="autocomplete"></div>
     </div>
   </div>
-
-  <script src="/JS-Console/js/utils.js"></script>
-  <script src="/JS-Console/js/snake.js"></script>
-  <script src="/JS-Console/js/tictactoe.js"></script>
-  <script src="/JS-Console/js/scripts.js"></script>
-
-  <!-- Service Worker Registration -->
+  <canvas id="gameCanvas" width="400" height="400"></canvas>
+  <script src="js/utils.js"></script>
+  <script src="js/snake.js"></script>
+  <script src="js/tictactoe.js"></script>
+  <script src="js/scripts.js"></script>
+  <!-- Register Service Worker -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/JS-Console/service-worker.js')
+        navigator.serviceWorker.register('/service-worker.js')
           .then(registration => {
             console.log('Service Worker registered with scope:', registration.scope);
-            appendLog('Service Worker registered with scope: ' + registration.scope, 'info');
           })
           .catch(error => {
-            console.log('Service Worker registration failed:', error.message);
-            appendLog(`Service Worker registration failed: ${error.message}`, 'error');
+            console.log('Service Worker registration failed:', error);
           });
       });
     }
