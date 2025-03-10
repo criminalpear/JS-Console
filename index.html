@@ -48,7 +48,7 @@
   <script src="js/scripts.js"></script>
   <!-- Register Service Worker -->
   <script>
-   if ('serviceWorker' in navigator) {
+ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/JS-Console/service-worker.js')
       .then(registration => {
