@@ -275,7 +275,7 @@ installPWA();
   appendLog('v1.7 (Mar 07, 2025): Added setTheme() for custom colors.', 'info');
   appendLog('v1.8 (Mar 07, 2025): Added toggleSound() for sound control.', 'info');
   appendLog('v1.9 (Mar 07, 2025): Removed Pong, fixed setTheme(), prioritized bookmarks, added PWA support.', 'info');
-  appendLog('v1.9.1 (Mar 09, 2025): Enhanced PWA support by adding an "Install App" button, fixing manifest and service worker path issues (/JS-Console/), resolving duplicate button issue by using a single static button, and ensuring the button hides after installation or in standalone mode using appinstalled and display-mode events.', 'info');
+  appendLog('v2.0 (Mar 09, 2025): Enhanced PWA support by adding an "Install App" button, fixing manifest and service worker path issues (/JS-Console/), resolving duplicate button issue by using a single static button, and ensuring the button hides after installation or in standalone mode using appinstalled and display-mode events.', 'info');
   appendLog('Type "list();" to see all commands.', 'info');
 }
   function setColor(type, color) {
@@ -979,7 +979,7 @@ installPWA();
     const savedLogs = JSON.parse(localStorage.getItem('consoleLogs') || '[]');
     savedLogs.forEach(log => appendLog(log.message, log.type, log.isHtml));
   }
-  appendLog('Welcome to the JavaScript Console v1.9 on GitHub Pages!', 'info');
+  appendLog('Welcome to the JavaScript Console v2.0 on GitHub Pages!', 'info');
   appendLog('Type "updates();" for what’s new or "list();" for all commands.', 'info');
 
   const customTheme = JSON.parse(localStorage.getItem('customTheme'));
