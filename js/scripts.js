@@ -968,39 +968,38 @@ function installPWA() {
     bookmarksBar.insertBefore(bookmark, saveBookmarksBtn);
   });
 
-  let hasShownWelcome = false;
+let hasShownWelcome = false;
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const sharedLogs = urlParams.get('logs');
-  if (sharedLogs) {
-    const logs = JSON.parse(decodeURIComponent(sharedLogs));
-    logs.forEach(log => appendLog(log.message, log.type, log.isHtml));
-  } else {
-    const savedLogs = JSON.parse(localStorage.getItem('logs') || '[]');
-    savedLogs.forEach(log => appendLog(log.message, log.type, log.isHtml));
-  }
- if (!hasShownWelcome) {
+const urlParams = new URLSearchParams(window.location.search);
+const sharedLogs = urlParams.get('logs');
+if (sharedLogs) {
+  const logs = JSON.parse(decodeURIComponent(sharedLogs));
+  logs.forEach(log => appendLog(log.message, log.type, log.isHtml));
+} else {
+  const savedLogs = JSON.parse(localStorage.getItem('logs') || '[]');
+  savedLogs.forEach(log => appendLog(log.message, log.type, log.isHtml));
+}
+if (!hasShownWelcome) {
   appendLog('Welcome to the JavaScript Console v2.0 on GitHub Pages!');
-  appendlog('Type "updates();" for what’s new or "list();" for all commands.', 'info');
+  appendLog('Type "updates();" for what’s new or "list();" for all commands.', 'info');
   hasShownWelcome = true;
 }
 
-  const customTheme = JSON.parse(localStorage.getItem('customTheme'));
-  if (customTheme) {
-    document.body.classList.remove('dark');
-    document.documentElement.style.setProperty('--bg-color', customTheme.bgColor);
-    document.documentElement.style.setProperty('--text-color', customTheme.textColor);
-  } else if (localStorage.getItem('theme') === 'dark') {
-    document.body.classList.add('dark');
-  }
+const customTheme = JSON.parse(localStorage.getItem('customTheme'));
+if (customTheme) {
+  document.body.classList.remove('dark');
+  document.documentElement.style.setProperty('--bg-color', customTheme.bgColor);
+  document.documentElement.style.setProperty('--text-color', customTheme.textColor);
+} else if (localStorage.getItem('theme') === 'dark') {
+  document.body.classList.add('dark');
+}
 
- 
-  setupInput();
-  setupAutocomplete();
-  installPWA();
+setupInput();
+setupAutocomplete();
+installPWA();
 
-  document.getElementById('executeBtn').addEventListener('click', executeCode);
-  document.getElementById('clearBtn').addEventListener('click', clearConsole);
-  document.getElementById('exportBtn').addEventListener('click', exportLog);
-  document.getElementById('themeBtn').addEventListener('click', toggleTheme);
+document.getElementById('executeBtn').addEventListener('click', executeCode);
+document.getElementById('clearBtn').addEventListener('click', clearConsole);
+document.getElementById('exportBtn').addEventListener('click', exportLog);
+document.getElementById('themeBtn').addEventListener('click', toggleTheme);
 });
