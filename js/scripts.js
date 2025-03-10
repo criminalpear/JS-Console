@@ -19,12 +19,41 @@ function installPWA() {
   const installBtn = document.getElementById('installBtn');
   installBtn.style.display = 'none';
 
+  function isStandalone() {
+    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  }
+
+  function updateButtonVisibility() {
+    if (isStandalone()) {
+      installBtn.style.display = 'none';
+      appendLog('App is already running as a standalone PWA!', 'info');
+    } else if (deferredPrompt) {
+      installBtn.style.display = 'inline-block';
+    }
+  }
+
+  // Initial check
+  updateButtonVisibility();
+
+  // Listen for display mode changes
+  window.matchMedia('(display-mode: standalone)').addEventListener('change', (e) => {
+    if (e.matches) {
+      installBtn.style.display = 'none';
+      appendLog('App is now running as a standalone PWA!', 'info');
+    }
+  });
+
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    installBtn.style.display = 'inline-block';
-    appendLog('This app can be installed! Click "Install App" to add it to your device.', 'info');
+    updateButtonVisibility();
     console.log('beforeinstallprompt fired');
+  });
+
+  window.addEventListener('appinstalled', () => {
+    appendLog('App installed successfully!', 'info');
+    installBtn.style.display = 'none';
+    deferredPrompt = null;
   });
 
   installBtn.addEventListener('click', () => {
@@ -45,11 +74,6 @@ function installPWA() {
       appendLog('Install prompt not available yet. Try refreshing the page.', 'error');
     }
   });
-
-  if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
-    installBtn.style.display = 'none';
-    appendLog('App is already running as a standalone PWA!', 'info');
-  }
 }
 
 installPWA();
