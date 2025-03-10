@@ -24,6 +24,7 @@ function installPWA() {
     deferredPrompt = e;
     installBtn.style.display = 'inline-block';
     appendLog('This app can be installed! Click "Install App" to add it to your device.', 'info');
+    console.log('beforeinstallprompt fired');
   });
 
   installBtn.addEventListener('click', () => {
@@ -966,12 +967,7 @@ installPWA();
     document.body.classList.add('dark');
   }
 
-  // Add the Install App button
-  const installBtn = document.createElement('button');
-  installBtn.id = 'installBtn';
-  installBtn.textContent = 'Install App';
-  document.querySelector('.input-container').appendChild(installBtn);
-
+ 
   setupInput();
   setupAutocomplete();
   installPWA();
