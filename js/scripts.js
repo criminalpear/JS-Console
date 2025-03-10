@@ -75,46 +75,46 @@ function installPWA() {
     }
   });
 }
-  function executeCode() {
-    const input = document.getElementById('inputField').value.trim();
-    if (input === '') {
-      appendLog('Error: Please enter some code to execute.', 'error');
-      playSound('error');
-      return;
-    }
-    commandHistory.unshift(input);
-    historyIndex = -1;
-    try {
-      if (input === 'idiot();') {
-        idiot();
-      } else if (input === 'elements();') {
-        elements();
-      } else if (input === 'elementshelp();') {
-        elementshelp();
-      } else if (input.includes('=') && input.includes('x')) {
-        const [leftSide, rightSide] = input.split('=').map(part => part.trim());
-        const solution = solveEquation(leftSide, rightSide);
-        appendLog(
-          `Equation: \\\\(${leftSide} = ${rightSide}\\\\), Solution: \\\\(x = ${solution}\\\\)`,
-          'log',
-          true
-        );
-        playSound('success');
-      } else if (window.editElement && /\d+\s/.test(input)) {
-        window.editElement(input);
-      } else {
-        const result = eval(input);
-        if (typeof result !== 'undefined') console.log(`Result: ${result}`);
-        playSound('execute');
-      }
-      gtag('event', 'execute_code', { 'event_category': 'Console', 'event_label': input });
-    } catch (e) {
-      appendLog('Error: ' + e.message, 'error');
-      playSound('error');
-    }
-    document.getElementById('inputField').value = '';
-    hideAutocomplete();
+ function executeCode() {
+  const input = document.getElementById('inputField').value.trim();
+  if (input === '') {
+    appendLog('Error: Please enter some code to execute.', 'error');
+    playSound('error');
+    return;
   }
+  commandHistory.unshift(input);
+  historyIndex = -1;
+  try {
+    if (input === 'idiot();') {
+      idiot();
+    } else if (input === 'elements();') {
+      elements();
+    } else if (input === 'elementshelp();') {
+      elementshelp();
+    } else if (input.includes('=') && input.includes('x')) {
+      const [leftSide, rightSide] = input.split('=').map(part => part.trim());
+      const solution = solveEquation(leftSide, rightSide);
+      appendLog(
+        `Equation: \\\\(${leftSide} = ${rightSide}\\\\), Solution: \\\\(x = ${solution}\\\\)`,
+        'log',
+        true
+      );
+      playSound('success');
+    } else if (window.editElement && /\d+\s/.test(input)) {
+      window.editElement(input);
+    } else {
+      const result = eval(input);
+      if (typeof result !== 'undefined') console.log(`Result: ${result}`);
+      playSound('execute');
+    }
+    gtag('event', 'execute_code', { 'event_category': 'Console', 'event_label': input });
+  } catch (e) {
+    appendLog('Error: ' + e.message, 'error');
+    playSound('error');
+  }
+  document.getElementById('inputField').value = '';
+  hideAutocomplete();
+}
 
   function solveEquation(left, right) {
     function parseSide(side) {
