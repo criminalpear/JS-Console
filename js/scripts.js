@@ -47,7 +47,6 @@ function installPWA() {
     e.preventDefault();
     deferredPrompt = e;
     updateButtonVisibility();
-    console.log('beforeinstallprompt fired');
   });
 
   window.addEventListener('appinstalled', () => {
