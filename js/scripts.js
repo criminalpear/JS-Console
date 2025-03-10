@@ -14,19 +14,92 @@ document.addEventListener('DOMContentLoaded', function() {
   console.warn = function(message) { appendLog(message, 'warn'); };
   console.info = function(message) { appendLog(message, 'info'); };
 
+// Google Analytics setup (already included in index.html, but here for completeness)
+function gtag(event, action, options) {
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push(arguments);
+}
+
+// Function to append logs to the UI
+function appendLog(message, type = 'log') {
+  const logsDiv = document.getElementById('logs');
+  const logEntry = document.createElement('div');
+  logEntry.className = `log-entry ${type}`;
+  logEntry.innerHTML = message;
+  logsDiv.appendChild(logEntry);
+  logsDiv.scrollTop = logsDiv.scrollHeight;
+
+  // Store logs in localStorage
+  const logs = JSON.parse(localStorage.getItem('logs')) || [];
+  logs.push({ message, type, timestamp: new Date().toISOString() });
+  localStorage.setItem('logs', JSON.stringify(logs));
+
+  // Update MathJax for any LaTeX in logs
+  if (window.MathJax) {
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, logEntry]);
+  }
+}
+
+// Function to execute code
+function executeCode(code) {
+  try {
+    const result = eval(code);
+    appendLog(`> ${code}`, 'input');
+    if (result !== undefined) {
+      appendLog(String(result), 'output');
+    }
+    gtag('event', 'execute_code', { 'event_category': 'Code', 'event_label': code });
+  } catch (error) {
+    appendLog(`Error: ${error.message}`, 'error');
+  }
+}
+
+// PWA Installation Logic
 function installPWA() {
   let deferredPrompt;
   const installBtn = document.getElementById('installBtn');
   installBtn.style.display = 'none';
 
+  function isStandalone() {
+    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  }
+
+  function updateButtonVisibility() {
+    if (isStandalone()) {
+      installBtn.style.display = 'none';
+      appendLog('App is already running as a standalone PWA!', 'info');
+    } else if (deferredPrompt) {
+      installBtn.style.display = 'inline-block';
+    }
+  }
+
+  // Initial check
+  updateButtonVisibility();
+
+  // Listen for display mode changes
+  window.matchMedia('(display-mode: standalone)').addEventListener('change', (e) => {
+    if (e.matches) {
+      installBtn.style.display = 'none';
+      appendLog('App is now running as a standalone PWA!', 'info');
+    }
+  });
+
+  // Listen for the beforeinstallprompt event
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    installBtn.style.display = 'inline-block';
-    appendLog('This app can be installed! Click "Install App" to add it to your device.', 'info');
-    console.log('beforeinstallprompt fired'); // Debug log
+    updateButtonVisibility();
+    console.log('beforeinstallprompt fired');
   });
 
+  // Listen for the appinstalled event
+  window.addEventListener('appinstalled', () => {
+    appendLog('App installed successfully!', 'info');
+    installBtn.style.display = 'none';
+    deferredPrompt = null;
+  });
+
+  // Handle button click
   installBtn.addEventListener('click', () => {
     if (deferredPrompt) {
       deferredPrompt.prompt();
@@ -45,13 +118,78 @@ function installPWA() {
       appendLog('Install prompt not available yet. Try refreshing the page.', 'error');
     }
   });
-
-  if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
-    installBtn.style.display = 'none';
-    appendLog('App is already running as a standalone PWA!', 'info');
-  }
 }
 
+// DOM Content Loaded Event Listener
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('DOM fully loaded');
+  gtag('event', 'page_load', { 'event_category': 'Page' });
+
+  // Load logs from localStorage
+  const logs = JSON.parse(localStorage.getItem('logs')) || [];
+  logs.forEach(log => appendLog(log.message, log.type));
+
+  // Setup input
+  const codeInput = document.getElementById('codeInput');
+  const executeBtn = document.getElementById('executeBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const themeBtn = document.getElementById('themeBtn');
+  const soundBtn = document.getElementById('soundBtn');
+
+  executeBtn.addEventListener('click', () => {
+    const code = codeInput.value.trim();
+    if (code) {
+      executeCode(code);
+      codeInput.value = '';
+    }
+  });
+
+  codeInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      executeBtn.click();
+    }
+  });
+
+  clearBtn.addEventListener('click', () => {
+    document.getElementById('logs').innerHTML = '';
+    localStorage.removeItem('logs');
+    appendLog('Logs cleared.', 'info');
+    gtag('event', 'clear_logs', { 'event_category': 'Logs' });
+  });
+
+  // Theme toggle
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  let isDark = localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : prefersDark;
+  document.body.classList.toggle('dark', isDark);
+  themeBtn.textContent = `Toggle Theme (${isDark ? 'Dark' : 'Light'})`;
+
+  themeBtn.addEventListener('click', () => {
+    isDark = !isDark;
+    document.body.classList.toggle('dark', isDark);
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    themeBtn.textContent = `Toggle Theme (${isDark ? 'Dark' : 'Light'})`;
+    gtag('event', 'toggle_theme', { 'event_category': 'Theme', 'event_label': isDark ? 'dark' : 'light' });
+  });
+
+  // Sound toggle
+  let soundEnabled = localStorage.getItem('sound') ? localStorage.getItem('sound') === 'on' : true;
+  soundBtn.textContent = `Sound: ${soundEnabled ? 'On' : 'Off'}`;
+
+  soundBtn.addEventListener('click', () => {
+    soundEnabled = !soundEnabled;
+    localStorage.setItem('sound', soundEnabled ? 'on' : 'off');
+    soundBtn.textContent = `Sound: ${soundEnabled ? 'On' : 'Off'}`;
+    gtag('event', 'toggle_sound', { 'event_category': 'Sound', 'event_label': soundEnabled ? 'on' : 'off' });
+  });
+
+  // Setup autocomplete
+  setupAutocomplete(codeInput);
+
+  // Welcome message
+  appendLog('Welcome to the JavaScript Console v1.9 on GitHub Pages!<br>Type "updates();" for what’s new or "list();" for all commands.', 'info');
+});
+
+// Call installPWA globally (already called in DOMContentLoaded in your setup, but here for clarity)
 installPWA();
   function executeCode() {
     const input = document.getElementById('inputField').value.trim();
