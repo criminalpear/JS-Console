@@ -977,7 +977,7 @@ installPWA();
     const logs = JSON.parse(decodeURIComponent(sharedLogs));
     logs.forEach(log => appendLog(log.message, log.type, log.isHtml));
   } else {
-    const savedLogs = JSON.parse(localStorage.getItem('consoleLogs') || '[]');
+    const savedLogs = JSON.parse(localStorage.getItem('logs') || '[]');
     savedLogs.forEach(log => appendLog(log.message, log.type, log.isHtml));
   }
  if (!hasShownWelcome) {
