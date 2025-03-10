@@ -15,38 +15,43 @@ document.addEventListener('DOMContentLoaded', function() {
   console.info = function(message) { appendLog(message, 'info'); };
 
 function installPWA() {
-  if ('BeforeInstallPromptEvent' in window) {
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault(); // Prevent the mini-infobar from appearing
-      const promptEvent = e;
-      appendLog('Install prompt is available! Click the "Install App" button.', 'info');
+  let deferredPrompt;
+  const installBtn = document.getElementById('installBtn');
+  installBtn.style.display = 'none';
 
-      // Add or update the install button event
-      const installBtn = document.getElementById('installBtn');
-      if (installBtn) {
-        installBtn.addEventListener('click', () => {
-          if (promptEvent) {
-            promptEvent.prompt();
-            appendLog('Install prompt shown. Please choose to install or cancel.', 'info');
-            promptEvent.userChoice.then((choiceResult) => {
-              if (choiceResult.outcome === 'accepted') {
-                appendLog('User accepted the install prompt. App should be installed!', 'info');
-              } else {
-                appendLog('User dismissed the install prompt.', 'info');
-              }
-            });
-          } else {
-            appendLog('Install prompt is not ready yet.', 'error');
-          }
-        });
-      } else {
-        appendLog('Install button not found in DOM.', 'error');
-      }
-    });
-  } else {
-    appendLog('Install prompt not supported on this browser or PWA conditions not met.', 'error');
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.style.display = 'inline-block';
+    appendLog('This app can be installed! Click "Install App" to add it to your device.', 'info');
+  });
+
+  installBtn.addEventListener('click', () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      appendLog('Install prompt displayed. Choose to install or cancel.', 'info');
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          appendLog('App installed successfully!', 'info');
+          gtag('event', 'pwa_install', { 'event_category': 'PWA', 'event_label': 'accepted' });
+        } else {
+          appendLog('Install prompt dismissed.', 'info');
+          gtag('event', 'pwa_install', { 'event_category': 'PWA', 'event_label': 'dismissed' });
+        }
+        deferredPrompt = null;
+      });
+    } else {
+      appendLog('Install prompt not available yet. Try refreshing the page.', 'error');
+    }
+  });
+
+  if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+    installBtn.style.display = 'none';
+    appendLog('App is already running as a standalone PWA!', 'info');
   }
 }
+
+installPWA();
   function executeCode() {
     const input = document.getElementById('inputField').value.trim();
     if (input === '') {
