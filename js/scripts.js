@@ -981,7 +981,7 @@ function installPWA() {
     savedLogs.forEach(log => appendLog(log.message, log.type, log.isHtml));
   }
  if (!hasShownWelcome) {
-  appendLog('Welcome to the JavaScript Console v2.0 on GitHub Pages!);
+  appendLog('Welcome to the JavaScript Console v2.0 on GitHub Pages!');
   appendlog('Type "updates();" for what’s new or "list();" for all commands.', 'info');
   hasShownWelcome = true;
 }
