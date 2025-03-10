@@ -847,30 +847,83 @@ function installPWA() {
     gtag('event', 'run_function', { 'event_category': 'Utility', 'event_label': 'more' });
   }
 
-  const bookmarksBar = document.getElementById('bookmarksBar');
-  const popularBookmarks = [
+const bookmarksBar = document.getElementById('bookmarksBar');
+
+// Define bookmarks with categories
+const categorizedBookmarks = {
+  Games: [
     { name: "Snake Game", type: "bookmarklet", value: "snake()" },
-    { name: "Tic-Tac-Toe", type: "bookmarklet", value: "tictactoe()" },
+    { name: "Tic-Tac-Toe", type: "bookmarklet", value: "tictactoe()" }
+  ],
+  Scores: [
     { name: "High Scores", type: "bookmarklet", value: "highscores()" },
-    { name: "Leaderboard", type: "bookmarklet", value: "leaderboard()" },
+    { name: "Leaderboard", type: "bookmarklet", value: "leaderboard()" }
+  ],
+  Utilities: [
     { name: "Updates", type: "bookmarklet", value: "updates()" },
     { name: "Set Username", type: "bookmarklet", value: "setUsername(prompt('Enter your username:'))" },
     { name: "Set Theme", type: "bookmarklet", value: "setTheme(prompt('Background color:'), prompt('Text color:'))" },
     { name: "Toggle Sound", type: "bookmarklet", value: "toggleSound()" },
     { name: "More", type: "bookmarklet", value: "more()" }
-  ];
+  ],
+  Gifs: [
+    { name: "Sawyer", type: "bookmarklet", value: "sawyer()" },
+    { name: "Aiden", type: "bookmarklet", value: "aiden()" },
+    { name: "Aadyn", type: "bookmarklet", value: "aadyn()" },
+    { name: "Eli", type: "bookmarklet", value: "eli()" },
+    { name: "Elijah", type: "bookmarklet", value: "elijah()" },
+    { name: "Ronin", type: "bookmarklet", value: "ronin()" },
+    { name: "Ronin 1", type: "bookmarklet", value: "ronin1()" },
+    { name: "Ronin 2", type: "bookmarklet", value: "ronin2()" }
+  ]
+};
 
-  popularBookmarks.forEach(bm => {
-    const bookmark = document.createElement('div');
-    bookmark.className = 'bookmark';
-    const span = document.createElement('span');
-    span.textContent = bm.name;
-    span.addEventListener('click', () => handleBookmark(bm.type, bm.value));
-    bookmark.appendChild(span);
-    bookmarksBar.appendChild(bookmark);
+// Function to create a categorized bookmark with dropdown
+function createCategorizedBookmark(category, bookmarks) {
+  const bookmark = document.createElement('div');
+  bookmark.className = 'bookmark';
+  const span = document.createElement('span');
+  span.textContent = category;
+  span.addEventListener('click', (e) => {
+    e.preventDefault(); // Prevent default behavior
+    bookmark.classList.toggle('active'); // Toggle dropdown visibility
   });
+  bookmark.appendChild(span);
 
-  const addBookmarkBtn = document.createElement('div');
+  const dropdown = document.createElement('div');
+  dropdown.className = 'bookmark-dropdown';
+  bookmarks.forEach(bm => {
+    const item = document.createElement('div');
+    item.className = 'dropdown-item';
+    item.textContent = bm.name;
+    item.addEventListener('click', () => handleBookmark(bm.type, bm.value));
+    dropdown.appendChild(item);
+  });
+  bookmark.appendChild(dropdown);
+
+  return bookmark;
+}
+
+// Add categorized bookmarks to the bar
+Object.entries(categorizedBookmarks).forEach(([category, bookmarks]) => {
+  const bookmarkElement = createCategorizedBookmark(category, bookmarks);
+  bookmarksBar.appendChild(bookmarkElement);
+});
+
+// Keep the add and save bookmark buttons
+const addBookmarkBtn = document.createElement('div');
+addBookmarkBtn.className = 'bookmark';
+addBookmarkBtn.id = 'addBookmarkBtn';
+addBookmarkBtn.textContent = 'Add Bookmark';
+addBookmarkBtn.addEventListener('click', addBookmark);
+bookmarksBar.appendChild(addBookmarkBtn);
+
+const saveBookmarksBtn = document.createElement('div');
+saveBookmarksBtn.className = 'bookmark';
+saveBookmarksBtn.id = 'saveBookmarksBtn';
+saveBookmarksBtn.textContent = 'Save Bookmarks';
+saveBookmarksBtn.addEventListener('click', saveBookmarks);
+bookmarksBar.appendChild(saveBookmarksBtn);
   addBookmarkBtn.className = 'bookmark';
   addBookmarkBtn.id = 'addBookmarkBtn';
   addBookmarkBtn.textContent = 'Add Bookmark';
