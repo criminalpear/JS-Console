@@ -1,6 +1,5 @@
 console.log('Script loaded');
-window.hasInstalledPWA = false;
-window.hasRegisteredSW = false;
+
 document.addEventListener('DOMContentLoaded', function() {
   console.log('DOM fully loaded');
   gtag('event', 'page_load', { 'event_category': 'Page' });
