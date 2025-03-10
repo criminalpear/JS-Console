@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
   console.info = function(message) { appendLog(message, 'info'); };
 
 function installPWA() {
+  if (window.hasInstalledPWA) return; // Prevent re-running
+  window.hasInstalledPWA = true;
+
   let deferredPrompt;
   const installBtn = document.getElementById('installBtn');
   installBtn.style.display = 'none';
@@ -32,10 +35,8 @@ function installPWA() {
     }
   }
 
-  // Initial check
   updateButtonVisibility();
 
-  // Listen for display mode changes
   window.matchMedia('(display-mode: standalone)').addEventListener('change', (e) => {
     if (e.matches) {
       installBtn.style.display = 'none';
@@ -44,10 +45,10 @@ function installPWA() {
   });
 
   window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  updateButtonVisibility();
-});
+    e.preventDefault();
+    deferredPrompt = e;
+    updateButtonVisibility();
+  });
 
   window.addEventListener('appinstalled', () => {
     appendLog('App installed successfully!', 'info');
@@ -74,8 +75,6 @@ function installPWA() {
     }
   });
 }
-
-installPWA();
   function executeCode() {
     const input = document.getElementById('inputField').value.trim();
     if (input === '') {
