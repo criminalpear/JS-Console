@@ -980,8 +980,10 @@ installPWA();
     const savedLogs = JSON.parse(localStorage.getItem('consoleLogs') || '[]');
     savedLogs.forEach(log => appendLog(log.message, log.type, log.isHtml));
   }
-  appendLog('Welcome to the JavaScript Console v2.0 on GitHub Pages!', 'info');
-  appendLog('Type "updates();" for what’s new or "list();" for all commands.', 'info');
+ if (!hasShownWelcome) {
+  appendLog('Welcome to the JavaScript Console v2.0 on GitHub Pages!<br>Type "updates();" for what’s new or "list();" for all commands.', 'info');
+  hasShownWelcome = true;
+}
 
   const customTheme = JSON.parse(localStorage.getItem('customTheme'));
   if (customTheme) {
