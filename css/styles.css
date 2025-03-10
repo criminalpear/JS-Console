@@ -91,3 +91,6 @@ button:hover { background-color: var(--button-hover); }
 .autocomplete-item { padding: 5px; cursor: pointer; color: var(--text-color); }
 .autocomplete-item:hover { background-color: var(--bookmark-hover); }
 #gameCanvas { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 1px solid var(--border-color); display: none; z-index: 2000; }
+#installBtn {
+  font-weight: bold; /* Make it bolder */
+}
