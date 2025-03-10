@@ -52,7 +52,7 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/JS-Console/service-worker.js')
       .then(registration => {
-        // No log here anymore
+        // Log removed
       })
       .catch(error => {
         console.error('Service Worker registration failed:', error);
