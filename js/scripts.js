@@ -969,6 +969,8 @@ installPWA();
     bookmarksBar.insertBefore(bookmark, saveBookmarksBtn);
   });
 
+  let hasShownWelcome = false;
+
   const urlParams = new URLSearchParams(window.location.search);
   const sharedLogs = urlParams.get('logs');
   if (sharedLogs) {
