@@ -263,21 +263,21 @@ installPWA();
     });
   }
 
-  function updates() {
-    appendLog('Update Log:', 'info');
-    appendLog('v1.0 (Mar 07, 2025): Initial release with theme toggle, Snake, and more!', 'info');
-    appendLog('v1.1 (Mar 07, 2025): Added setColor, Tic-Tac-Toe, sharing, logs, reset, scores.', 'info');
-    appendLog('v1.2 (Mar 07, 2025): Fixed title overlap and Tic-Tac-Toe score bug.', 'info');
-    appendLog('v1.3 (Mar 07, 2025): Scores persist after reset; added shareHighScores().', 'info');
-    appendLog('v1.4 (Mar 07, 2025): Added leaderboard() for global scores.', 'info');
-    appendLog('v1.5 (Mar 07, 2025): Added Pong (later removed).', 'info');
-    appendLog('v1.6 (Mar 07, 2025): Added setUsername() for profiles.', 'info');
-    appendLog('v1.7 (Mar 07, 2025): Added setTheme() for custom colors.', 'info');
-    appendLog('v1.8 (Mar 07, 2025): Added toggleSound() for sound control.', 'info');
-    appendLog('v1.9 (Mar 07, 2025): Removed Pong, fixed setTheme(), prioritized bookmarks, added PWA support.', 'info');
-    appendLog('Type "list();" to see all commands.', 'info');
-  }
-
+ function updates() {
+  appendLog('Update Log:', 'info');
+  appendLog('v1.0 (Mar 07, 2025): Initial release with theme toggle, Snake, and more!', 'info');
+  appendLog('v1.1 (Mar 07, 2025): Added setColor, Tic-Tac-Toe, sharing, logs, reset, scores.', 'info');
+  appendLog('v1.2 (Mar 07, 2025): Fixed title overlap and Tic-Tac-Toe score bug.', 'info');
+  appendLog('v1.3 (Mar 07, 2025): Scores persist after reset; added shareHighScores().', 'info');
+  appendLog('v1.4 (Mar 07, 2025): Added leaderboard() for global scores.', 'info');
+  appendLog('v1.5 (Mar 07, 2025): Added Pong (later removed).', 'info');
+  appendLog('v1.6 (Mar 07, 2025): Added setUsername() for profiles.', 'info');
+  appendLog('v1.7 (Mar 07, 2025): Added setTheme() for custom colors.', 'info');
+  appendLog('v1.8 (Mar 07, 2025): Added toggleSound() for sound control.', 'info');
+  appendLog('v1.9 (Mar 07, 2025): Removed Pong, fixed setTheme(), prioritized bookmarks, added PWA support.', 'info');
+  appendLog('v1.9.1 (Mar 09, 2025): Enhanced PWA support by adding an "Install App" button, fixing manifest and service worker path issues (/JS-Console/), resolving duplicate button issue by using a single static button, and ensuring the button hides after installation or in standalone mode using appinstalled and display-mode events.', 'info');
+  appendLog('Type "list();" to see all commands.', 'info');
+}
   function setColor(type, color) {
     const validTypes = ['log', 'error', 'warn', 'info'];
     if (!validTypes.includes(type)) {
