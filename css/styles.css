@@ -91,6 +91,54 @@ button:hover { background-color: var(--button-hover); }
 .autocomplete-item { padding: 5px; cursor: pointer; color: var(--text-color); }
 .autocomplete-item:hover { background-color: var(--bookmark-hover); }
 #gameCanvas { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 1px solid var(--border-color); display: none; z-index: 2000; }
+/* Existing bookmark styles remain unchanged */
+.bookmark {
+  padding: 5px 10px;
+  margin: 2px 5px;
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  position: relative; /* Needed for dropdown positioning */
+}
+
+/* Style for the dropdown container */
+.bookmark-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: var(--bookmark-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  min-width: 150px;
+  z-index: 1001;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Style for each dropdown item */
+.bookmark-dropdown .dropdown-item {
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.bookmark-dropdown .dropdown-item:hover {
+  background-color: var(--bookmark-hover);
+}
+
+/* Show dropdown when parent bookmark is hovered or clicked */
+.bookmark:hover .bookmark-dropdown {
+  display: block;
+}
+
+/* Ensure the dropdown stays visible on click (optional, for touch devices) */
+.bookmark.active .bookmark-dropdown {
+  display: block;
+}
 #installBtn {
   font-weight: bold; /* Make it bolder */
 }
