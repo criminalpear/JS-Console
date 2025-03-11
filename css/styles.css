@@ -4,7 +4,7 @@ html, body {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
-  overflow: auto; /* Changed from hidden to allow dropdowns */
+  overflow: auto; /* Allows dropdowns to render outside boundaries */
   transition: background-color 0.3s, color 0.3s;
 }
 
@@ -49,8 +49,17 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
   z-index: 1000;
   box-sizing: border-box;
   white-space: nowrap;
-  margin-bottom: 20px;
-  isolation: isolate; /* Creates a new stacking context */
+  margin-bottom: 20px; /* Space below bookmarks bar */
+  isolation: isolate; /* Ensures a new stacking context */
+}
+
+/* Title Styling */
+.title {
+  text-align: center;
+  font-size: 24px;
+  color: var(--text-color);
+  margin: 10px 0;
+  padding-top: 60px; /* Space from top to account for fixed #bookmarksBar */
 }
 
 /* Bookmark Styling */
@@ -83,27 +92,15 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
   color: darkred;
 }
 
-/* Container and Title */
+/* Container and Console */
 .container {
   display: flex;
   flex-direction: column;
   height: calc(100vh - 60px);
-  margin-top: 60px;
+  margin-top: 0; /* Adjusted since title is separate */
   box-sizing: border-box;
 }
 
-h1 {
-  margin: 10px 0;
-  text-align: center;
-  font-size: 24px;
-  flex-shrink: 0;
-  color: var(--text-color);
-  margin-top: 20px;
-  position: static;
-  z-index: auto;
-}
-
-/* Console and Input */
 .console-container {
   flex: 1;
   display: flex;
