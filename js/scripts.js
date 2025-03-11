@@ -930,6 +930,7 @@ bookmarksBar.appendChild(saveBookmarksBtn);
   addBookmarkBtn.addEventListener('click', addBookmark);
   bookmarksBar.appendChild(addBookmarkBtn);
 
+
   function handleBookmark(type, value) {
     if (type === 'url') {
       window.open(value, '_blank');
