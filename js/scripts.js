@@ -274,7 +274,8 @@ function installPWA() {
   appendLog('v1.8 (Mar 07, 2025): Added toggleSound() for sound control.', 'info');
   appendLog('v1.9 (Mar 07, 2025): Removed Pong, fixed setTheme(), prioritized bookmarks, added PWA support.', 'info');
   appendLog('v2.0 (Mar 09, 2025): Enhanced PWA support by adding an "Install App" button, fixing manifest and service worker path issues (/JS-Console/), resolving duplicate button issue by using a single static button, and ensuring the button hides after installation or in standalone mode using appinstalled and display-mode events.', 'info');
-  appendLog('Type "list();" to see all commands.', 'info');
+  appendLog('v2.1 (Mar 11, 2025): Added organization to bookmark function by adding folders holding that category of bookmarks functions.', 'info');
+   appendLog('Type "list();" to see all commands.', 'info');
 }
   function setColor(type, color) {
     const validTypes = ['log', 'error', 'warn', 'info'];
@@ -1027,7 +1028,7 @@ if (sharedLogs) {
   savedLogs.forEach(log => appendLog(log.message, log.type, log.isHtml));
 }
 if (!hasShownWelcome) {
-  appendLog('Welcome to the JavaScript Console v2.0 on GitHub Pages!');
+  appendLog('Welcome to the JavaScript Console v2.1 on GitHub Pages!', 'info');
   appendLog('Type "updates();" for what’s new or "list();" for all commands.', 'info');
   hasShownWelcome = true;
 }
