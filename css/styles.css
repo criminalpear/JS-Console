@@ -4,7 +4,7 @@ html, body {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
-  overflow: auto; /* Allows dropdowns to render outside boundaries */
+  overflow: auto;
   transition: background-color 0.3s, color 0.3s;
 }
 
@@ -45,11 +45,11 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
   width: 100%;
   height: 50px;
   overflow-x: auto;
-  overflow-y: visible; /* Changed to allow dropdowns to render below */
+  overflow-y: visible;
   z-index: 1000;
   box-sizing: border-box;
   white-space: nowrap;
-  isolation: isolate; /* Ensures a new stacking context */
+  isolation: isolate;
 }
 
 /* Title Styling */
@@ -58,8 +58,8 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
   font-size: 24px;
   color: var(--text-color);
   margin: 0;
-  padding-top: 70px; /* Increased to ensure visibility below #bookmarksBar */
-  z-index: 500; /* Lower than dropdowns */
+  padding-top: 70px;
+  z-index: 500;
 }
 
 /* Bookmark Styling */
@@ -73,7 +73,7 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  position: relative;
+  position: relative; /* Ensure dropdown is positioned relative to .bookmark */
   z-index: 1000;
 }
 
@@ -96,8 +96,8 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
 .container {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 110px); /* Adjusted for title height + padding */
-  margin-top: 60px; /* Space for title */
+  height: calc(100vh - 110px);
+  margin-top: 60px;
   box-sizing: border-box;
 }
 
@@ -232,7 +232,7 @@ button:hover {
 
 /* Dropdown Styling */
 .bookmark-dropdown {
-  display: block !important; /* Force visibility for debugging */
+  display: none;
   position: absolute;
   top: 100%;
   left: 0;
