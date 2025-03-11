@@ -4,7 +4,7 @@ html, body {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
-  overflow: auto; /* Changed from hidden to allow dropdowns, but keeps scrolling behavior */
+  overflow: auto; /* Changed from hidden to allow dropdowns */
   transition: background-color 0.3s, color 0.3s;
 }
 
@@ -50,7 +50,7 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
   box-sizing: border-box;
   white-space: nowrap;
   margin-bottom: 20px;
-  isolation: isolate; /* Creates a new stacking context for #bookmarksBar */
+  isolation: isolate; /* Creates a new stacking context */
 }
 
 /* Bookmark Styling */
@@ -64,8 +64,8 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  position: relative; /* Ensures dropdowns are positioned relative to this */
-  z-index: 1000; /* Base z-index for the bookmark */
+  position: relative;
+  z-index: 1000;
 }
 
 .bookmark:hover {
@@ -88,7 +88,7 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
   display: flex;
   flex-direction: column;
   height: calc(100vh - 60px);
-  margin-top: 60px; /* Adjusted to account for fixed bookmarks bar */
+  margin-top: 60px;
   box-sizing: border-box;
 }
 
@@ -98,7 +98,9 @@ h1 {
   font-size: 24px;
   flex-shrink: 0;
   color: var(--text-color);
-  margin-top: 20px; /* Space above title to avoid overlap with bookmarks bar */
+  margin-top: 20px;
+  position: static;
+  z-index: auto;
 }
 
 /* Console and Input */
@@ -182,7 +184,7 @@ button:hover {
   font-size: 16px;
   margin: 0 5px;
   flex-shrink: 0;
-  font-weight: bold; /* Make it bolder */
+  font-weight: bold;
 }
 
 #installBtn:hover {
@@ -235,13 +237,13 @@ button:hover {
 .bookmark-dropdown {
   display: none;
   position: absolute;
-  top: 100%; /* Position below the bookmark */
+  top: 100%;
   left: 0;
   background-color: var(--bookmark-bg);
   border: 1px solid var(--border-color);
   border-radius: 3px;
   min-width: 150px;
-  z-index: 10000; /* High z-index to stay above other elements */
+  z-index: 10000;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
