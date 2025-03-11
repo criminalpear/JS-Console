@@ -142,3 +142,7 @@ button:hover { background-color: var(--button-hover); }
 #installBtn {
   font-weight: bold; /* Make it bolder */
 }
+.bookmark {
+  position: relative; /* Ensure a local stacking context */
+  z-index: 1000; /* Base z-index for the bookmark */
+}
