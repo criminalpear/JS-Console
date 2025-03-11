@@ -52,16 +52,6 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
   isolation: isolate;
 }
 
-/* Title Styling */
-.title {
-  text-align: center;
-  font-size: 24px;
-  color: var(--text-color);
-  margin: 0;
-  padding-top: 70px;
-  z-index: 500;
-}
-
 /* Bookmark Styling */
 .bookmark {
   padding: 5px 10px;
@@ -73,7 +63,7 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  position: relative; /* Ensure dropdown is positioned relative to .bookmark */
+  position: relative;
   z-index: 1000;
 }
 
@@ -96,10 +86,11 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
 .container {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 50px); /* Adjust from 110px, since title is gone */
-  margin-top: 50px; /* Adjust from 60px to match #bookmarksBar height */
+  height: calc(100vh - 150px); /* Adjusted for no title and lowered console */
+  margin-top: 100px; /* Pushes console logs below dropdowns */
   box-sizing: border-box;
 }
+
 .console-container {
   flex: 1;
   display: flex;
