@@ -22,6 +22,10 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
   color: var(--text-color);
 }
 #bookmarksBar {
+  overflow: visible; /* Ensures dropdowns are not clipped */
+  position: relative; /* Defines a stacking context for dropdowns */
+  z-index: 1000; /* Base z-index for the bookmarks bar */
+}
   background-color: var(--bar-bg);
   padding: 5px;
   border-bottom: 1px solid var(--border-color);
