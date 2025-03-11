@@ -930,13 +930,6 @@ bookmarksBar.appendChild(saveBookmarksBtn);
   addBookmarkBtn.addEventListener('click', addBookmark);
   bookmarksBar.appendChild(addBookmarkBtn);
 
-  const saveBookmarksBtn = document.createElement('div');
-  saveBookmarksBtn.className = 'bookmark';
-  saveBookmarksBtn.id = 'saveBookmarksBtn';
-  saveBookmarksBtn.textContent = 'Save Bookmarks';
-  saveBookmarksBtn.addEventListener('click', saveBookmarks);
-  bookmarksBar.appendChild(saveBookmarksBtn);
-
   function handleBookmark(type, value) {
     if (type === 'url') {
       window.open(value, '_blank');
