@@ -1,4 +1,13 @@
-html, body { height: 100%; margin: 0; padding: 0; font-family: Arial, sans-serif; overflow: hidden; transition: background-color 0.3s, color 0.3s; }
+/* Reset and global styles */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  overflow: auto; /* Changed from hidden to allow dropdowns, but keeps scrolling behavior */
+  transition: background-color 0.3s, color 0.3s;
+}
+
 :root {
   --bg-color: #f4f4f4;
   --text-color: black;
@@ -9,6 +18,7 @@ html, body { height: 100%; margin: 0; padding: 0; font-family: Arial, sans-serif
   --button-bg: #4CAF50;
   --button-hover: #45a049;
 }
+
 body.dark {
   --bg-color: #000000;
   --text-color: #ffffff;
@@ -17,15 +27,14 @@ body.dark {
   --bookmark-bg: #000000;
   --bookmark-hover: #333333;
 }
+
 html, body, .console, #inputField, #autocomplete, button, .bookmark {
   background-color: var(--bg-color);
   color: var(--text-color);
 }
+
+/* Bookmarks Bar */
 #bookmarksBar {
-  overflow: visible; /* Ensures dropdowns are not clipped */
-  position: relative; /* Defines a stacking context for dropdowns */
-  z-index: 1000; /* Base z-index for the bookmarks bar */
-}
   background-color: var(--bar-bg);
   padding: 5px;
   border-bottom: 1px solid var(--border-color);
@@ -35,12 +44,15 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
   top: 0;
   width: 100%;
   height: 50px;
-  overflow-x: auto;
+  overflow-x: auto; /* Keep horizontal scrolling for many bookmarks */
   overflow-y: hidden;
-  z-index: 1000;
+  z-index: 1000; /* Base z-index for the bookmarks bar */
   box-sizing: border-box;
   white-space: nowrap;
+  margin-bottom: 20px; /* Space below bookmarks bar to avoid overlap with title */
 }
+
+/* Bookmark Styling */
 .bookmark {
   padding: 5px 10px;
   margin: 2px 5px;
@@ -51,31 +63,115 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
   text-decoration: none;
   display: inline-flex;
   align-items: center;
+  position: relative; /* Ensures dropdowns are positioned relative to this */
+  z-index: 1000; /* Base z-index for the bookmark */
 }
-.bookmark:hover { background-color: var(--bookmark-hover); }
-.bookmark .remove { margin-left: 5px; color: red; font-weight: bold; cursor: pointer; }
-.bookmark .remove:hover { color: darkred; }
-.container { display: flex; flex-direction: column; height: calc(100vh - 60px); margin-top: 60px; box-sizing: border-box; }
-h1 { margin: 10px 0; text-align: center; font-size: 24px; flex-shrink: 0; color: var(--text-color); }
-.console-container { flex: 1; display: flex; overflow: hidden; }
-.console { 
-  flex: 1; 
-  border: 1px solid var(--border-color); 
-  padding: 10px; 
-  font-family: monospace; 
-  white-space: pre-wrap; 
-  overflow-y: auto; 
-  box-sizing: border-box; 
+
+.bookmark:hover {
+  background-color: var(--bookmark-hover);
 }
-.console .log { color: var(--text-color); }
-body.dark .console .log { color: #ffffff; }
-.console .error { color: #ff5555; }
-.console .warn { color: #ffff55; }
-.console .info { color: #00ccff; }
-.input-container { display: flex; flex-shrink: 0; padding: 10px; box-sizing: border-box; position: relative; }
-#inputField { flex: 1; padding: 10px; font-size: 16px; margin-right: 10px; box-sizing: border-box; font-family: monospace; border: 1px solid var(--border-color); resize: vertical; min-height: 40px; }
-button { padding: 10px; background-color: var(--button-bg); color: white; border: none; cursor: pointer; font-size: 16px; margin: 0 5px; flex-shrink: 0; }
-button:hover { background-color: var(--button-hover); }
+
+.bookmark .remove {
+  margin-left: 5px;
+  color: red;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.bookmark .remove:hover {
+  color: darkred;
+}
+
+/* Container and Title */
+.container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 60px);
+  margin-top: 60px; /* Adjusted to account for fixed bookmarks bar */
+  box-sizing: border-box;
+}
+
+h1 {
+  margin: 10px 0;
+  text-align: center;
+  font-size: 24px;
+  flex-shrink: 0;
+  color: var(--text-color);
+  margin-top: 20px; /* Space above title to avoid overlap with bookmarks bar */
+}
+
+/* Console and Input */
+.console-container {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.console {
+  flex: 1;
+  border: 1px solid var(--border-color);
+  padding: 10px;
+  font-family: monospace;
+  white-space: pre-wrap;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.console .log {
+  color: var(--text-color);
+}
+
+body.dark .console .log {
+  color: #ffffff;
+}
+
+.console .error {
+  color: #ff5555;
+}
+
+.console .warn {
+  color: #ffff55;
+}
+
+.console .info {
+  color: #00ccff;
+}
+
+.input-container {
+  display: flex;
+  flex-shrink: 0;
+  padding: 10px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+#inputField {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+  margin-right: 10px;
+  box-sizing: border-box;
+  font-family: monospace;
+  border: 1px solid var(--border-color);
+  resize: vertical;
+  min-height: 40px;
+}
+
+button {
+  padding: 10px;
+  background-color: var(--button-bg);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 0 5px;
+  flex-shrink: 0;
+}
+
+button:hover {
+  background-color: var(--button-hover);
+}
+
 #installBtn {
   padding: 10px;
   background-color: #2196F3;
@@ -85,45 +181,69 @@ button:hover { background-color: var(--button-hover); }
   font-size: 16px;
   margin: 0 5px;
   flex-shrink: 0;
+  font-weight: bold; /* Make it bolder */
 }
+
 #installBtn:hover {
   background-color: #1976D2;
 }
-.element-link { color: #00ccff; cursor: pointer; text-decoration: underline; margin-left: 5px; }
-.element-link:hover { color: #77ccff; }
-#autocomplete { position: absolute; bottom: 60px; left: 10px; border: 1px solid var(--border-color); max-height: 150px; overflow-y: auto; display: none; z-index: 100; }
-.autocomplete-item { padding: 5px; cursor: pointer; color: var(--text-color); }
-.autocomplete-item:hover { background-color: var(--bookmark-hover); }
-#gameCanvas { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 1px solid var(--border-color); display: none; z-index: 2000; }
-/* Existing bookmark styles remain unchanged */
-.bookmark {
-  padding: 5px 10px;
-  margin: 2px 5px;
-  border: 1px solid var(--border-color);
-  border-radius: 3px;
+
+.element-link {
+  color: #00ccff;
   cursor: pointer;
-  font-size: 14px;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  position: relative; /* Needed for dropdown positioning */
+  text-decoration: underline;
+  margin-left: 5px;
 }
 
-/* Style for the dropdown container */
+.element-link:hover {
+  color: #77ccff;
+}
+
+#autocomplete {
+  position: absolute;
+  bottom: 60px;
+  left: 10px;
+  border: 1px solid var(--border-color);
+  max-height: 150px;
+  overflow-y: auto;
+  display: none;
+  z-index: 100;
+}
+
+.autocomplete-item {
+  padding: 5px;
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+.autocomplete-item:hover {
+  background-color: var(--bookmark-hover);
+}
+
+#gameCanvas {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid var(--border-color);
+  display: none;
+  z-index: 2000;
+}
+
+/* Dropdown Styling */
 .bookmark-dropdown {
   display: none;
   position: absolute;
-  top: 100%;
+  top: 100%; /* Position below the bookmark */
   left: 0;
   background-color: var(--bookmark-bg);
   border: 1px solid var(--border-color);
   border-radius: 3px;
   min-width: 150px;
-  z-index: 10000; /* Increased from 1001 to 10000 */
+  z-index: 10000; /* High z-index to stay above other elements */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Style for each dropdown item */
 .bookmark-dropdown .dropdown-item {
   padding: 5px 10px;
   cursor: pointer;
@@ -134,19 +254,8 @@ button:hover { background-color: var(--button-hover); }
   background-color: var(--bookmark-hover);
 }
 
-/* Show dropdown when parent bookmark is hovered or clicked */
+/* Show dropdown when parent bookmark is active or hovered */
+.bookmark.active .bookmark-dropdown,
 .bookmark:hover .bookmark-dropdown {
   display: block;
-}
-
-/* Ensure the dropdown stays visible on click (optional, for touch devices) */
-.bookmark.active .bookmark-dropdown {
-  display: block;
-}
-#installBtn {
-  font-weight: bold; /* Make it bolder */
-}
-.bookmark {
-  position: relative; /* Ensure a local stacking context */
-  z-index: 1000; /* Base z-index for the bookmark */
 }
