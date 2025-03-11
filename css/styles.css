@@ -232,7 +232,7 @@ button:hover {
 
 /* Dropdown Styling */
 .bookmark-dropdown {
-  display: none;
+  display: block !important; /* Force visibility for debugging */
   position: absolute;
   top: 100%;
   left: 0;
