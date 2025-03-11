@@ -118,8 +118,8 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
 .container {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 60px); /* Adjusted to bring console closer to bookmarks */
-  margin-top: 50px; /* Minimal margin to align just below #bookmarksBar */
+  height: calc(100vh - 85px); /* Adjusted to bring console closer to bookmarks */
+  margin-top: 75px; /* Minimal margin to align just below #bookmarksBar */
   box-sizing: border-box;
 }
 
