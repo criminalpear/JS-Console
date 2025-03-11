@@ -44,12 +44,13 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
   top: 0;
   width: 100%;
   height: 50px;
-  overflow-x: auto; /* Keep horizontal scrolling for many bookmarks */
+  overflow-x: auto;
   overflow-y: hidden;
-  z-index: 1000; /* Base z-index for the bookmarks bar */
+  z-index: 1000;
   box-sizing: border-box;
   white-space: nowrap;
-  margin-bottom: 20px; /* Space below bookmarks bar to avoid overlap with title */
+  margin-bottom: 20px;
+  isolation: isolate; /* Creates a new stacking context for #bookmarksBar */
 }
 
 /* Bookmark Styling */
