@@ -49,7 +49,6 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
   z-index: 1000;
   box-sizing: border-box;
   white-space: nowrap;
-  margin-bottom: 20px; /* Space below bookmarks bar */
   isolation: isolate; /* Ensures a new stacking context */
 }
 
@@ -60,6 +59,7 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
   color: var(--text-color);
   margin: 10px 0;
   padding-top: 60px; /* Space from top to account for fixed #bookmarksBar */
+  z-index: 500; /* Lower than dropdowns */
 }
 
 /* Bookmark Styling */
