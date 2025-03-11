@@ -96,11 +96,10 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
 .container {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 110px);
-  margin-top: 60px;
+  height: calc(100vh - 50px); /* Adjust from 110px, since title is gone */
+  margin-top: 50px; /* Adjust from 60px to match #bookmarksBar height */
   box-sizing: border-box;
 }
-
 .console-container {
   flex: 1;
   display: flex;
