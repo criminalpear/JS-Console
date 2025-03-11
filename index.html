@@ -8,7 +8,6 @@
   <title>JavaScript Console</title>
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
-  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-X1QVWZVDC3"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -16,9 +15,7 @@
     gtag('js', new Date());
     gtag('config', 'G-X1QVWZVDC3');
   </script>
-  <!-- PWA Manifest -->
   <link rel="manifest" href="/JS-Console/manifest.json">
-  <!-- iOS Support -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="apple-touch-icon" href="/images/icon-192x192.png">
@@ -45,14 +42,11 @@
   <script src="js/snake.js"></script>
   <script src="js/tictactoe.js"></script>
   <script src="js/scripts.js"></script>
-  <!-- Register Service Worker -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/JS-Console/service-worker.js')
-          .then(registration => {
-            // Log removed
-          })
+          .then(registration => {})
           .catch(error => {
             console.error('Service Worker registration failed:', error);
           });
