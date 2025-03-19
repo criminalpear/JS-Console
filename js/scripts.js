@@ -14,107 +14,108 @@ document.addEventListener('DOMContentLoaded', function() {
   console.warn = function(message) { appendLog(message, 'warn'); };
   console.info = function(message) { appendLog(message, 'info'); };
 
-function installPWA() {
-  if (window.hasInstalledPWA) return; // Prevent re-running
-  window.hasInstalledPWA = true;
+  function installPWA() {
+    if (window.hasInstalledPWA) return; // Prevent re-running
+    window.hasInstalledPWA = true;
 
-  let deferredPrompt;
-  const installBtn = document.getElementById('installBtn');
-  installBtn.style.display = 'none';
-
-  function isStandalone() {
-    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-  }
-
-  function updateButtonVisibility() {
-    if (isStandalone()) {
-      installBtn.style.display = 'none';
-      appendLog('App is already running as a standalone PWA!', 'info');
-    } else if (deferredPrompt) {
-      installBtn.style.display = 'inline-block';
-    }
-  }
-
-  updateButtonVisibility();
-
-  window.matchMedia('(display-mode: standalone)').addEventListener('change', (e) => {
-    if (e.matches) {
-      installBtn.style.display = 'none';
-      appendLog('App is now running as a standalone PWA!', 'info');
-    }
-  });
-
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    updateButtonVisibility();
-  });
-
-  window.addEventListener('appinstalled', () => {
-    appendLog('App installed successfully!', 'info');
+    let deferredPrompt;
+    const installBtn = document.getElementById('installBtn');
     installBtn.style.display = 'none';
-    deferredPrompt = null;
-  });
 
-  installBtn.addEventListener('click', () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      appendLog('Install prompt displayed. Choose to install or cancel.', 'info');
-      deferredPrompt.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === 'accepted') {
-          appendLog('App installed successfully!', 'info');
-          gtag('event', 'pwa_install', { 'event_category': 'PWA', 'event_label': 'accepted' });
-        } else {
-          appendLog('Install prompt dismissed.', 'info');
-          gtag('event', 'pwa_install', { 'event_category': 'PWA', 'event_label': 'dismissed' });
-        }
-        deferredPrompt = null;
-      });
-    } else {
-      appendLog('Install prompt not available yet. Try refreshing the page.', 'error');
+    function isStandalone() {
+      return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
     }
-  });
-}
- function executeCode() {
-  const input = document.getElementById('inputField').value.trim();
-  if (input === '') {
-    appendLog('Error: Please enter some code to execute.', 'error');
-    playSound('error');
-    return;
-  }
-  commandHistory.unshift(input);
-  historyIndex = -1;
-  try {
-    if (input === 'idiot();') {
-      idiot();
-    } else if (input === 'elements();') {
-      elements();
-    } else if (input === 'elementshelp();') {
-      elementshelp();
-    } else if (input.includes('=') && input.includes('x')) {
-      const [leftSide, rightSide] = input.split('=').map(part => part.trim());
-      const solution = solveEquation(leftSide, rightSide);
-      appendLog(
-        `Equation: \\\\(${leftSide} = ${rightSide}\\\\), Solution: \\\\(x = ${solution}\\\\)`,
-        'log',
-        true
-      );
-      playSound('success');
-    } else if (window.editElement && /\d+\s/.test(input)) {
-      window.editElement(input);
-    } else {
-      const result = eval(input);
-      if (typeof result !== 'undefined') console.log(`Result: ${result}`);
-      playSound('execute');
+
+    function updateButtonVisibility() {
+      if (isStandalone()) {
+        installBtn.style.display = 'none';
+        appendLog('App is already running as a standalone PWA!', 'info');
+      } else if (deferredPrompt) {
+        installBtn.style.display = 'inline-block';
+      }
     }
-    gtag('event', 'execute_code', { 'event_category': 'Console', 'event_label': input });
-  } catch (e) {
-    appendLog('Error: ' + e.message, 'error');
-    playSound('error');
+
+    updateButtonVisibility();
+
+    window.matchMedia('(display-mode: standalone)').addEventListener('change', (e) => {
+      if (e.matches) {
+        installBtn.style.display = 'none';
+        appendLog('App is now running as a standalone PWA!', 'info');
+      }
+    });
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      updateButtonVisibility();
+    });
+
+    window.addEventListener('appinstalled', () => {
+      appendLog('App installed successfully!', 'info');
+      installBtn.style.display = 'none';
+      deferredPrompt = null;
+    });
+
+    installBtn.addEventListener('click', () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        appendLog('Install prompt displayed. Choose to install or cancel.', 'info');
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            appendLog('App installed successfully!', 'info');
+            gtag('event', 'pwa_install', { 'event_category': 'PWA', 'event_label': 'accepted' });
+          } else {
+            appendLog('Install prompt dismissed.', 'info');
+            gtag('event', 'pwa_install', { 'event_category': 'PWA', 'event_label': 'dismissed' });
+          }
+          deferredPrompt = null;
+        });
+      } else {
+        appendLog('Install prompt not available yet. Try refreshing the page.', 'error');
+      }
+    });
   }
-  document.getElementById('inputField').value = '';
-  hideAutocomplete();
-}
+
+  function executeCode() {
+    const input = document.getElementById('inputField').value.trim();
+    if (input === '') {
+      appendLog('Error: Please enter some code to execute.', 'error');
+      playSound('error');
+      return;
+    }
+    commandHistory.unshift(input);
+    historyIndex = -1;
+    try {
+      if (input === 'idiot();') {
+        idiot();
+      } else if (input === 'elements();') {
+        elements();
+      } else if (input === 'elementshelp();') {
+        elementshelp();
+      } else if (input.includes('=') && input.includes('x')) {
+        const [leftSide, rightSide] = input.split('=').map(part => part.trim());
+        const solution = solveEquation(leftSide, rightSide);
+        appendLog(
+          `Equation: \\\\(${leftSide} = ${rightSide}\\\\), Solution: \\\\(x = ${solution}\\\\)`,
+          'log',
+          true
+        );
+        playSound('success');
+      } else if (window.editElement && /\d+\s/.test(input)) {
+        window.editElement(input);
+      } else {
+        const result = eval(input);
+        if (typeof result !== 'undefined') console.log(`Result: ${result}`);
+        playSound('execute');
+      }
+      gtag('event', 'execute_code', { 'event_category': 'Console', 'event_label': input });
+    } catch (e) {
+      appendLog('Error: ' + e.message, 'error');
+      playSound('error');
+    }
+    document.getElementById('inputField').value = '';
+    hideAutocomplete();
+  }
 
   function solveEquation(left, right) {
     function parseSide(side) {
@@ -261,22 +262,23 @@ function installPWA() {
     });
   }
 
- function updates() {
-  appendLog('Update Log:', 'info');
-  appendLog('v1.0 (Mar 07, 2025): Initial release with theme toggle, Snake, and more!', 'info');
-  appendLog('v1.1 (Mar 07, 2025): Added setColor, Tic-Tac-Toe, sharing, logs, reset, scores.', 'info');
-  appendLog('v1.2 (Mar 07, 2025): Fixed title overlap and Tic-Tac-Toe score bug.', 'info');
-  appendLog('v1.3 (Mar 07, 2025): Scores persist after reset; added shareHighScores().', 'info');
-  appendLog('v1.4 (Mar 07, 2025): Added leaderboard() for global scores.', 'info');
-  appendLog('v1.5 (Mar 07, 2025): Added Pong (later removed).', 'info');
-  appendLog('v1.6 (Mar 07, 2025): Added setUsername() for profiles.', 'info');
-  appendLog('v1.7 (Mar 07, 2025): Added setTheme() for custom colors.', 'info');
-  appendLog('v1.8 (Mar 07, 2025): Added toggleSound() for sound control.', 'info');
-  appendLog('v1.9 (Mar 07, 2025): Removed Pong, fixed setTheme(), prioritized bookmarks, added PWA support.', 'info');
-  appendLog('v2.0 (Mar 09, 2025): Enhanced PWA support by adding an "Install App" button, fixing manifest and service worker path issues (/JS-Console/), resolving duplicate button issue by using a single static button, and ensuring the button hides after installation or in standalone mode using appinstalled and display-mode events.', 'info');
-  appendLog('v2.1 (Mar 11, 2025): Added organization to bookmark function by adding folders holding that category of bookmarks functions.', 'info');
-   appendLog('Type "list();" to see all commands.', 'info');
-}
+  function updates() {
+    appendLog('Update Log:', 'info');
+    appendLog('v1.0 (Mar 07, 2025): Initial release with theme toggle, Snake, and more!', 'info');
+    appendLog('v1.1 (Mar 07, 2025): Added setColor, Tic-Tac-Toe, sharing, logs, reset, scores.', 'info');
+    appendLog('v1.2 (Mar 07, 2025): Fixed title overlap and Tic-Tac-Toe score bug.', 'info');
+    appendLog('v1.3 (Mar 07, 2025): Scores persist after reset; added shareHighScores().', 'info');
+    appendLog('v1.4 (Mar 07, 2025): Added leaderboard() for global scores.', 'info');
+    appendLog('v1.5 (Mar 07, 2025): Added Pong (later removed).', 'info');
+    appendLog('v1.6 (Mar 07, 2025): Added setUsername() for profiles.', 'info');
+    appendLog('v1.7 (Mar 07, 2025): Added setTheme() for custom colors.', 'info');
+    appendLog('v1.8 (Mar 07, 2025): Added toggleSound() for sound control.', 'info');
+    appendLog('v1.9 (Mar 07, 2025): Removed Pong, fixed setTheme(), prioritized bookmarks, added PWA support.', 'info');
+    appendLog('v2.0 (Mar 09, 2025): Enhanced PWA support by adding an "Install App" button, fixing manifest and service worker path issues (/JS-Console/), resolving duplicate button issue by using a single static button, and ensuring the button hides after installation or in standalone mode using appinstalled and display-mode events.', 'info');
+    appendLog('v2.1 (Mar 11, 2025): Added organization to bookmark function by adding folders holding that category of bookmarks functions.', 'info');
+    appendLog('Type "list();" to see all commands.', 'info');
+  }
+
   function setColor(type, color) {
     const validTypes = ['log', 'error', 'warn', 'info'];
     if (!validTypes.includes(type)) {
@@ -848,89 +850,83 @@ function installPWA() {
     gtag('event', 'run_function', { 'event_category': 'Utility', 'event_label': 'more' });
   }
 
-const bookmarksBar = document.getElementById('bookmarksBar');
+  const bookmarksBar = document.getElementById('bookmarksBar');
 
-// Define bookmarks with categories
-const categorizedBookmarks = {
-  Games: [
-    { name: "Snake Game", type: "bookmarklet", value: "snake()" },
-    { name: "Tic-Tac-Toe", type: "bookmarklet", value: "tictactoe()" }
-  ],
-  Scores: [
-    { name: "High Scores", type: "bookmarklet", value: "highscores()" },
-    { name: "Leaderboard", type: "bookmarklet", value: "leaderboard()" }
-  ],
-  Utilities: [
-    { name: "Updates", type: "bookmarklet", value: "updates()" },
-    { name: "Set Username", type: "bookmarklet", value: "setUsername(prompt('Enter your username:'))" },
-    { name: "Set Theme", type: "bookmarklet", value: "setTheme(prompt('Background color:'), prompt('Text color:'))" },
-    { name: "Toggle Sound", type: "bookmarklet", value: "toggleSound()" },
-    { name: "More", type: "bookmarklet", value: "more()" }
-  ],
-  Gifs: [
-    { name: "Sawyer", type: "bookmarklet", value: "sawyer()" },
-    { name: "Aiden", type: "bookmarklet", value: "aiden()" },
-    { name: "Aadyn", type: "bookmarklet", value: "aadyn()" },
-    { name: "Eli", type: "bookmarklet", value: "eli()" },
-    { name: "Elijah", type: "bookmarklet", value: "elijah()" },
-    { name: "Ronin", type: "bookmarklet", value: "ronin()" },
-    { name: "Ronin 1", type: "bookmarklet", value: "ronin1()" },
-    { name: "Ronin 2", type: "bookmarklet", value: "ronin2()" }
-  ]
-};
+  // Define bookmarks with categories
+  const categorizedBookmarks = {
+    Games: [
+      { name: "Snake Game", type: "bookmarklet", value: "snake()" },
+      { name: "Tic-Tac-Toe", type: "bookmarklet", value: "tictactoe()" }
+    ],
+    Scores: [
+      { name: "High Scores", type: "bookmarklet", value: "highscores()" },
+      { name: "Leaderboard", type: "bookmarklet", value: "leaderboard()" }
+    ],
+    Utilities: [
+      { name: "Updates", type: "bookmarklet", value: "updates()" },
+      { name: "Set Username", type: "bookmarklet", value: "setUsername(prompt('Enter your username:'))" },
+      { name: "Set Theme", type: "bookmarklet", value: "setTheme(prompt('Background color:'), prompt('Text color:'))" },
+      { name: "Toggle Sound", type: "bookmarklet", value: "toggleSound()" },
+      { name: "More", type: "bookmarklet", value: "more()" }
+    ],
+    Gifs: [
+      { name: "Sawyer", type: "bookmarklet", value: "sawyer()" },
+      { name: "Aiden", type: "bookmarklet", value: "aiden()" },
+      { name: "Aadyn", type: "bookmarklet", value: "aadyn()" },
+      { name: "Eli", type: "bookmarklet", value: "eli()" },
+      { name: "Elijah", type: "bookmarklet", value: "elijah()" },
+      { name: "Ronin", type: "bookmarklet", value: "ronin()" },
+      { name: "Ronin 1", type: "bookmarklet", value: "ronin1()" },
+      { name: "Ronin 2", type: "bookmarklet", value: "ronin2()" }
+    ]
+  };
 
-// Function to create a categorized bookmark with dropdown
-function createCategorizedBookmark(category, bookmarks) {
-  const bookmark = document.createElement('div');
-  bookmark.className = 'bookmark';
-  const span = document.createElement('span');
-  span.textContent = category;
-  span.addEventListener('click', (e) => {
-    e.preventDefault(); // Prevent default behavior
-    bookmark.classList.toggle('active'); // Toggle dropdown visibility
+  // Function to create a categorized bookmark with dropdown
+  function createCategorizedBookmark(category, bookmarks) {
+    const bookmark = document.createElement('div');
+    bookmark.className = 'bookmark';
+    const span = document.createElement('span');
+    span.textContent = category;
+    span.addEventListener('click', (e) => {
+      e.preventDefault(); // Prevent default behavior
+      bookmark.classList.toggle('active'); // Toggle dropdown visibility
+    });
+    bookmark.appendChild(span);
+
+    const dropdown = document.createElement('div');
+    dropdown.className = 'bookmark-dropdown';
+    bookmarks.forEach(bm => {
+      const item = document.createElement('div');
+      item.className = 'dropdown-item';
+      item.textContent = bm.name;
+      item.addEventListener('click', () => handleBookmark(bm.type, bm.value));
+      dropdown.appendChild(item);
+    });
+    bookmark.appendChild(dropdown);
+
+    return bookmark;
+  }
+
+  // Add categorized bookmarks to the bar
+  Object.entries(categorizedBookmarks).forEach(([category, bookmarks]) => {
+    const bookmarkElement = createCategorizedBookmark(category, bookmarks);
+    bookmarksBar.appendChild(bookmarkElement);
   });
-  bookmark.appendChild(span);
 
-  const dropdown = document.createElement('div');
-  dropdown.className = 'bookmark-dropdown';
-  bookmarks.forEach(bm => {
-    const item = document.createElement('div');
-    item.className = 'dropdown-item';
-    item.textContent = bm.name;
-    item.addEventListener('click', () => handleBookmark(bm.type, bm.value));
-    dropdown.appendChild(item);
-  });
-  bookmark.appendChild(dropdown);
-
-  return bookmark;
-}
-
-// Add categorized bookmarks to the bar
-Object.entries(categorizedBookmarks).forEach(([category, bookmarks]) => {
-  const bookmarkElement = createCategorizedBookmark(category, bookmarks);
-  bookmarksBar.appendChild(bookmarkElement);
-});
-
-// Keep the add and save bookmark buttons
-const addBookmarkBtn = document.createElement('div');
-addBookmarkBtn.className = 'bookmark';
-addBookmarkBtn.id = 'addBookmarkBtn';
-addBookmarkBtn.textContent = 'Add Bookmark';
-addBookmarkBtn.addEventListener('click', addBookmark);
-bookmarksBar.appendChild(addBookmarkBtn);
-
-const saveBookmarksBtn = document.createElement('div');
-saveBookmarksBtn.className = 'bookmark';
-saveBookmarksBtn.id = 'saveBookmarksBtn';
-saveBookmarksBtn.textContent = 'Save Bookmarks';
-saveBookmarksBtn.addEventListener('click', saveBookmarks);
-bookmarksBar.appendChild(saveBookmarksBtn);
+  // Keep the add and save bookmark buttons
+  const addBookmarkBtn = document.createElement('div');
   addBookmarkBtn.className = 'bookmark';
   addBookmarkBtn.id = 'addBookmarkBtn';
   addBookmarkBtn.textContent = 'Add Bookmark';
   addBookmarkBtn.addEventListener('click', addBookmark);
   bookmarksBar.appendChild(addBookmarkBtn);
 
+  const saveBookmarksBtn = document.createElement('div');
+  saveBookmarksBtn.className = 'bookmark';
+  saveBookmarksBtn.id = 'saveBookmarksBtn';
+  saveBookmarksBtn.textContent = 'Save Bookmarks';
+  saveBookmarksBtn.addEventListener('click', saveBookmarks);
+  bookmarksBar.appendChild(saveBookmarksBtn);
 
   function handleBookmark(type, value) {
     if (type === 'url') {
@@ -1016,38 +1012,42 @@ bookmarksBar.appendChild(saveBookmarksBtn);
     bookmarksBar.insertBefore(bookmark, saveBookmarksBtn);
   });
 
-let hasShownWelcome = false;
+  let hasShownWelcome = false;
 
-const urlParams = new URLSearchParams(window.location.search);
-const sharedLogs = urlParams.get('logs');
-if (sharedLogs) {
-  const logs = JSON.parse(decodeURIComponent(sharedLogs));
-  logs.forEach(log => appendLog(log.message, log.type, log.isHtml));
-} else {
-  const savedLogs = JSON.parse(localStorage.getItem('logs') || '[]');
-  savedLogs.forEach(log => appendLog(log.message, log.type, log.isHtml));
-}
-if (!hasShownWelcome) {
-  appendLog('Welcome to the JavaScript Console v2.1 on GitHub Pages!', 'info');
-  appendLog('Type "updates();" for what’s new or "list();" for all commands.', 'info');
-  hasShownWelcome = true;
-}
+  const urlParams = new URLSearchParams(window.location.search);
+  const sharedLogs = urlParams.get('logs');
+  if (sharedLogs) {
+    const logs = JSON.parse(decodeURIComponent(sharedLogs));
+    logs.forEach(log => appendLog(log.message, log.type, log.isHtml));
+  } else {
+    const savedLogs = JSON.parse(localStorage.getItem('logs') || '[]');
+    savedLogs.forEach(log => appendLog(log.message, log.type, log.isHtml));
+  }
+  if (!hasShownWelcome) {
+    appendLog('Welcome to the JavaScript Console v2.1 on GitHub Pages!', 'info');
+    appendLog('Type "updates();" for what’s new or "list();" for all commands.', 'info');
+    hasShownWelcome = true;
+  }
 
-const customTheme = JSON.parse(localStorage.getItem('customTheme'));
-if (customTheme) {
-  document.body.classList.remove('dark');
-  document.documentElement.style.setProperty('--bg-color', customTheme.bgColor);
-  document.documentElement.style.setProperty('--text-color', customTheme.textColor);
-} else if (localStorage.getItem('theme') === 'dark') {
-  document.body.classList.add('dark');
-}
+  const customTheme = JSON.parse(localStorage.getItem('customTheme'));
+  if (customTheme) {
+    document.body.classList.remove('dark');
+    document.documentElement.style.setProperty('--bg-color', customTheme.bgColor);
+    document.documentElement.style.setProperty('--text-color', customTheme.textColor);
+  } else if (localStorage.getItem('theme') === 'dark') {
+    document.body.classList.add('dark');
+  }
 
-setupInput();
-setupAutocomplete();
-installPWA();
+  setupInput();
+  setupAutocomplete();
+  installPWA();
 
-document.getElementById('executeBtn').addEventListener('click', executeCode);
-document.getElementById('clearBtn').addEventListener('click', clearConsole);
-document.getElementById('exportBtn').addEventListener('click', exportLog);
-document.getElementById('themeBtn').addEventListener('click', toggleTheme);
+  // Button event listeners
+  document.getElementById('executeBtn').addEventListener('click', executeCode);
+  document.getElementById('clearBtn').addEventListener('click', clearConsole);
+  document.getElementById('exportBtn').addEventListener('click', exportLog);
+  document.getElementById('themeBtn').addEventListener('click', toggleTheme);
+  document.getElementById('launcherBtn').addEventListener('click', () => {
+    window.location.href = '/JS-Console/launcher.html';
+  });
 });
