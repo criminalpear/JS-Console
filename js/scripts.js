@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
   console.info = function(message) { appendLog(message, 'info'); };
 
   function installPWA() {
-    if (window.hasInstalledPWA) return; // Prevent re-running
+    if (window.hasInstalledPWA) return;
     window.hasInstalledPWA = true;
 
     let deferredPrompt;
@@ -274,8 +274,8 @@ document.addEventListener('DOMContentLoaded', function() {
     appendLog('v1.7 (Mar 07, 2025): Added setTheme() for custom colors.', 'info');
     appendLog('v1.8 (Mar 07, 2025): Added toggleSound() for sound control.', 'info');
     appendLog('v1.9 (Mar 07, 2025): Removed Pong, fixed setTheme(), prioritized bookmarks, added PWA support.', 'info');
-    appendLog('v2.0 (Mar 09, 2025): Enhanced PWA support by adding an "Install App" button, fixing manifest and service worker path issues (/JS-Console/), resolving duplicate button issue by using a single static button, and ensuring the button hides after installation or in standalone mode using appinstalled and display-mode events.', 'info');
-    appendLog('v2.1 (Mar 11, 2025): Added organization to bookmark function by adding folders holding that category of bookmarks functions.', 'info');
+    appendLog('v2.0 (Mar 09, 2025): Enhanced PWA support with "Install App" button, fixed manifest and service worker paths.', 'info');
+    appendLog('v2.1 (Mar 11, 2025): Organized bookmarks into categorized folders.', 'info');
     appendLog('Type "list();" to see all commands.', 'info');
   }
 
@@ -852,7 +852,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const bookmarksBar = document.getElementById('bookmarksBar');
 
-  // Define bookmarks with categories
   const categorizedBookmarks = {
     Games: [
       { name: "Snake Game", type: "bookmarklet", value: "snake()" },
@@ -881,15 +880,14 @@ document.addEventListener('DOMContentLoaded', function() {
     ]
   };
 
-  // Function to create a categorized bookmark with dropdown
   function createCategorizedBookmark(category, bookmarks) {
     const bookmark = document.createElement('div');
     bookmark.className = 'bookmark';
     const span = document.createElement('span');
     span.textContent = category;
     span.addEventListener('click', (e) => {
-      e.preventDefault(); // Prevent default behavior
-      bookmark.classList.toggle('active'); // Toggle dropdown visibility
+      e.preventDefault();
+      bookmark.classList.toggle('active');
     });
     bookmark.appendChild(span);
 
@@ -907,13 +905,11 @@ document.addEventListener('DOMContentLoaded', function() {
     return bookmark;
   }
 
-  // Add categorized bookmarks to the bar
   Object.entries(categorizedBookmarks).forEach(([category, bookmarks]) => {
     const bookmarkElement = createCategorizedBookmark(category, bookmarks);
     bookmarksBar.appendChild(bookmarkElement);
   });
 
-  // Keep the add and save bookmark buttons
   const addBookmarkBtn = document.createElement('div');
   addBookmarkBtn.className = 'bookmark';
   addBookmarkBtn.id = 'addBookmarkBtn';
@@ -1042,12 +1038,12 @@ document.addEventListener('DOMContentLoaded', function() {
   setupAutocomplete();
   installPWA();
 
-  // Button event listeners
   document.getElementById('executeBtn').addEventListener('click', executeCode);
   document.getElementById('clearBtn').addEventListener('click', clearConsole);
   document.getElementById('exportBtn').addEventListener('click', exportLog);
   document.getElementById('themeBtn').addEventListener('click', toggleTheme);
   document.getElementById('launcherBtn').addEventListener('click', () => {
-    window.location.href = '/JS-Console/launcher.html';
+    console.log('Launcher button clicked');
+    window.location.href = 'https://criminalpear.github.io/JS-Console/launcher.html';
   });
 });
