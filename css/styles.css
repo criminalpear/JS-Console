@@ -9,23 +9,34 @@ html, body {
 }
 
 :root {
-  --bg-color: #f4f4f4;
-  --text-color: black;
+  --bg-color: #1a2525; /* Dark blue-black default */
+  --text-color: #e0e0e0; /* Light gray for readability */
+  --border-color: #555; /* Subtle border for dark theme */
+  --bar-bg: #2e3b3b; /* Slightly lighter for bookmark bar */
+  --bookmark-bg: #2e3b3b; /* Matches button background */
+  --bookmark-hover: #3e4b4b; /* Hover state */
+  --button-bg: #4a6363; /* Dark teal for buttons */
+  --button-hover: #5a7373; /* Lighter teal on hover */
+}
+
+body.dark {
+  --bg-color: #1a2525; /* Matches default dark theme */
+  --text-color: #e0e0e0;
+  --border-color: #555;
+  --bar-bg: #2e3b3b;
+  --bookmark-bg: #2e3b3b;
+  --bookmark-hover: #3e4b4b;
+}
+
+body:not(.dark) {
+  --bg-color: #f4f4f4; /* Light mode fallback */
+  --text-color: #333;
   --border-color: #ccc;
   --bar-bg: #f1f1f1;
   --bookmark-bg: #e0e0e0;
   --bookmark-hover: #d0d0d0;
-  --button-bg: #4CAF50;
+  --button-bg: #4CAF50; /* Original green for light mode */
   --button-hover: #45a049;
-}
-
-body.dark {
-  --bg-color: #000000;
-  --text-color: #ffffff;
-  --border-color: #555;
-  --bar-bg: #000000;
-  --bookmark-bg: #000000;
-  --bookmark-hover: #333333;
 }
 
 html, body, .console, #inputField, #autocomplete, button, .bookmark {
@@ -65,6 +76,7 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
   align-items: center;
   position: relative;
   z-index: 2000;
+  background-color: var(--bookmark-bg);
 }
 
 .bookmark:hover {
@@ -73,13 +85,13 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
 
 .bookmark .remove {
   margin-left: 5px;
-  color: red;
+  color: #ff5555;
   font-weight: bold;
   cursor: pointer;
 }
 
 .bookmark .remove:hover {
-  color: darkred;
+  color: #cc4444;
 }
 
 /* Container and Console */
@@ -109,25 +121,10 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
   z-index: 1000;
 }
 
-.console .log {
-  color: var(--text-color);
-}
-
-body.dark .console .log {
-  color: #ffffff;
-}
-
-.console .error {
-  color: #ff5555;
-}
-
-.console .warn {
-  color: #ffff55;
-}
-
-.console .info {
-  color: #00ccff;
-}
+.console .log { color: var(--text-color); }
+.console .error { color: #ff5555; }
+.console .warn { color: #ffaa00; }
+.console .info { color: #55ff55; }
 
 .input-container {
   display: flex;
@@ -135,6 +132,8 @@ body.dark .console .log {
   padding: 10px;
   box-sizing: border-box;
   position: relative;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 #inputField {
@@ -147,6 +146,8 @@ body.dark .console .log {
   border: 1px solid var(--border-color);
   resize: vertical;
   min-height: 40px;
+  background-color: var(--bookmark-bg);
+  color: var(--text-color);
 }
 
 button {
@@ -158,6 +159,8 @@ button {
   font-size: 16px;
   margin: 0 5px;
   flex-shrink: 0;
+  border-radius: 5px;
+  transition: background-color 0.3s;
 }
 
 button:hover {
@@ -166,7 +169,7 @@ button:hover {
 
 #installBtn {
   padding: 10px;
-  background-color: #2196F3;
+  background-color: #2196F3; /* Blue for install button */
   color: white;
   border: none;
   cursor: pointer;
@@ -174,6 +177,7 @@ button:hover {
   margin: 0 5px;
   flex-shrink: 0;
   font-weight: bold;
+  border-radius: 5px;
 }
 
 #installBtn:hover {
@@ -181,7 +185,7 @@ button:hover {
 }
 
 .element-link {
-  color: #00ccff;
+  color: #55aaff;
   cursor: pointer;
   text-decoration: underline;
   margin-left: 5px;
@@ -200,6 +204,7 @@ button:hover {
   overflow-y: auto;
   display: none;
   z-index: 1500;
+  background-color: var(--bookmark-bg);
 }
 
 .autocomplete-item {
@@ -239,6 +244,7 @@ button:hover {
   padding: 5px 10px;
   cursor: pointer;
   font-size: 14px;
+  color: var(--text-color);
 }
 
 .bookmark-dropdown .dropdown-item:hover {
@@ -267,46 +273,17 @@ button:hover {
   color: var(--text-color);
 }
 
-.launcher-container p {
-  font-size: 18px;
-  margin-bottom: 20px;
-  color: var(--text-color);
-}
-
-.launcher-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 15px;
-  width: 100%;
-  max-width: 800px;
-}
-
-.launcher-item {
+.launcher-container button {
+  padding: 15px 30px; /* Larger for prominence */
   background-color: var(--button-bg);
   color: white;
-  text-align: center;
-  padding: 15px;
-  border-radius: 5px;
-  text-decoration: none;
-  font-size: 16px;
-  transition: background-color 0.3s;
-}
-
-.launcher-item:hover {
-  background-color: var(--button-hover);
-}
-
-.back-btn {
-  margin-top: 20px;
-  background-color: #2196F3;
-  color: white;
-  padding: 10px 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
+  transition: background-color 0.3s;
 }
 
-.back-btn:hover {
-  background-color: #1976D2;
+.launcher-container button:hover {
+  background-color: var(--button-hover);
 }
