@@ -1,19 +1,16 @@
-// Service Worker for JS-Console PWA
-const CACHE_NAME = 'js-console-cache-v1';
+// Service Worker for JS-Console PWA (Launcher)
+const CACHE_NAME = 'js-console-launcher-cache-v1';
 const FILES_TO_CACHE = [
-  '/JS-Console/',             // Root URL (matches start_url)
-  '/JS-Console/index.html',   // URL to index
+  '/JS-Console/',             // Launcher root URL
+  '/JS-Console/index.html',   // Launcher page
   '/JS-Console/css/styles.css', // Stylesheet
-  '/JS-Console/js/scripts.js',  // Main script
-  '/JS-Console/js/utils.js',    // Utility script
-  '/JS-Console/js/snake.js',    // Snake game script
-  '/JS-Console/js/tictactoe.js', // Tic-tac-toe script
+  '/JS-Console/js/scripts.js',  // Launcher script (if needed)
   '/JS-Console/manifest.json',  // Manifest
   '/JS-Console/images/icon-192x192.png', // Icon
   '/JS-Console/images/icon-512x512.png'  // Icon
 ];
 
-// Install event: Cache all critical files
+// Install event: Cache launcher files
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -40,14 +37,14 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch event: Serve cached files or fetch from network
+// Fetch event: Serve cached launcher page
 self.addEventListener('fetch', (event) => {
   if (event.request.mode === 'navigate') {
     event.respondWith(
       caches.match('/JS-Console/').then((response) => {
         return response || fetch(event.request);
       }).catch(() => {
-        return caches.match('/JS-Console/index.html'); // Fallback to index.html
+        return caches.match('/JS-Console/index.html');
       })
     );
   } else {
