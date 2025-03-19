@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#4CAF50">
-  <meta name="description" content="A collection of games and utilities by criminalpear">
-  <title>Game & Utility Hub</title>
+  <meta name="description" content="A JavaScript console with games and utilities">
+  <title>JavaScript Console</title>
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-X1QVWZVDC3"></script>
@@ -22,20 +22,26 @@
   <link rel="stylesheet" href="/JS-Console/css/styles.css">
 </head>
 <body>
-  <div class="launcher-container">
-    <h1>Game & Utility Hub</h1>
-    <p>Select an app to launch:</p>
-    <div class="launcher-grid">
-      <a href="https://criminalpear.github.io/JS-Console/" class="launcher-item">JS-Console</a>
-      <a href="https://criminalpear.github.io/Flappy-Bird/" class="launcher-item">Flappy Bird</a>
-      <a href="https://criminalpear.github.io/Bookmarklets/" class="launcher-item">Bookmarklets</a>
-      <a href="https://criminalpear.github.io/Hextris/" class="launcher-item">Hextris</a>
-      <a href="https://criminalpear.github.io/Pacman/" class="launcher-item">Pacman</a>
-      <a href="https://criminalpear.github.io/Space-Invaders/" class="launcher-item">Space Invaders</a>
-      <a href="https://criminalpear.github.io/HexGL-game/" class="launcher-item">HexGL</a>
-      <a href="https://criminalpear.github.io/2048/" class="launcher-item">2048</a>
+  <div id="bookmarksBar"></div>
+  <div class="container">
+    <div class="console-container">
+      <div id="jsConsole" class="console"></div>
+    </div>
+    <div class="input-container">
+      <textarea id="inputField" placeholder="Enter code here..."></textarea>
+      <button id="executeBtn">Execute Code</button>
+      <button id="clearBtn">Clear Console</button>
+      <button id="exportBtn">Export Log</button>
+      <button id="themeBtn">Toggle Theme</button>
+      <button id="installBtn">Install App</button>
+      <button id="launcherBtn">Launcher</button> <!-- New button -->
+      <div id="autocomplete"></div>
     </div>
   </div>
+  <canvas id="gameCanvas" width="400" height="400"></canvas>
+  <script src="/JS-Console/js/utils.js"></script>
+  <script src="/JS-Console/js/snake.js"></script>
+  <script src="/JS-Console/js/tictactoe.js"></script>
   <script src="/JS-Console/js/scripts.js"></script>
   <script>
     if ('serviceWorker' in navigator) {
