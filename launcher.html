@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#4CAF50">
+  <title>Launcher - Game & Utility Hub</title>
+  <link rel="stylesheet" href="/JS-Console/css/styles.css">
+</head>
+<body>
+  <div class="launcher-container">
+    <h1>Game & Utility Hub</h1>
+    <p>Select an app to launch:</p>
+    <div class="launcher-grid">
+      <a href="https://criminalpear.github.io/JS-Console/" class="launcher-item">JS-Console</a>
+      <a href="https://criminalpear.github.io/Flappy-Bird/" class="launcher-item">Flappy Bird</a>
+      <a href="https://criminalpear.github.io/Bookmarklets/" class="launcher-item">Bookmarklets</a>
+      <a href="https://criminalpear.github.io/Hextris/" class="launcher-item">Hextris</a>
+      <a href="https://criminalpear.github.io/Pacman/" class="launcher-item">Pacman</a>
+      <a href="https://criminalpear.github.io/Space-Invaders/" class="launcher-item">Space Invaders</a>
+      <a href="https://criminalpear.github.io/HexGL-game/" class="launcher-item">HexGL</a>
+      <a href="https://criminalpear.github.io/2048/" class="launcher-item">2048</a>
+    </div>
+    <button id="backBtn" class="back-btn">Back to JS-Console</button>
+  </div>
+  <script>
+    document.getElementById('backBtn').addEventListener('click', () => {
+      window.location.href = '/JS-Console/';
+    });
+  </script>
+</body>
+</html>
