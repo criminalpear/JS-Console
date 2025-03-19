@@ -1,16 +1,20 @@
-// Service Worker for JS-Console PWA (Launcher)
-const CACHE_NAME = 'js-console-launcher-cache-v1';
+// Service Worker for JS-Console PWA
+const CACHE_NAME = 'js-console-cache-v2';
 const FILES_TO_CACHE = [
-  '/JS-Console/',             // Launcher root URL
-  '/JS-Console/index.html',   // Launcher page
+  '/JS-Console/',             // Root URL (start_url)
+  '/JS-Console/index.html',   // JS-Console page
+  '/JS-Console/launcher.html', // Launcher page
   '/JS-Console/css/styles.css', // Stylesheet
-  '/JS-Console/js/scripts.js',  // Launcher script (if needed)
+  '/JS-Console/js/scripts.js',  // Main script
+  '/JS-Console/js/utils.js',    // Utility script
+  '/JS-Console/js/snake.js',    // Snake game script
+  '/JS-Console/js/tictactoe.js', // Tic-tac-toe script
   '/JS-Console/manifest.json',  // Manifest
   '/JS-Console/images/icon-192x192.png', // Icon
   '/JS-Console/images/icon-512x512.png'  // Icon
 ];
 
-// Install event: Cache launcher files
+// Install event: Cache all critical files
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -37,7 +41,7 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch event: Serve cached launcher page
+// Fetch event: Serve cached files or fetch from network
 self.addEventListener('fetch', (event) => {
   if (event.request.mode === 'navigate') {
     event.respondWith(
