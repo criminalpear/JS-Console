@@ -1,7 +1,7 @@
 // Service Worker for JS-Console PWA
 const CACHE_NAME = 'js-console-cache-v1';
 const FILES_TO_CACHE = [
-  '/JS-Console/',             // Root URL (start_url)
+  '/JS-Console/',             // Root URL (matches start_url)
   '/JS-Console/index.html',   // Main page
   '/JS-Console/css/styles.css', // Stylesheet
   '/JS-Console/js/scripts.js',  // Main script
@@ -9,8 +9,8 @@ const FILES_TO_CACHE = [
   '/JS-Console/js/snake.js',    // Snake game script
   '/JS-Console/js/tictactoe.js', // Tic-tac-toe script
   '/JS-Console/manifest.json',  // Manifest
-  '/images/icon-192x192.png',   // Icon (adjust path if different)
-  '/JS-Console/offline.html'    // Offline fallback page
+  '/JS-Console/images/icon-192x192.png', // Icon
+  '/JS-Console/images/icon-512x512.png'  // Icon
 ];
 
 // Install event: Cache all critical files
@@ -19,6 +19,8 @@ self.addEventListener('install', (event) => {
     caches.open(CACHE_NAME).then((cache) => {
       console.log('Service Worker: Installing and caching files');
       return cache.addAll(FILES_TO_CACHE);
+    }).catch((error) => {
+      console.error('Cache addAll failed:', error);
     })
   );
   self.skipWaiting();
@@ -42,10 +44,10 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      caches.match('/JS-Console/index.html').then((response) => {
+      caches.match('/JS-Console/').then((response) => {
         return response || fetch(event.request);
       }).catch(() => {
-        return caches.match('/JS-Console/offline.html');
+        return caches.match('/JS-Console/index.html'); // Fallback to index.html
       })
     );
   } else {
