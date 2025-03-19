@@ -1,7 +1,7 @@
 {
-  "name": "Game & Utility Hub",
-  "short_name": "Hub",
-  "description": "A collection of games and utilities by criminalpear",
+  "name": "JavaScript Console",
+  "short_name": "JS Console",
+  "description": "A JavaScript console with games and utilities",
   "start_url": "/JS-Console/",
   "scope": "/JS-Console/",
   "display": "standalone",
