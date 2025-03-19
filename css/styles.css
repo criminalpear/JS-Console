@@ -33,7 +33,53 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
   color: var(--text-color);
 }
 
-/* Bookmarks Bar */
+/* Launcher Styles */
+.launcher-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.launcher-container h1 {
+  font-size: 32px;
+  margin-bottom: 10px;
+  color: var(--text-color);
+}
+
+.launcher-container p {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: var(--text-color);
+}
+
+.launcher-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  width: 100%;
+  max-width: 800px;
+}
+
+.launcher-item {
+  background-color: var(--button-bg);
+  color: white;
+  text-align: center;
+  padding: 15px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.launcher-item:hover {
+  background-color: var(--button-hover);
+}
+
+/* Existing JS-Console Styles (kept for when JS-Console is loaded) */
 #bookmarksBar {
   background-color: var(--bar-bg);
   padding: 5px;
@@ -46,13 +92,12 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
   height: 50px;
   overflow-x: auto;
   overflow-y: visible;
-  z-index: 2000; /* Increased to support dropdowns above console */
+  z-index: 2000;
   box-sizing: border-box;
   white-space: nowrap;
   isolation: isolate;
 }
 
-/* Bookmark Styling */
 .bookmark {
   padding: 5px 10px;
   margin: 2px 5px;
@@ -64,39 +109,7 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
   display: inline-flex;
   align-items: center;
   position: relative;
-  z-index: 2000; /* Match #bookmarksBar for consistency */
-}
-
-/* Dropdown Styling */
-.bookmark-dropdown {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background-color: var(--bookmark-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 3px;
-  min-width: 150px;
-  z-index: 3000;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  max-height: 300px; /* Allow scrolling if too tall */
-  overflow-y: auto;
-}
-
-.bookmark-dropdown .dropdown-item {
-  padding: 5px 10px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.bookmark-dropdown .dropdown-item:hover {
-  background-color: var(--bookmark-hover);
-}
-
-/* Show dropdown when parent bookmark is active or hovered */
-.bookmark.active .bookmark-dropdown,
-.bookmark:hover .bookmark-dropdown {
-  display: block;
+  z-index: 2000;
 }
 
 .bookmark:hover {
@@ -114,12 +127,11 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
   color: darkred;
 }
 
-/* Container and Console */
 .container {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 85px); /* Adjusted to bring console closer to bookmarks */
-  margin-top: 75px; /* Minimal margin to align just below #bookmarksBar */
+  height: calc(100vh - 60px);
+  margin-top: 50px;
   box-sizing: border-box;
 }
 
@@ -127,7 +139,7 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
   flex: 1;
   display: flex;
   overflow: hidden;
-  z-index: 1000; /* Lower than dropdowns */
+  z-index: 1000;
 }
 
 .console {
@@ -138,7 +150,7 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
   white-space: pre-wrap;
   overflow-y: auto;
   box-sizing: border-box;
-  z-index: 1000; /* Lower than dropdowns */
+  z-index: 1000;
 }
 
 .console .log {
@@ -231,7 +243,7 @@ button:hover {
   max-height: 150px;
   overflow-y: auto;
   display: none;
-  z-index: 1500; /* Above console but below dropdowns */
+  z-index: 1500;
 }
 
 .autocomplete-item {
@@ -251,5 +263,33 @@ button:hover {
   transform: translate(-50%, -50%);
   border: 1px solid var(--border-color);
   display: none;
-  z-index: 4000; /* Highest to ensure games appear above all */
+  z-index: 4000;
+}
+
+.bookmark-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: var(--bookmark-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  min-width: 150px;
+  z-index: 3000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.bookmark-dropdown .dropdown-item {
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.bookmark-dropdown .dropdown-item:hover {
+  background-color: var(--bookmark-hover);
+}
+
+.bookmark.active .bookmark-dropdown,
+.bookmark:hover .bookmark-dropdown {
+  display: block;
 }
