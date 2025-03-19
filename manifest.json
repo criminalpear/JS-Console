@@ -1,9 +1,9 @@
 {
-  "name": "JavaScript Console",
-  "short_name": "JS Console",
-  "description": "A JavaScript console with games and utilities",
-  "start_url": "/JS-Console/",  // Changed from "/index.html"
-  "scope": "/JS-Console/",      // Added to define the app’s scope
+  "name": "Game & Utility Hub",
+  "short_name": "Hub",
+  "description": "A collection of games and utilities by criminalpear",
+  "start_url": "/JS-Console/",
+  "scope": "/JS-Console/",
   "display": "standalone",
   "background_color": "#f4f4f4",
   "theme_color": "#4CAF50",
@@ -14,7 +14,7 @@
       "type": "image/png"
     },
     {
-      "src": "/JS-Console/images/icon-512x512.png", // Fixed path typo
+      "src": "/JS-Console/images/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
