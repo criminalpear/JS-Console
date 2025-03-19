@@ -1043,7 +1043,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('exportBtn').addEventListener('click', exportLog);
   document.getElementById('themeBtn').addEventListener('click', toggleTheme);
   document.getElementById('launcherBtn').addEventListener('click', () => {
-    console.log('Launcher button clicked');
-    window.location.href = 'https://criminalpear.github.io/JS-Console/launcher.html';
-  });
+  console.log('Launcher button clicked');
+  window.location.assign('https://criminalpear.github.io/JS-Console/launcher.html');
+});
 });
