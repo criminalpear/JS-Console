@@ -10,7 +10,7 @@ html, body {
 
 /* Default to light theme for JS-Console */
 :root {
-  --bg-color: #f4f4f4; /* Original light gray for JS-Console */
+  --bg-color: #f4f4f4; /* Original light gray */
   --text-color: black; /* Original black text */
   --border-color: #ccc;
   --bar-bg: #f1f1f1;
@@ -248,7 +248,7 @@ button:hover {
   display: block;
 }
 
-/* Launcher Styles (override for dark theme) */
+/* Launcher Styles (dark theme for eye comfort) */
 .launcher-container {
   display: flex;
   flex-direction: column;
@@ -257,24 +257,25 @@ button:hover {
   height: 100vh;
   padding: 20px;
   box-sizing: border-box;
-  background-color: #1a2525; /* Dark blue-black for launcher */
+  background-color: #1a2525; /* Dark blue-black */
   color: #e0e0e0; /* Light gray text */
 }
 
 .launcher-container h1 {
   font-size: 32px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   color: #e0e0e0;
 }
 
 .launcher-container button {
   padding: 15px 30px;
-  background-color: #4a6363; /* Dark teal for contrast */
+  background-color: #4a6363; /* Dark teal */
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
+  margin: 10px 0;
   transition: background-color 0.3s;
 }
 
