@@ -1,4 +1,4 @@
-const CACHE_NAME = 'js-console-cache-v2';
+const CACHE_NAME = 'js-console-cache-v3';
 const FILES_TO_CACHE = [
   '/JS-Console/',
   '/JS-Console/index.html',
