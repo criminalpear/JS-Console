@@ -1,17 +1,17 @@
 // Service Worker for JS-Console PWA
 const CACHE_NAME = 'js-console-cache-v2';
 const FILES_TO_CACHE = [
-  '/JS-Console/',             // Root URL (start_url)
-  '/JS-Console/index.html',   // JS-Console page
-  '/JS-Console/launcher.html', // Launcher page
-  '/JS-Console/css/styles.css', // Stylesheet
-  '/JS-Console/js/scripts.js',  // Main script
-  '/JS-Console/js/utils.js',    // Utility script
-  '/JS-Console/js/snake.js',    // Snake game script
-  '/JS-Console/js/tictactoe.js', // Tic-tac-toe script
-  '/JS-Console/manifest.json',  // Manifest
-  '/JS-Console/images/icon-192x192.png', // Icon
-  '/JS-Console/images/icon-512x512.png'  // Icon
+  '/JS-Console/',
+  '/JS-Console/index.html',
+  '/JS-Console/launcher.html', // Ensure this is listed
+  '/JS-Console/css/styles.css',
+  '/JS-Console/js/scripts.js',
+  '/JS-Console/js/utils.js',
+  '/JS-Console/js/snake.js',
+  '/JS-Console/js/tictactoe.js',
+  '/JS-Console/manifest.json',
+  '/JS-Console/images/icon-192x192.png',
+  '/JS-Console/images/icon-512x512.png'
 ];
 
 // Install event: Cache all critical files
