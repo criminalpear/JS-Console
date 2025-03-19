@@ -9,7 +9,8 @@ const FILES_TO_CACHE = [
   '/JS-Console/js/snake.js',    // Snake game script
   '/JS-Console/js/tictactoe.js', // Tic-tac-toe script
   '/JS-Console/manifest.json',  // Manifest
-  '/images/icon-192x192.png'    // Icon (adjust path if different)
+  '/images/icon-192x192.png',   // Icon (adjust path if different)
+  '/JS-Console/offline.html'    // Add this line for offline fallback
 ];
 
 // Install event: Cache all critical files
