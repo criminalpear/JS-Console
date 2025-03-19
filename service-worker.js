@@ -2,7 +2,7 @@
 const CACHE_NAME = 'js-console-cache-v1';
 const FILES_TO_CACHE = [
   '/JS-Console/',             // Root URL (matches start_url)
-  '/JS-Console/index.html',   // Main page
+  '/JS-Console/index.html',   // URL to index
   '/JS-Console/css/styles.css', // Stylesheet
   '/JS-Console/js/scripts.js',  // Main script
   '/JS-Console/js/utils.js',    // Utility script
