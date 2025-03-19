@@ -33,53 +33,7 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
   color: var(--text-color);
 }
 
-/* Launcher Styles */
-.launcher-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.launcher-container h1 {
-  font-size: 32px;
-  margin-bottom: 10px;
-  color: var(--text-color);
-}
-
-.launcher-container p {
-  font-size: 18px;
-  margin-bottom: 20px;
-  color: var(--text-color);
-}
-
-.launcher-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 15px;
-  width: 100%;
-  max-width: 800px;
-}
-
-.launcher-item {
-  background-color: var(--button-bg);
-  color: white;
-  text-align: center;
-  padding: 15px;
-  border-radius: 5px;
-  text-decoration: none;
-  font-size: 16px;
-  transition: background-color 0.3s;
-}
-
-.launcher-item:hover {
-  background-color: var(--button-hover);
-}
-
-/* Existing JS-Console Styles (kept for when JS-Console is loaded) */
+/* Bookmarks Bar */
 #bookmarksBar {
   background-color: var(--bar-bg);
   padding: 5px;
@@ -98,6 +52,7 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
   isolation: isolate;
 }
 
+/* Bookmark Styling */
 .bookmark {
   padding: 5px 10px;
   margin: 2px 5px;
@@ -127,6 +82,7 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
   color: darkred;
 }
 
+/* Container and Console */
 .container {
   display: flex;
   flex-direction: column;
@@ -292,4 +248,65 @@ button:hover {
 .bookmark.active .bookmark-dropdown,
 .bookmark:hover .bookmark-dropdown {
   display: block;
+}
+
+/* Launcher Styles */
+.launcher-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.launcher-container h1 {
+  font-size: 32px;
+  margin-bottom: 10px;
+  color: var(--text-color);
+}
+
+.launcher-container p {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: var(--text-color);
+}
+
+.launcher-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  width: 100%;
+  max-width: 800px;
+}
+
+.launcher-item {
+  background-color: var(--button-bg);
+  color: white;
+  text-align: center;
+  padding: 15px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.launcher-item:hover {
+  background-color: var(--button-hover);
+}
+
+.back-btn {
+  margin-top: 20px;
+  background-color: #2196F3;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.back-btn:hover {
+  background-color: #1976D2;
 }
