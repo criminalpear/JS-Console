@@ -8,43 +8,35 @@ html, body {
   transition: background-color 0.3s, color 0.3s;
 }
 
+/* Default to light theme for JS-Console */
 :root {
-  --bg-color: #1a2525; /* Dark blue-black default */
-  --text-color: #e0e0e0; /* Light gray for readability */
-  --border-color: #555; /* Subtle border for dark theme */
-  --bar-bg: #2e3b3b; /* Slightly lighter for bookmark bar */
-  --bookmark-bg: #2e3b3b; /* Matches button background */
-  --bookmark-hover: #3e4b4b; /* Hover state */
-  --button-bg: #4a6363; /* Dark teal for buttons */
-  --button-hover: #5a7373; /* Lighter teal on hover */
-}
-
-body.dark {
-  --bg-color: #1a2525; /* Matches default dark theme */
-  --text-color: #e0e0e0;
-  --border-color: #555;
-  --bar-bg: #2e3b3b;
-  --bookmark-bg: #2e3b3b;
-  --bookmark-hover: #3e4b4b;
-}
-
-body:not(.dark) {
-  --bg-color: #f4f4f4; /* Light mode fallback */
-  --text-color: #333;
+  --bg-color: #f4f4f4; /* Original light gray for JS-Console */
+  --text-color: black; /* Original black text */
   --border-color: #ccc;
   --bar-bg: #f1f1f1;
   --bookmark-bg: #e0e0e0;
   --bookmark-hover: #d0d0d0;
-  --button-bg: #4CAF50; /* Original green for light mode */
+  --button-bg: #4CAF50; /* Original green buttons */
   --button-hover: #45a049;
 }
 
+/* Dark mode toggle for JS-Console */
+body.dark {
+  --bg-color: #000000;
+  --text-color: #ffffff;
+  --border-color: #555;
+  --bar-bg: #000000;
+  --bookmark-bg: #000000;
+  --bookmark-hover: #333333;
+}
+
+/* Apply defaults globally unless overridden */
 html, body, .console, #inputField, #autocomplete, button, .bookmark {
   background-color: var(--bg-color);
   color: var(--text-color);
 }
 
-/* Bookmarks Bar */
+/* Bookmarks Bar (JS-Console) */
 #bookmarksBar {
   background-color: var(--bar-bg);
   padding: 5px;
@@ -85,16 +77,16 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
 
 .bookmark .remove {
   margin-left: 5px;
-  color: #ff5555;
+  color: red;
   font-weight: bold;
   cursor: pointer;
 }
 
 .bookmark .remove:hover {
-  color: #cc4444;
+  color: darkred;
 }
 
-/* Container and Console */
+/* Container and Console (JS-Console) */
 .container {
   display: flex;
   flex-direction: column;
@@ -123,8 +115,8 @@ html, body, .console, #inputField, #autocomplete, button, .bookmark {
 
 .console .log { color: var(--text-color); }
 .console .error { color: #ff5555; }
-.console .warn { color: #ffaa00; }
-.console .info { color: #55ff55; }
+.console .warn { color: #ffff55; }
+.console .info { color: #00ccff; }
 
 .input-container {
   display: flex;
@@ -169,7 +161,7 @@ button:hover {
 
 #installBtn {
   padding: 10px;
-  background-color: #2196F3; /* Blue for install button */
+  background-color: #2196F3;
   color: white;
   border: none;
   cursor: pointer;
@@ -185,7 +177,7 @@ button:hover {
 }
 
 .element-link {
-  color: #55aaff;
+  color: #00ccff;
   cursor: pointer;
   text-decoration: underline;
   margin-left: 5px;
@@ -256,7 +248,7 @@ button:hover {
   display: block;
 }
 
-/* Launcher Styles */
+/* Launcher Styles (override for dark theme) */
 .launcher-container {
   display: flex;
   flex-direction: column;
@@ -265,17 +257,19 @@ button:hover {
   height: 100vh;
   padding: 20px;
   box-sizing: border-box;
+  background-color: #1a2525; /* Dark blue-black for launcher */
+  color: #e0e0e0; /* Light gray text */
 }
 
 .launcher-container h1 {
   font-size: 32px;
   margin-bottom: 10px;
-  color: var(--text-color);
+  color: #e0e0e0;
 }
 
 .launcher-container button {
-  padding: 15px 30px; /* Larger for prominence */
-  background-color: var(--button-bg);
+  padding: 15px 30px;
+  background-color: #4a6363; /* Dark teal for contrast */
   color: white;
   border: none;
   border-radius: 5px;
@@ -285,5 +279,5 @@ button:hover {
 }
 
 .launcher-container button:hover {
-  background-color: var(--button-hover);
+  background-color: #5a7373; /* Lighter teal on hover */
 }
