@@ -1025,13 +1025,28 @@ document.addEventListener('DOMContentLoaded', function() {
     hasShownWelcome = true;
   }
 
+// ... (rest of scripts.js remains unchanged until the end)
+
+document.addEventListener('DOMContentLoaded', function() {
+  // ... (all other code inside DOMContentLoaded)
+
+  // Theme setup
   const customTheme = JSON.parse(localStorage.getItem('customTheme'));
+  const savedTheme = localStorage.getItem('theme');
+  
   if (customTheme) {
+    // Apply custom theme if set
     document.body.classList.remove('dark');
     document.documentElement.style.setProperty('--bg-color', customTheme.bgColor);
     document.documentElement.style.setProperty('--text-color', customTheme.textColor);
-  } else if (localStorage.getItem('theme') === 'dark') {
+  } else if (savedTheme === 'dark') {
+    // Apply dark mode if explicitly saved
     document.body.classList.add('dark');
+  } else {
+    // Default to light theme (no class, uses :root CSS)
+    document.body.classList.remove('dark');
+    document.documentElement.style.removeProperty('--bg-color');
+    document.documentElement.style.removeProperty('--text-color');
   }
 
   setupInput();
@@ -1043,7 +1058,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('exportBtn').addEventListener('click', exportLog);
   document.getElementById('themeBtn').addEventListener('click', toggleTheme);
   document.getElementById('launcherBtn').addEventListener('click', () => {
-  console.log('Launcher button clicked');
-  window.location.assign('https://criminalpear.github.io/JS-Console/launcher.html');
-});
+    console.log('Launcher button clicked');
+    window.location.assign('https://criminalpear.github.io/JS-Console/launcher.html');
+  });
 });
