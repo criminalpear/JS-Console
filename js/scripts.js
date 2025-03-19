@@ -1025,11 +1025,6 @@ document.addEventListener('DOMContentLoaded', function() {
     hasShownWelcome = true;
   }
 
-// ... (rest of scripts.js remains unchanged until the end)
-
-document.addEventListener('DOMContentLoaded', function() {
-  // ... (all other code inside DOMContentLoaded)
-
   // Theme setup
   const customTheme = JSON.parse(localStorage.getItem('customTheme'));
   const savedTheme = localStorage.getItem('theme');
