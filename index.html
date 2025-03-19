@@ -42,16 +42,16 @@
   <script src="js/snake.js"></script>
   <script src="js/tictactoe.js"></script>
   <script src="js/scripts.js"></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/JS-Console/service-worker.js')
-          .then(registration => {})
-          .catch(error => {
-            console.error('Service Worker registration failed:', error);
-          });
-      });
-    }
-  </script>
+ <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/JS-Console/service-worker.js')
+        .then(registration => {})
+        .catch(error => {
+          console.error('Service Worker registration failed:', error);
+        });
+    });
+  }
+</script>
 </body>
 </html>
