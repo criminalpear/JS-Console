@@ -1024,7 +1024,7 @@ document.addEventListener('DOMContentLoaded', function() {
     savedLogs.forEach(log => appendLog(log.message, log.type, log.isHtml));
   }
   if (!hasShownWelcome) {
-    appendLog('Welcome to the JavaScript Console v2.1 on GitHub Pages!', 'info');
+    appendLog('Welcome to the JavaScript Console v2.5 on GitHub Pages!', 'info');
     appendLog('Type "updates();" for what’s new or "list();" for all commands.', 'info');
     hasShownWelcome = true;
   }
