@@ -1098,21 +1098,31 @@ function calculateTrig(func, angle) {
   saveBookmarksBtn.addEventListener('click', saveBookmarks);
   bookmarksBar.appendChild(saveBookmarksBtn);
 
-  function handleBookmark(type, value) {
-    if (type === 'url') {
-      window.open(value, '_blank');
-    } else if (type === 'bookmarklet') {
-      try {
-        eval(value);
-      } catch (e) {
-        appendLog('Bookmarklet Error: ' + e.message, 'error');
+ function handleBookmark(type, value) {
+  if (type === 'url') {
+    window.open(value, '_blank');
+  } else if (type === 'bookmarklet') {
+    try {
+      // Decode URL-encoded bookmarklet and clean up
+      let decodedValue = decodeURIComponent(value.trim());
+      // Remove 'javascript:' prefix if present and ensure it ends with a semicolon
+      if (decodedValue.startsWith('javascript:')) {
+        decodedValue = decodedValue.replace('javascript:', '');
       }
-    } else {
-      appendLog(`Unknown bookmark type: ${type}`, 'error');
+      if (!decodedValue.endsWith(';')) {
+        decodedValue += ';';
+      }
+      // Execute the cleaned, decoded bookmarklet
+      eval(decodedValue);
+      appendLog(`Bookmarklet "${decodedValue.slice(0, 20)}..." executed successfully!`, 'info');
+    } catch (e) {
+      appendLog('Bookmarklet Error: ' + e.message, 'error');
     }
-    gtag('event', 'use_bookmark', { 'event_category': 'UI', 'event_label': value });
+  } else {
+    appendLog(`Unknown bookmark type: ${type}`, 'error');
   }
-
+  gtag('event', 'use_bookmark', { 'event_category': 'UI', 'event_label': value });
+}
   let customBookmarks = JSON.parse(localStorage.getItem('customBookmarks') || '[]');
 
   function addBookmark() {
