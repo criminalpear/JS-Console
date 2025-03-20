@@ -214,11 +214,12 @@ function executeCode() {
     gtag('event', 'export_log', { 'event_category': 'Console' });
   }
 
-  const functions = [
-    'squares', 'ponies', 'sawyer', 'aiden', 'aadyn', 'eli', 'elijah', 'ronin', 'ronin1', 'ronin2',
-    'check', 'idiot', 'elements', 'elementshelp', 'list', 'snake', 'updates', 'setColor', 'tictactoe',
-    'share', 'reset', 'highscores', 'shareHighScores', 'leaderboard', 'setUsername', 'setTheme', 'toggleSound', 'more'
-  ];
+const functions = [
+  'squares', 'ponies', 'sawyer', 'aiden', 'aadyn', 'eli', 'elijah', 'ronin', 'ronin1', 'ronin2',
+  'check', 'idiot', 'elements', 'elementshelp', 'list', 'snake', 'updates', 'setColor', 'tictactoe',
+  'share', 'reset', 'highscores', 'shareHighScores', 'leaderboard', 'setUsername', 'setTheme', 
+  'toggleSound', 'more', 'math'
+];
 
   function setupAutocomplete() {
     const autocomplete = document.getElementById('autocomplete');
