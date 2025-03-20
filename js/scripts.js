@@ -282,7 +282,168 @@ document.addEventListener('DOMContentLoaded', function() {
   appendLog('v2.5 (Mar 19, 2025): Expanded launcher with Flappy Bird, Bookmarklets, Hextris, Pacman, Space Invaders, HexGL, and 2048.', 'info');
   appendLog('Type "list();" to see all commands.', 'info');
 }
+function math(type = "list", input = "") {
+  appendLog('Math Formulas and Solvers:', 'info');
 
+  // List of all formulas if type is "list" or no specific solver is matched
+  if (type === "list") {
+    appendLog('Type "math(\'type\', \'input\')" to solve specific problems (e.g., math(\'quadratic\', \'x² + 5x + 6 = 0\')).', 'info');
+    appendLog('Available formulas and solvers:', 'info');
+
+    // Linear Equations
+    appendLog('Linear Equation (Slope-Intercept): y = mx + b (m = slope, b = y-intercept)', 'info');
+    appendLog('Point-Slope Form: y - y₁ = m(x - x₁) (m = slope, (x₁, y₁) = point)', 'info');
+    appendLog('Standard Form: Ax + By = C (A, B, C = constants)', 'info');
+    appendLog('  Solver: math(\'linear\', \'2x + 3 = 7\')', 'info');
+
+    // Quadratic Equations
+    appendLog('Quadratic Equation: y = ax² + bx + c (a, b, c = constants)', 'info');
+    appendLog('Quadratic Formula: x = [-b ± √(b² - 4ac)] / (2a)', 'info');
+    appendLog('  Solver: math(\'quadratic\', \'x² + 5x + 6 = 0\')', 'info');
+
+    // Exponential and Logarithmic
+    appendLog('Exponential: y = a * b^x (a = initial, b = base)', 'info');
+    appendLog('Logarithmic: y = log_b(x) (b = base)', 'info');
+
+    // Binomial Theorem
+    appendLog('Binomial Theorem: (a + b)^n = Σ [nCk * a^(n-k) * b^k]', 'info');
+
+    // Geometry
+    appendLog('Area of Rectangle: A = l * w (l = length, w = width)', 'info');
+    appendLog('Area of Triangle: A = (1/2) * b * h (b = base, h = height)', 'info');
+    appendLog('Area of Circle: A = πr² (r = radius)', 'info');
+    appendLog('Circumference of Circle: C = 2πr (r = radius)', 'info');
+    appendLog('Pythagorean Theorem: a² + b² = c² (a, b = legs, c = hypotenuse)', 'info');
+    appendLog('Volume of Cylinder: V = πr²h (r = radius, h = height)', 'info');
+    appendLog('Surface Area of Sphere: A = 4πr² (r = radius)', 'info');
+    appendLog('  Solver: math(\'area\', \'circle 5\') or math(\'volume\', \'cylinder 3 10\')', 'info');
+
+    // Trigonometry
+    appendLog('Sine: sin(θ) = opposite / hypotenuse', 'info');
+    appendLog('Cosine: cos(θ) = adjacent / hypotenuse', 'info');
+    appendLog('Tangent: tan(θ) = opposite / adjacent', 'info');
+    appendLog('Pythagorean Identity: sin²(θ) + cos²(θ) = 1', 'info');
+    appendLog('Law of Sines: a / sin(A) = b / sin(B) = c / sin(C)', 'info');
+    appendLog('Law of Cosines: c² = a² + b² - 2ab * cos(C)', 'info');
+    appendLog('  Solver: math(\'trig\', \'sin 30\')', 'info');
+
+    // Calculus
+    appendLog('Power Rule: d/dx [x^n] = n * x^(n-1)', 'info');
+    appendLog('Product Rule: d/dx [u * v] = u * dv/dx + v * du/dx', 'info');
+    appendLog('Chain Rule: d/dx [f(g(x))] = f\'(g(x)) * g\'(x)', 'info');
+    appendLog('Definite Integral: ∫(a to b) f(x) dx', 'info');
+    appendLog('Fundamental Theorem: ∫(a to b) f(x) dx = F(b) - F(a)', 'info');
+
+    // Statistics/Probability
+    appendLog('Mean: μ = (Σx) / n', 'info');
+    appendLog('Standard Deviation: σ = √[Σ(x - μ)² / n]', 'info');
+    appendLog('Probability: P(E) = favorable / total', 'info');
+    appendLog('Binomial Probability: P(x) = nCx * p^x * (1-p)^(n-x)', 'info');
+
+    // Other
+    appendLog('Distance Formula: d = √[(x₂ - x₁)² + (y₂ - y₁)²]', 'info');
+    appendLog('Slope Formula: m = (y₂ - y₁) / (x₂ - x₁)', 'info');
+    appendLog('Arithmetic Sequence: a_n = a_1 + (n-1)d', 'info');
+    appendLog('Geometric Sequence: a_n = a_1 * r^(n-1)', 'info');
+    appendLog('See solvers below for usage examples!', 'info');
+    return;
+  }
+
+  // Solvers
+  try {
+    if (type === "linear") {
+      const [left, right] = input.split('=').map(part => part.trim());
+      const solution = solveEquation(left, right);
+      appendLog(`Linear: \\\\(${left} = ${right}\\\\), Solution: \\\\(x = ${solution}\\\\)`, 'log', true);
+      playSound('success');
+    } else if (type === "quadratic") {
+      const [left, right] = input.split('=').map(part => part.trim());
+      if (right !== "0") throw new Error("Quadratic solver requires form ax² + bx + c = 0");
+      const coeffs = parseQuadratic(left);
+      const [x1, x2] = solveQuadratic(coeffs.a, coeffs.b, coeffs.c);
+      appendLog(`Quadratic: \\\\(${left} = 0\\\\), Solutions: \\\\(x = ${x1}, x = ${x2}\\\\)`, 'log', true);
+      playSound('success');
+    } else if (type === "area") {
+      const [shape, ...params] = input.split(' ');
+      const result = calculateArea(shape, params.map(Number));
+      appendLog(`Area of ${shape}: \\\\(A = ${result}\\\\)`, 'log', true);
+      playSound('success');
+    } else if (type === "volume") {
+      const [shape, ...params] = input.split(' ');
+      const result = calculateVolume(shape, params.map(Number));
+      appendLog(`Volume of ${shape}: \\\\(V = ${result}\\\\)`, 'log', true);
+      playSound('success');
+    } else if (type === "trig") {
+      const [func, angle] = input.split(' ');
+      const result = calculateTrig(func, Number(angle));
+      appendLog(`${func}(${angle}°): \\\\(${result}\\\\)`, 'log', true);
+      playSound('success');
+    } else {
+      appendLog(`Error: Unknown math type "${type}". Type "math()" for a list.`, 'error');
+    }
+  } catch (e) {
+    appendLog(`Error: ${e.message}`, 'error');
+    playSound('error');
+  }
+  gtag('event', 'run_function', { 'event_category': 'Math', 'event_label': type });
+}
+
+// Helper for quadratic parsing
+function parseQuadratic(expr) {
+  expr = expr.replace(/\s+/g, '').replace(/−/g, '-'); // Clean up spaces and minus signs
+  let a = 0, b = 0, c = 0;
+  const terms = expr.match(/([+-]?\d*\.?\d*x²|[+-]?\d*\.?\d*x|[+-]?\d*\.?\d*)/g).filter(Boolean);
+  terms.forEach(term => {
+    if (term.includes('x²')) {
+      a = parseFloat(term.replace('x²', '')) || (term === 'x²' ? 1 : term === '-x²' ? -1 : 0);
+    } else if (term.includes('x')) {
+      b = parseFloat(term.replace('x', '')) || (term === 'x' ? 1 : term === '-x' ? -1 : 0);
+    } else {
+      c = parseFloat(term) || 0;
+    }
+  });
+  return { a, b, c };
+}
+
+// Helper for quadratic formula
+function solveQuadratic(a, b, c) {
+  if (a === 0) throw new Error("Not a quadratic equation (a cannot be 0)");
+  const discriminant = b * b - 4 * a * c;
+  if (discriminant < 0) throw new Error("No real solutions (discriminant < 0)");
+  const sqrtD = Math.sqrt(discriminant);
+  const x1 = (-b + sqrtD) / (2 * a);
+  const x2 = (-b - sqrtD) / (2 * a);
+  return [x1.toFixed(4), x2.toFixed(4)];
+}
+
+// Helper for area calculations
+function calculateArea(shape, params) {
+  switch (shape.toLowerCase()) {
+    case 'rectangle': return params[0] * params[1]; // l * w
+    case 'triangle': return 0.5 * params[0] * params[1]; // (1/2) * b * h
+    case 'circle': return Math.PI * params[0] * params[0]; // πr²
+    default: throw new Error("Supported shapes: rectangle, triangle, circle");
+  }
+}
+
+// Helper for volume calculations
+function calculateVolume(shape, params) {
+  switch (shape.toLowerCase()) {
+    case 'cylinder': return Math.PI * params[0] * params[0] * params[1]; // πr²h
+    default: throw new Error("Supported shapes: cylinder");
+  }
+}
+
+// Helper for trigonometry (degrees to radians)
+function calculateTrig(func, angle) {
+  const rad = angle * Math.PI / 180;
+  switch (func.toLowerCase()) {
+    case 'sin': return Math.sin(rad).toFixed(4);
+    case 'cos': return Math.cos(rad).toFixed(4);
+    case 'tan': return Math.tan(rad).toFixed(4);
+    default: throw new Error("Supported functions: sin, cos, tan");
+  }
+}
   function setColor(type, color) {
     const validTypes = ['log', 'error', 'warn', 'info'];
     if (!validTypes.includes(type)) {
