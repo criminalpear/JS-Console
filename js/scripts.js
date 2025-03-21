@@ -100,7 +100,15 @@ function executeCode() {
       } else {
         appendLog('Error: Invalid math() syntax. Use math("type", "input")', 'error');
       }
-    } else if (input.includes('=') && input.includes('x')) {
+    } else if (input.startsWith('javascript:')) {
+      // Handle bookmarklet-style JavaScript
+      let decodedValue = decodeURIComponent(input.replace('javascript:', '').trim());
+      if (!decodedValue.endsWith(';')) decodedValue += ';';
+      eval(decodedValue);
+      appendLog('Bookmarklet executed successfully!', 'info');
+      playSound('execute');
+    } else if (/^[+-]?\d*\.?\d*x\s*[+-=]/.test(input)) {
+      // Only treat as equation if it starts with a number and 'x' followed by +,-,=
       const [leftSide, rightSide] = input.split('=').map(part => part.trim());
       const solution = solveEquation(leftSide, rightSide);
       appendLog(
