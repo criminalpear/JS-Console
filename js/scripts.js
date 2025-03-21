@@ -318,9 +318,6 @@ function math(type = "list", input = "") {
     appendLog('Quadratic Equation: y = ax² + bx + c (a, b, c = constants)', 'info');
     appendLog('Quadratic Formula: x = [-b ± √(b² - 4ac)] / (2a)', 'info');
     appendLog('  Solver: math(\'quadratic\', \'x² + 5x + 6 = 0\')', 'info');
-    appendLog('Exponential: y = a * b^x (a = initial, b = base)', 'info');
-    appendLog('Logarithmic: y = log_b(x) (b = base)', 'info');
-    appendLog('Binomial Theorem: (a + b)^n = Σ [nCk * a^(n-k) * b^k]', 'info');
     appendLog('Area of Rectangle: A = l * w (l = length, w = width)', 'info');
     appendLog('Area of Triangle: A = (1/2) * b * h (b = base, h = height)', 'info');
     appendLog('Area of Circle: A = πr² (r = radius)', 'info');
@@ -329,26 +326,6 @@ function math(type = "list", input = "") {
     appendLog('Volume of Cylinder: V = πr²h (r = radius, h = height)', 'info');
     appendLog('Surface Area of Sphere: A = 4πr² (r = radius)', 'info');
     appendLog('  Solver: math(\'area\', \'circle 5\') or math(\'volume\', \'cylinder 3 10\')', 'info');
-    appendLog('Sine: sin(θ) = opposite / hypotenuse', 'info');
-    appendLog('Cosine: cos(θ) = adjacent / hypotenuse', 'info');
-    appendLog('Tangent: tan(θ) = opposite / adjacent', 'info');
-    appendLog('Pythagorean Identity: sin²(θ) + cos²(θ) = 1', 'info');
-    appendLog('Law of Sines: a / sin(A) = b / sin(B) = c / sin(C)', 'info');
-    appendLog('Law of Cosines: c² = a² + b² - 2ab * cos(C)', 'info');
-    appendLog('  Solver: math(\'trig\', \'sin 30\')', 'info');
-    appendLog('Power Rule: d/dx [x^n] = n * x^(n-1)', 'info');
-    appendLog('Product Rule: d/dx [u * v] = u * dv/dx + v * du/dx', 'info');
-    appendLog('Chain Rule: d/dx [f(g(x))] = f\'(g(x)) * g\'(x)', 'info');
-    appendLog('Definite Integral: ∫(a to b) f(x) dx', 'info');
-    appendLog('Fundamental Theorem: ∫(a to b) f(x) dx = F(b) - F(a)', 'info');
-    appendLog('Mean: μ = (Σx) / n', 'info');
-    appendLog('Standard Deviation: σ = √[Σ(x - μ)² / n]', 'info');
-    appendLog('Probability: P(E) = favorable / total', 'info');
-    appendLog('Binomial Probability: P(x) = nCx * p^x * (1-p)^(n-x)', 'info');
-    appendLog('Distance Formula: d = √[(x₂ - x₁)² + (y₂ - y₁)²]', 'info');
-    appendLog('Slope Formula: m = (y₂ - y₁) / (x₂ - x₁)', 'info');
-    appendLog('Arithmetic Sequence: a_n = a_1 + (n-1)d', 'info');
-    appendLog('Geometric Sequence: a_n = a_1 * r^(n-1)', 'info');
     appendLog('See solvers below or type "math(\'prompts\')" for examples!', 'info');
     return;
   }
@@ -358,19 +335,10 @@ function math(type = "list", input = "") {
     appendLog('Copy these into the input field and press "Execute Code":', 'info');
     appendLog('Linear Equation:', 'info');
     appendLog('  math("linear", "2x + 5 = 9") → Solves for x in y = 2x + 5', 'info');
-    appendLog('  math("linear", "-3x = 12") → Solves for x', 'info');
     appendLog('Quadratic Equation:', 'info');
-    appendLog('  math("quadratic", "1x² + 5x + 6 = 0") → Solves ax² + bx + c = 0', 'info');
-    appendLog('  math("quadratic", "2x² - 4x - 6 = 0") → Finds two roots', 'info');
+    appendLog('  math("quadratic", "x² + 5x + 6 = 0") → Solves ax² + bx + c = 0', 'info');
     appendLog('Geometry - Area:', 'info');
-    appendLog('  math("area", "rectangle 4 6") → A = 4 * 6', 'info');
-    appendLog('  math("area", "triangle 3 8") → A = (1/2) * 3 * 8', 'info');
     appendLog('  math("area", "circle 5") → A = π * 5²', 'info');
-    appendLog('Geometry - Volume:', 'info');
-    appendLog('  math("volume", "cylinder 3 10") → V = π * 3² * 10', 'info');
-    appendLog('Trigonometry:', 'info');
-    appendLog('  math("trig", "sin 30") → sin(30°)', 'info');
-    appendLog('  math("trig", "cos θ = 0.5") → cos(60°)', 'info');
     appendLog('Expressions:', 'info');
     appendLog('  √4 → Evaluates to 2', 'info');
     appendLog('  2 × π → Evaluates to ~6.2832', 'info');
@@ -404,17 +372,6 @@ function math(type = "list", input = "") {
       const result = calculateVolume(shape, params.map(Number));
       appendLog(`Volume of ${shape}: \\\\(V = ${result}\\\\)`, 'log', true);
       playSound('success');
-    } else if (type === "trig") {
-      const parts = input.split(' ').map(part => part.trim());
-      if (parts.length === 1) {
-        const result = calculateTrig(parts[0], undefined);
-        appendLog(`${parts[0]}: \\\\(${result}\\\\)`, 'log', true);
-      } else {
-        const [func, angle] = parts;
-        const result = calculateTrig(func, Number(angle));
-        appendLog(`${func}(${angle}°): \\\\(${result}\\\\)`, 'log', true);
-      }
-      playSound('success');
     } else if (type === "expression") {
       const result = evaluateExpression(input);
       appendLog(`Expression: \\\\(${input}\\\\), Result: \\\\(${result}\\\\)`, 'log', true);
@@ -434,9 +391,7 @@ function evaluateExpression(expr) {
     .replace('π', Math.PI)
     .replace('∞', Infinity)
     .replace('÷', '/')
-    .replace('×', '*')
-    .replace('∆', 'x') // Treat ∆ as a variable for now
-    .replace('θ', 'x'); // Treat θ as a variable (use in trig context)
+    .replace('×', '*');
 
   if (cleanedExpr.includes('±')) {
     const [left, right] = cleanedExpr.split('±').map(part => part.trim());
@@ -465,13 +420,7 @@ function evaluateExpression(expr) {
       return Math.pow(num, 2).toFixed(4);
     }
   }
-  if (cleanedExpr.includes('∑')) {
-    throw new Error("Summation (∑) not yet supported in expressions");
-  }
-  if (cleanedExpr.includes('∫')) {
-    throw new Error("Integration (∫) not yet supported in expressions");
-  }
-  const result = eval(cleanedExpr); // Safe for basic arithmetic and fractions
+  const result = eval(cleanedExpr); // Handles fractions and basic arithmetic
   return Number.isFinite(result) ? result.toFixed(4) : result;
 }
 // Helper for quadratic parsing
@@ -1317,12 +1266,10 @@ function calculateTrig(func, angle) {
     console.log('Launcher button clicked');
     window.location.assign('https://criminalpear.github.io/JS-Console/launcher.html');
   });
-    // Symbols button functionality
-   // Symbols button functionality with Fractions included
   const symbolsBtn = document.getElementById('symbolsBtn');
   const symbolsDropdown = document.getElementById('symbolsDropdown');
   const inputField = document.getElementById('inputField');
-  const symbols = ['±', '√', 'π', '²', '³', '×', '÷', '∞', '∑', '∫', '∆', 'θ', 'sin', 'cos', 'tan', 'Fractions'];
+  const symbols = ['±', '√', 'π', '²', '³', '×', '÷', '∞', 'Fractions'];
 
   symbolsBtn.addEventListener('click', () => {
     symbolsDropdown.innerHTML = '';
@@ -1333,8 +1280,9 @@ function calculateTrig(func, angle) {
 
       if (symbol === 'Fractions') {
         symbolItem.addEventListener('click', () => {
-          symbolsDropdown.innerHTML = ''; // Clear dropdown
+          symbolsDropdown.innerHTML = '';
           const fractionDiv = document.createElement('div');
+          fractionDiv.className = 'fraction-container';
           const numInput = document.createElement('input');
           numInput.type = 'text';
           numInput.placeholder = 'Numerator';
@@ -1345,7 +1293,7 @@ function calculateTrig(func, angle) {
           denomInput.className = 'fraction-input';
           const addBtn = document.createElement('button');
           addBtn.textContent = 'Add';
-          addBtn.className = 'fraction-add-btn'; // Add class for styling
+          addBtn.className = 'fraction-add-btn';
           addBtn.addEventListener('click', () => {
             const num = numInput.value.trim();
             const denom = denomInput.value.trim();
@@ -1355,6 +1303,7 @@ function calculateTrig(func, angle) {
               inputField.focus();
             } else {
               appendLog('Error: Enter both numerator and denominator.', 'error');
+              playSound('error');
             }
           });
           fractionDiv.appendChild(numInput);
