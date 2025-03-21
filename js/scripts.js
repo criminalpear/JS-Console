@@ -302,7 +302,7 @@ const functions = [
 function math(type = "list", input = "") {
   appendLog('Math Formulas and Solvers:', 'info');
 
-  // List of all formulas if type is "list" or no specific solver is matched
+  // List of all formulas if type is "list"
   if (type === "list") {
     appendLog('Type "math(\'type\', \'input\')" to solve specific problems (e.g., math(\'quadratic\', \'x² + 5x + 6 = 0\')).', 'info');
     appendLog('Available formulas and solvers:', 'info');
@@ -362,7 +362,37 @@ function math(type = "list", input = "") {
     appendLog('Slope Formula: m = (y₂ - y₁) / (x₂ - x₁)', 'info');
     appendLog('Arithmetic Sequence: a_n = a_1 + (n-1)d', 'info');
     appendLog('Geometric Sequence: a_n = a_1 * r^(n-1)', 'info');
-    appendLog('See solvers below for usage examples!', 'info');
+    appendLog('See solvers below or type "math(\'prompts\')" for examples!', 'info');
+    return;
+  }
+
+  // List of example prompts if type is "prompts"
+  if (type === "prompts") {
+    appendLog('Example Prompts for Math Solvers:', 'info');
+    appendLog('Copy these into the input field and press "Execute Code":', 'info');
+
+    appendLog('Linear Equation:', 'info');
+    appendLog('  math("linear", "2x + 5 = 9") → Solves for x in y = 2x + 5', 'info');
+    appendLog('  math("linear", "-3x = 12") → Solves for x', 'info');
+
+    appendLog('Quadratic Equation:', 'info');
+    appendLog('  math("quadratic", "1x² + 5x + 6 = 0") → Solves ax² + bx + c = 0', 'info');
+    appendLog('  math("quadratic", "2x² - 4x - 6 = 0") → Finds two roots', 'info');
+
+    appendLog('Geometry - Area:', 'info');
+    appendLog('  math("area", "rectangle 4 6") → A = 4 * 6', 'info');
+    appendLog('  math("area", "triangle 3 8") → A = (1/2) * 3 * 8', 'info');
+    appendLog('  math("area", "circle 5") → A = π * 5²', 'info');
+
+    appendLog('Geometry - Volume:', 'info');
+    appendLog('  math("volume", "cylinder 3 10") → V = π * 3² * 10', 'info');
+
+    appendLog('Trigonometry:', 'info');
+    appendLog('  math("trig", "sin 30") → sin(30°)', 'info');
+    appendLog('  math("trig", "cos 45") → cos(45°)', 'info');
+    appendLog('  math("trig", "tan 60") → tan(60°)', 'info');
+
+    appendLog('Use the Symbols and Fractions buttons for easier input!', 'info');
     return;
   }
 
@@ -396,7 +426,7 @@ function math(type = "list", input = "") {
       appendLog(`${func}(${angle}°): \\\\(${result}\\\\)`, 'log', true);
       playSound('success');
     } else {
-      appendLog(`Error: Unknown math type "${type}". Type "math()" for a list.`, 'error');
+      appendLog(`Error: Unknown math type "${type}". Type "math()" for a list or "math(\'prompts\')" for examples.`, 'error');
     }
   } catch (e) {
     appendLog(`Error: ${e.message}`, 'error');
@@ -1247,5 +1277,70 @@ function calculateTrig(func, angle) {
   document.getElementById('launcherBtn').addEventListener('click', () => {
     console.log('Launcher button clicked');
     window.location.assign('https://criminalpear.github.io/JS-Console/launcher.html');
+  });
+    // Symbols button functionality
+  const symbolsBtn = document.getElementById('symbolsBtn');
+  const symbolsDropdown = document.getElementById('symbolsDropdown');
+  const inputField = document.getElementById('inputField');
+  const symbols = ['±', '√', 'π', '²', '³', '×', '÷', '∞', '∑', '∫', '∆', 'θ', 'sin', 'cos', 'tan'];
+
+  symbolsBtn.addEventListener('click', () => {
+    symbolsDropdown.innerHTML = '';
+    symbols.forEach(symbol => {
+      const symbolItem = document.createElement('span');
+      symbolItem.className = 'symbol-item';
+      symbolItem.textContent = symbol;
+      symbolItem.addEventListener('click', () => {
+        inputField.value += symbol;
+        symbolsDropdown.style.display = 'none';
+        inputField.focus();
+      });
+      symbolsDropdown.appendChild(symbolItem);
+    });
+    symbolsDropdown.style.display = symbolsDropdown.style.display === 'none' ? 'block' : 'none';
+  });
+
+  // Fractions button functionality
+  const fractionsBtn = document.getElementById('fractionsBtn');
+  const fractionsInput = document.getElementById('fractionsInput');
+
+  fractionsBtn.addEventListener('click', () => {
+    fractionsInput.innerHTML = '';
+    const numInput = document.createElement('input');
+    numInput.type = 'text';
+    numInput.placeholder = 'Numerator';
+    numInput.className = 'fraction-input';
+    const denomInput = document.createElement('input');
+    denomInput.type = 'text';
+    denomInput.placeholder = 'Denominator';
+    denomInput.className = 'fraction-input';
+    const addBtn = document.createElement('button');
+    addBtn.textContent = 'Add';
+    addBtn.addEventListener('click', () => {
+      const num = numInput.value.trim();
+      const denom = denomInput.value.trim();
+      if (num && denom) {
+        inputField.value += `${num}/${denom}`;
+        fractionsInput.style.display = 'none';
+        inputField.focus();
+      } else {
+        appendLog('Error: Enter both numerator and denominator.', 'error');
+      }
+    });
+    fractionsInput.appendChild(numInput);
+    fractionsInput.appendChild(document.createTextNode(' / '));
+    fractionsInput.appendChild(denomInput);
+    fractionsInput.appendChild(addBtn);
+    fractionsInput.style.display = fractionsInput.style.display === 'none' ? 'block' : 'none';
+  });
+
+  // Hide dropdowns when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!symbolsBtn.contains(e.target) && !symbolsDropdown.contains(e.target)) {
+      symbolsDropdown.style.display = 'none';
+    }
+    if (!fractionsBtn.contains(e.target) && !fractionsInput.contains(e.target)) {
+      fractionsInput.style.display = 'none';
+    }
   });
 });
