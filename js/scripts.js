@@ -1279,10 +1279,11 @@ function calculateTrig(func, angle) {
     window.location.assign('https://criminalpear.github.io/JS-Console/launcher.html');
   });
     // Symbols button functionality
+   // Symbols button functionality with Fractions included
   const symbolsBtn = document.getElementById('symbolsBtn');
   const symbolsDropdown = document.getElementById('symbolsDropdown');
   const inputField = document.getElementById('inputField');
-  const symbols = ['±', '√', 'π', '²', '³', '×', '÷', '∞', '∑', '∫', '∆', 'θ', 'sin', 'cos', 'tan'];
+  const symbols = ['±', '√', 'π', '²', '³', '×', '÷', '∞', '∑', '∫', '∆', 'θ', 'sin', 'cos', 'tan', 'Fractions'];
 
   symbolsBtn.addEventListener('click', () => {
     symbolsDropdown.innerHTML = '';
@@ -1290,57 +1291,54 @@ function calculateTrig(func, angle) {
       const symbolItem = document.createElement('span');
       symbolItem.className = 'symbol-item';
       symbolItem.textContent = symbol;
-      symbolItem.addEventListener('click', () => {
-        inputField.value += symbol;
-        symbolsDropdown.style.display = 'none';
-        inputField.focus();
-      });
+
+      if (symbol === 'Fractions') {
+        symbolItem.addEventListener('click', () => {
+          const fractionDiv = document.createElement('div');
+          const numInput = document.createElement('input');
+          numInput.type = 'text';
+          numInput.placeholder = 'Numerator';
+          numInput.className = 'fraction-input';
+          const denomInput = document.createElement('input');
+          denomInput.type = 'text';
+          denomInput.placeholder = 'Denominator';
+          denomInput.className = 'fraction-input';
+          const addBtn = document.createElement('button');
+          addBtn.textContent = 'Add';
+          addBtn.addEventListener('click', () => {
+            const num = numInput.value.trim();
+            const denom = denomInput.value.trim();
+            if (num && denom) {
+              inputField.value += `${num}/${denom}`;
+              symbolsDropdown.style.display = 'none';
+              inputField.focus();
+            } else {
+              appendLog('Error: Enter both numerator and denominator.', 'error');
+            }
+          });
+          fractionDiv.appendChild(numInput);
+          fractionDiv.appendChild(document.createTextNode(' / '));
+          fractionDiv.appendChild(denomInput);
+          fractionDiv.appendChild(addBtn);
+          symbolsDropdown.innerHTML = '';
+          symbolsDropdown.appendChild(fractionDiv);
+        });
+      } else {
+        symbolItem.addEventListener('click', () => {
+          inputField.value += symbol;
+          symbolsDropdown.style.display = 'none';
+          inputField.focus();
+        });
+      }
       symbolsDropdown.appendChild(symbolItem);
     });
     symbolsDropdown.style.display = symbolsDropdown.style.display === 'none' ? 'block' : 'none';
   });
 
-  // Fractions button functionality
-  const fractionsBtn = document.getElementById('fractionsBtn');
-  const fractionsInput = document.getElementById('fractionsInput');
-
-  fractionsBtn.addEventListener('click', () => {
-    fractionsInput.innerHTML = '';
-    const numInput = document.createElement('input');
-    numInput.type = 'text';
-    numInput.placeholder = 'Numerator';
-    numInput.className = 'fraction-input';
-    const denomInput = document.createElement('input');
-    denomInput.type = 'text';
-    denomInput.placeholder = 'Denominator';
-    denomInput.className = 'fraction-input';
-    const addBtn = document.createElement('button');
-    addBtn.textContent = 'Add';
-    addBtn.addEventListener('click', () => {
-      const num = numInput.value.trim();
-      const denom = denomInput.value.trim();
-      if (num && denom) {
-        inputField.value += `${num}/${denom}`;
-        fractionsInput.style.display = 'none';
-        inputField.focus();
-      } else {
-        appendLog('Error: Enter both numerator and denominator.', 'error');
-      }
-    });
-    fractionsInput.appendChild(numInput);
-    fractionsInput.appendChild(document.createTextNode(' / '));
-    fractionsInput.appendChild(denomInput);
-    fractionsInput.appendChild(addBtn);
-    fractionsInput.style.display = fractionsInput.style.display === 'none' ? 'block' : 'none';
-  });
-
-  // Hide dropdowns when clicking outside
+  // Hide dropdown when clicking outside
   document.addEventListener('click', (e) => {
     if (!symbolsBtn.contains(e.target) && !symbolsDropdown.contains(e.target)) {
       symbolsDropdown.style.display = 'none';
-    }
-    if (!fractionsBtn.contains(e.target) && !fractionsInput.contains(e.target)) {
-      fractionsInput.style.display = 'none';
     }
   });
 });
