@@ -22,6 +22,23 @@
   <link rel="stylesheet" href="/JS-Console/css/styles.css">
 </head>
 <body>
+  <nav>
+  <button id="menuBtn">Menu</button>
+  <div id="dropdown" class="dropdown">
+    <button onclick="list();">List Commands</button>
+    <button onclick="document.getElementById('inputField').value = '';">Clear Input</button>
+    <button onclick="toggleSound();">Toggle Sound</button>
+    <button onclick="more();">More</button>
+  </div>
+  <div class="dropdown">
+    <button class="dropbtn">Bookmarks</button>
+    <div id="bookmarkDropdown" class="dropdown-content"></div>
+  </div>
+  <div class="dropdown">
+    <button class="dropbtn">Symbols</button>
+    <div id="symbolsDropdown" class="dropdown-content"></div>
+  </div>
+</nav>
   <div id="bookmarksBar"></div>
   <div class="container">
     <div class="console-container">
