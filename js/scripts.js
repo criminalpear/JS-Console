@@ -106,15 +106,12 @@ function executeCode() {
       eval(decodedValue);
       appendLog('Bookmarklet executed successfully!', 'info');
       playSound('execute');
-    } else if (/[\u00B1\u221A\u03C0\u00B2\u00B3\u00D7\u00F7\u221E\u03A3\u222B\u2206\u03B8]/.test(input) || /^[+-]?\d*\.?\d*x\s*[+-=]/.test(input) || /sin|cos|tan/.test(input)) {
+    } else if (/[\u00B1\u221A\u03C0\u00B2\u00B3\u00D7\u00F7\u221E]/.test(input) || /^[+-]?\d*\.?\d*x\s*[+-=]/.test(input) || input.includes('/')) {
       const [leftSide, rightSide] = input.split('=').map(part => part.trim());
-      const hasSymbols = /[\u00B1\u221A\u03C0\u00B2\u00B3\u00D7\u00F7\u221E\u03A3\u222B\u2206\u03B8]/.test(input);
-      const hasTrig = /sin|cos|tan/.test(input);
+      const hasSymbols = /[\u00B1\u221A\u03C0\u00B2\u00B3\u00D7\u00F7\u221E]/.test(input);
 
-      if (input.includes('²') || input.includes('³')) {
+      if (input.includes('²') && input.includes('x')) {
         math("quadratic", `${leftSide} = ${rightSide || '0'}`);
-      } else if (hasTrig && !input.includes('x')) {
-        math("trig", input.replace('=', '').trim());
       } else if (hasSymbols || input.includes('/')) {
         math("expression", input);
       } else {
