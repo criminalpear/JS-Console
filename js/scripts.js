@@ -101,22 +101,25 @@ function executeCode() {
         appendLog('Error: Invalid math() syntax. Use math("type", "input")', 'error');
       }
     } else if (input.startsWith('javascript:')) {
-      // Handle bookmarklet-style JavaScript
       let decodedValue = decodeURIComponent(input.replace('javascript:', '').trim());
       if (!decodedValue.endsWith(';')) decodedValue += ';';
       eval(decodedValue);
       appendLog('Bookmarklet executed successfully!', 'info');
       playSound('execute');
-    } else if (/^[+-]?\d*\.?\d*x\s*[+-=]/.test(input)) {
-      // Only treat as equation if it starts with a number and 'x' followed by +,-,=
+    } else if (/^[+-]?\d*\.?\d*x\s*[+-=]/.test(input) || /[\u00B1\u221A\u03C0\u00B2\u00B3\u00D7\u00F7\u221E\u03A3\u222B\u2206\u03B8]/.test(input)) {
+      // Handle inputs with x and operators or math symbols (e.g., ±, √, π, ², ³, ×, ÷, ∞, ∑, ∫, ∆, θ)
       const [leftSide, rightSide] = input.split('=').map(part => part.trim());
-      const solution = solveEquation(leftSide, rightSide);
-      appendLog(
-        `Equation: \\\\(${leftSide} = ${rightSide}\\\\), Solution: \\\\(x = ${solution}\\\\)`,
-        'log',
-        true
-      );
-      playSound('success');
+      if (input.includes('²')) {
+        math("quadratic", `${leftSide} = ${rightSide || '0'}`);
+      } else {
+        const solution = solveEquation(leftSide, rightSide || '0');
+        appendLog(
+          `Equation: \\\\(${leftSide} = ${rightSide || '0'}\\\\), Solution: \\\\(x = ${solution}\\\\)`,
+          'log',
+          true
+        );
+        playSound('success');
+      }
     } else if (window.editElement && /\d+\s/.test(input)) {
       window.editElement(input);
     } else {
