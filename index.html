@@ -22,21 +22,40 @@
   <link rel="stylesheet" href="/JS-Console/css/styles.css">
 </head>
 <body>
+  <nav>
+    <button id="menuBtn">Menu</button>
+    <div id="dropdown" class="dropdown">
+      <button onclick="list();">List Commands</button>
+      <button onclick="document.getElementById('inputField').value = '';">Clear Input</button>
+      <button onclick="toggleSound();">Toggle Sound</button>
+      <button onclick="more();">More</button>
+    </div>
+    <div class="dropdown">
+      <button class="dropbtn">Bookmarks</button>
+      <div id="bookmarkDropdown" class="dropdown-content"></div>
+    </div>
+    <div class="dropdown">
+      <button class="dropbtn">Symbols</button>
+      <div id="symbolsDropdown" class="dropdown-content"></div>
+    </div>
+  </nav>
   <div id="bookmarksBar"></div>
+  <h1>Welcome to the JavaScript Console v2.5 on GitHub Pages!</h1>
+  <p>Type "updates();" for what’s new or "list();" for all commands.</p>
   <div class="container">
     <div class="console-container">
       <div id="jsConsole" class="console"></div>
     </div>
     <div class="input-container">
-  <textarea id="inputField" placeholder="Enter code here..."></textarea>
-  <button id="executeBtn">Execute Code</button>
-  <button id="clearBtn">Clear Console</button>
-  <button id="exportBtn">Export Log</button>
-  <button id="themeBtn">Toggle Theme</button>
-  <button id="launcherBtn">Launcher</button>
-  <button id="installBtn">Install App</button>
-  <div id="autocomplete"></div>
-</div>
+      <textarea id="inputField" placeholder="Enter code here..."></textarea>
+      <button id="executeBtn">Execute Code</button>
+      <button id="clearBtn">Clear Console</button>
+      <button id="exportBtn">Export Log</button>
+      <button id="themeBtn">Toggle Theme</button>
+      <button id="launcherBtn">Launcher</button>
+      <button id="installBtn">Install App</button>
+      <div id="autocomplete"></div>
+    </div>
   </div>
   <canvas id="gameCanvas" width="400" height="400"></canvas>
   <script src="/JS-Console/js/utils.js"></script>
