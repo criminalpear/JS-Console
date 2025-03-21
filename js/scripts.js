@@ -232,7 +232,7 @@ const functions = [
   'squares', 'ponies', 'sawyer', 'aiden', 'aadyn', 'eli', 'elijah', 'ronin', 'ronin1', 'ronin2',
   'check', 'idiot', 'elements', 'elementshelp', 'list', 'snake', 'updates', 'setColor', 'tictactoe',
   'share', 'reset', 'highscores', 'shareHighScores', 'leaderboard', 'setUsername', 'setTheme', 
-  'toggleSound', 'more', 'math'
+  'toggleSound', 'more', 'math', 'symbols' // Added 'symbols' for reference
 ];
 
   function setupAutocomplete() {
@@ -1266,67 +1266,45 @@ function calculateTrig(func, angle) {
     console.log('Launcher button clicked');
     window.location.assign('https://criminalpear.github.io/JS-Console/launcher.html');
   });
-  const symbolsBtn = document.getElementById('symbolsBtn');
+ document.addEventListener('DOMContentLoaded', function() {
+  // Existing code...
+
+  // Bookmarks dropdown setup (already present)
+  const bookmarkDropdown = document.getElementById('bookmarkDropdown');
+  // ... (existing bookmark logic)
+
+  // Symbols dropdown setup
   const symbolsDropdown = document.getElementById('symbolsDropdown');
   const inputField = document.getElementById('inputField');
-  const symbols = ['±', '√', 'π', '²', '³', '×', '÷', '∞', 'Fractions'];
+  const symbols = ['±', '√', 'π', '²', '³', '×', '÷', '∞'];
 
-  symbolsBtn.addEventListener('click', () => {
-    symbolsDropdown.innerHTML = '';
-    symbols.forEach(symbol => {
-      const symbolItem = document.createElement('span');
-      symbolItem.className = 'symbol-item';
-      symbolItem.textContent = symbol;
-
-      if (symbol === 'Fractions') {
-        symbolItem.addEventListener('click', () => {
-          symbolsDropdown.innerHTML = '';
-          const fractionDiv = document.createElement('div');
-          fractionDiv.className = 'fraction-container';
-          const numInput = document.createElement('input');
-          numInput.type = 'text';
-          numInput.placeholder = 'Numerator';
-          numInput.className = 'fraction-input';
-          const denomInput = document.createElement('input');
-          denomInput.type = 'text';
-          denomInput.placeholder = 'Denominator';
-          denomInput.className = 'fraction-input';
-          const addBtn = document.createElement('button');
-          addBtn.textContent = 'Add';
-          addBtn.className = 'fraction-add-btn';
-          addBtn.addEventListener('click', () => {
-            const num = numInput.value.trim();
-            const denom = denomInput.value.trim();
-            if (num && denom) {
-              inputField.value += `${num}/${denom}`;
-              symbolsDropdown.style.display = 'none';
-              inputField.focus();
-            } else {
-              appendLog('Error: Enter both numerator and denominator.', 'error');
-              playSound('error');
-            }
-          });
-          fractionDiv.appendChild(numInput);
-          fractionDiv.appendChild(document.createTextNode(' / '));
-          fractionDiv.appendChild(denomInput);
-          fractionDiv.appendChild(addBtn);
-          symbolsDropdown.appendChild(fractionDiv);
-        });
-      } else {
-        symbolItem.addEventListener('click', () => {
-          inputField.value += symbol;
-          symbolsDropdown.style.display = 'none';
-          inputField.focus();
-        });
-      }
-      symbolsDropdown.appendChild(symbolItem);
+  symbols.forEach(symbol => {
+    const symbolItem = document.createElement('button');
+    symbolItem.textContent = symbol;
+    symbolItem.className = 'dropdown-item';
+    symbolItem.addEventListener('click', () => {
+      inputField.value += symbol;
+      symbolsDropdown.style.display = 'none';
+      inputField.focus();
     });
-    symbolsDropdown.style.display = symbolsDropdown.style.display === 'none' ? 'block' : 'none';
+    symbolsDropdown.appendChild(symbolItem);
   });
 
+  // Toggle Symbols dropdown
+  const symbolsBtn = document.querySelector('nav .dropdown:nth-child(3) .dropbtn'); // Third dropdown is Symbols
+  symbolsBtn.addEventListener('click', () => {
+    symbolsDropdown.style.display = symbolsDropdown.style.display === 'block' ? 'none' : 'block';
+  });
+
+  // Hide dropdowns when clicking outside
   document.addEventListener('click', (e) => {
-    if (!symbolsBtn.contains(e.target) && !symbolsDropdown.contains(e.target)) {
+    if (!e.target.closest('.dropdown')) {
+      bookmarkDropdown.style.display = 'none';
       symbolsDropdown.style.display = 'none';
+      document.getElementById('dropdown').style.display = 'none';
     }
   });
+
+  // Rest of existing code...
+});
 });
