@@ -106,11 +106,18 @@ function executeCode() {
       eval(decodedValue);
       appendLog('Bookmarklet executed successfully!', 'info');
       playSound('execute');
-    } else if (/^[+-]?\d*\.?\d*x\s*[+-=]/.test(input) || /[\u00B1\u221A\u03C0\u00B2\u00B3\u00D7\u00F7\u221E\u03A3\u222B\u2206\u03B8]/.test(input)) {
-      // Handle inputs with x and operators or math symbols (e.g., ±, √, π, ², ³, ×, ÷, ∞, ∑, ∫, ∆, θ)
+    } else if (/[\u00B1\u221A\u03C0\u00B2\u00B3\u00D7\u00F7\u221E\u03A3\u222B\u2206\u03B8]/.test(input) || /^[+-]?\d*\.?\d*x\s*[+-=]/.test(input) || /sin|cos|tan/.test(input)) {
+      // Handle math inputs with symbols, x, or trig functions
       const [leftSide, rightSide] = input.split('=').map(part => part.trim());
+      const hasSymbols = /[\u221A\u03C0\u00B2\u00B3\u00D7\u00F7\u221E\u03A3\u222B\u2206]/.test(input);
+      const hasTrig = /sin|cos|tan/.test(input);
+
       if (input.includes('²')) {
         math("quadratic", `${leftSide} = ${rightSide || '0'}`);
+      } else if (hasTrig && !input.includes('x')) {
+        math("trig", input.replace('=', '').trim());
+      } else if (hasSymbols && !input.includes('x')) {
+        math("expression", input);
       } else {
         const solution = solveEquation(leftSide, rightSide || '0');
         appendLog(
@@ -305,30 +312,19 @@ const functions = [
 function math(type = "list", input = "") {
   appendLog('Math Formulas and Solvers:', 'info');
 
-  // List of all formulas if type is "list"
   if (type === "list") {
     appendLog('Type "math(\'type\', \'input\')" to solve specific problems (e.g., math(\'quadratic\', \'x² + 5x + 6 = 0\')).', 'info');
     appendLog('Available formulas and solvers:', 'info');
-
-    // Linear Equations
     appendLog('Linear Equation (Slope-Intercept): y = mx + b (m = slope, b = y-intercept)', 'info');
     appendLog('Point-Slope Form: y - y₁ = m(x - x₁) (m = slope, (x₁, y₁) = point)', 'info');
     appendLog('Standard Form: Ax + By = C (A, B, C = constants)', 'info');
     appendLog('  Solver: math(\'linear\', \'2x + 3 = 7\')', 'info');
-
-    // Quadratic Equations
     appendLog('Quadratic Equation: y = ax² + bx + c (a, b, c = constants)', 'info');
     appendLog('Quadratic Formula: x = [-b ± √(b² - 4ac)] / (2a)', 'info');
     appendLog('  Solver: math(\'quadratic\', \'x² + 5x + 6 = 0\')', 'info');
-
-    // Exponential and Logarithmic
     appendLog('Exponential: y = a * b^x (a = initial, b = base)', 'info');
     appendLog('Logarithmic: y = log_b(x) (b = base)', 'info');
-
-    // Binomial Theorem
     appendLog('Binomial Theorem: (a + b)^n = Σ [nCk * a^(n-k) * b^k]', 'info');
-
-    // Geometry
     appendLog('Area of Rectangle: A = l * w (l = length, w = width)', 'info');
     appendLog('Area of Triangle: A = (1/2) * b * h (b = base, h = height)', 'info');
     appendLog('Area of Circle: A = πr² (r = radius)', 'info');
@@ -337,8 +333,6 @@ function math(type = "list", input = "") {
     appendLog('Volume of Cylinder: V = πr²h (r = radius, h = height)', 'info');
     appendLog('Surface Area of Sphere: A = 4πr² (r = radius)', 'info');
     appendLog('  Solver: math(\'area\', \'circle 5\') or math(\'volume\', \'cylinder 3 10\')', 'info');
-
-    // Trigonometry
     appendLog('Sine: sin(θ) = opposite / hypotenuse', 'info');
     appendLog('Cosine: cos(θ) = adjacent / hypotenuse', 'info');
     appendLog('Tangent: tan(θ) = opposite / adjacent', 'info');
@@ -346,21 +340,15 @@ function math(type = "list", input = "") {
     appendLog('Law of Sines: a / sin(A) = b / sin(B) = c / sin(C)', 'info');
     appendLog('Law of Cosines: c² = a² + b² - 2ab * cos(C)', 'info');
     appendLog('  Solver: math(\'trig\', \'sin 30\')', 'info');
-
-    // Calculus
     appendLog('Power Rule: d/dx [x^n] = n * x^(n-1)', 'info');
     appendLog('Product Rule: d/dx [u * v] = u * dv/dx + v * du/dx', 'info');
     appendLog('Chain Rule: d/dx [f(g(x))] = f\'(g(x)) * g\'(x)', 'info');
     appendLog('Definite Integral: ∫(a to b) f(x) dx', 'info');
     appendLog('Fundamental Theorem: ∫(a to b) f(x) dx = F(b) - F(a)', 'info');
-
-    // Statistics/Probability
     appendLog('Mean: μ = (Σx) / n', 'info');
     appendLog('Standard Deviation: σ = √[Σ(x - μ)² / n]', 'info');
     appendLog('Probability: P(E) = favorable / total', 'info');
     appendLog('Binomial Probability: P(x) = nCx * p^x * (1-p)^(n-x)', 'info');
-
-    // Other
     appendLog('Distance Formula: d = √[(x₂ - x₁)² + (y₂ - y₁)²]', 'info');
     appendLog('Slope Formula: m = (y₂ - y₁) / (x₂ - x₁)', 'info');
     appendLog('Arithmetic Sequence: a_n = a_1 + (n-1)d', 'info');
@@ -369,37 +357,32 @@ function math(type = "list", input = "") {
     return;
   }
 
-  // List of example prompts if type is "prompts"
   if (type === "prompts") {
     appendLog('Example Prompts for Math Solvers:', 'info');
     appendLog('Copy these into the input field and press "Execute Code":', 'info');
-
     appendLog('Linear Equation:', 'info');
     appendLog('  math("linear", "2x + 5 = 9") → Solves for x in y = 2x + 5', 'info');
     appendLog('  math("linear", "-3x = 12") → Solves for x', 'info');
-
     appendLog('Quadratic Equation:', 'info');
     appendLog('  math("quadratic", "1x² + 5x + 6 = 0") → Solves ax² + bx + c = 0', 'info');
     appendLog('  math("quadratic", "2x² - 4x - 6 = 0") → Finds two roots', 'info');
-
     appendLog('Geometry - Area:', 'info');
     appendLog('  math("area", "rectangle 4 6") → A = 4 * 6', 'info');
     appendLog('  math("area", "triangle 3 8") → A = (1/2) * 3 * 8', 'info');
     appendLog('  math("area", "circle 5") → A = π * 5²', 'info');
-
     appendLog('Geometry - Volume:', 'info');
     appendLog('  math("volume", "cylinder 3 10") → V = π * 3² * 10', 'info');
-
     appendLog('Trigonometry:', 'info');
     appendLog('  math("trig", "sin 30") → sin(30°)', 'info');
     appendLog('  math("trig", "cos 45") → cos(45°)', 'info');
     appendLog('  math("trig", "tan 60") → tan(60°)', 'info');
-
-    appendLog('Use the Symbols and Fractions buttons for easier input!', 'info');
+    appendLog('Expressions:', 'info');
+    appendLog('  √4 → Evaluates to 2', 'info');
+    appendLog('  2 × π → Evaluates to ~6.2832', 'info');
+    appendLog('Use the Symbols button for easier input!', 'info');
     return;
   }
 
-  // Solvers
   try {
     if (type === "linear") {
       const [left, right] = input.split('=').map(part => part.trim());
@@ -424,9 +407,13 @@ function math(type = "list", input = "") {
       appendLog(`Volume of ${shape}: \\\\(V = ${result}\\\\)`, 'log', true);
       playSound('success');
     } else if (type === "trig") {
-      const [func, angle] = input.split(' ');
+      const [func, angle] = input.split(' ').map(part => part.trim());
       const result = calculateTrig(func, Number(angle));
       appendLog(`${func}(${angle}°): \\\\(${result}\\\\)`, 'log', true);
+      playSound('success');
+    } else if (type === "expression") {
+      const result = evaluateExpression(input);
+      appendLog(`Expression: \\\\(${input}\\\\), Result: \\\\(${result}\\\\)`, 'log', true);
       playSound('success');
     } else {
       appendLog(`Error: Unknown math type "${type}". Type "math()" for a list or "math(\'prompts\')" for examples.`, 'error');
@@ -438,6 +425,33 @@ function math(type = "list", input = "") {
   gtag('event', 'run_function', { 'event_category': 'Math', 'event_label': type });
 }
 
+// New helper function to evaluate expressions with symbols
+function evaluateExpression(expr) {
+  let cleanedExpr = expr.replace(/\s+/g, '').replace('π', Math.PI).replace('∞', Infinity).replace('÷', '/').replace('×', '*');
+  if (cleanedExpr.includes('√')) {
+    const sqrtMatch = cleanedExpr.match(/√(\d+\.?\d*)/);
+    if (sqrtMatch) {
+      const num = parseFloat(sqrtMatch[1]);
+      return Math.sqrt(num).toFixed(4);
+    }
+  }
+  if (cleanedExpr.includes('³')) {
+    const cubeMatch = cleanedExpr.match(/(\d+\.?\d*)³/);
+    if (cubeMatch) {
+      const num = parseFloat(cubeMatch[1]);
+      return Math.pow(num, 3).toFixed(4);
+    }
+  }
+  if (cleanedExpr.includes('²')) {
+    const squareMatch = cleanedExpr.match(/(\d+\.?\d*)²/);
+    if (squareMatch) {
+      const num = parseFloat(squareMatch[1]);
+      return Math.pow(num, 2).toFixed(4);
+    }
+  }
+  const result = eval(cleanedExpr); // Safe here since we're controlling input
+  return Number.isFinite(result) ? result.toFixed(4) : result;
+}
 // Helper for quadratic parsing
 function parseQuadratic(expr) {
   expr = expr.replace(/\s+/g, '').replace(/−/g, '-'); // Clean up spaces and minus signs
