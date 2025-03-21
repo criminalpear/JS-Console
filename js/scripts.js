@@ -76,68 +76,68 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  function executeCode() {
-    const input = document.getElementById('inputField').value.trim();
-    if (input === '') {
-      appendLog('Error: Please enter some code to execute.', 'error');
-      playSound('error');
-      return;
-    }
-    commandHistory.unshift(input);
-    historyIndex = -1;
-    try {
-      if (input === 'idiot();') {
-        idiot();
-      } else if (input === 'elements();') {
-        elements();
-      } else if (input === 'elementshelp();') {
-        elementshelp();
-      } else if (input.startsWith('math(')) {
-        const match = input.match(/math\(['"]([^'"]+)['"](?:,\s*['"]([^'"]+)['"])?\);?/);
-        if (match) {
-          const [, type, mathInput] = match;
-          math(type, mathInput || "");
-        } else {
-          appendLog('Error: Invalid math() syntax. Use math("type", "input")', 'error');
-        }
-      } else if (input.startsWith('javascript:')) {
-        let decodedValue = decodeURIComponent(input.replace('javascript:', '').trim());
-        if (!decodedValue.endsWith(';')) decodedValue += ';';
-        eval(decodedValue);
-        appendLog('Bookmarklet executed successfully!', 'info');
-        playSound('execute');
-      } else if (/[\u00B1\u221A\u03C0\u00B2\u00B3\u00D7\u00F7\u221E]/.test(input) || /^[+-]?\d*\.?\d*x\s*[+-=]/.test(input) || input.includes('/')) {
-        const [leftSide, rightSide] = input.split('=').map(part => part.trim());
-        const hasSymbols = /[\u00B1\u221A\u03C0\u00B2\u00B3\u00D7\u00F7\u221E]/.test(input);
-
-        if (input.includes('²') && input.includes('x')) {
-          math("quadratic", `${leftSide} = ${rightSide || '0'}`);
-        } else if (hasSymbols || input.includes('/')) {
-          math("expression", input);
-        } else {
-          const solution = solveEquation(leftSide, rightSide || '0');
-          appendLog(
-            `Equation: \\\\(${leftSide} = ${rightSide || '0'}\\\\), Solution: \\\\(x = ${solution}\\\\)`,
-            'log',
-            true
-          );
-          playSound('success');
-        }
-      } else if (window.editElement && /\d+\s/.test(input)) {
-        window.editElement(input);
-      } else {
-        const result = eval(input);
-        if (typeof result !== 'undefined') console.log(`Result: ${result}`);
-        playSound('execute');
-      }
-      gtag('event', 'execute_code', { 'event_category': 'Console', 'event_label': input });
-    } catch (e) {
-      appendLog('Error: ' + e.message, 'error');
-      playSound('error');
-    }
-    document.getElementById('inputField').value = '';
-    hideAutocomplete();
+function executeCode() {
+  const input = document.getElementById('inputField').value.trim();
+  if (input === '') {
+    appendLog('Error: Please enter some code to execute.', 'error');
+    playSound('error');
+    return;
   }
+  commandHistory.unshift(input);
+  historyIndex = -1;
+  try {
+    if (input === 'idiot();') {
+      idiot();
+    } else if (input === 'elements();') {
+      elements();
+    } else if (input === 'elementshelp();') {
+      elementshelp();
+    } else if (input.startsWith('math(')) {
+      const match = input.match(/math\(['"]([^'"]+)['"](?:,\s*['"]([^'"]+)['"])?\);?/);
+      if (match) {
+        const [, type, mathInput] = match;
+        math(type, mathInput || "");
+      } else {
+        appendLog('Error: Invalid math() syntax. Use math("type", "input")', 'error');
+      }
+    } else if (input.startsWith('javascript:')) {
+      let decodedValue = decodeURIComponent(input.replace('javascript:', '').trim());
+      if (!decodedValue.endsWith(';')) decodedValue += ';';
+      eval(decodedValue);
+      appendLog('Bookmarklet executed successfully!', 'info');
+      playSound('execute');
+    } else if (/[\u00B1\u221A\u03C0\u00B2\u00B3\u00D7\u00F7\u221E]/.test(input) || /^[+-]?\d*\.?\d*x\s*[+-=]/.test(input) || input.includes('/')) {
+      const [leftSide, rightSide] = input.split('=').map(part => part.trim());
+      const hasSymbols = /[\u00B1\u221A\u03C0\u00B2\u00B3\u00D7\u00F7\u221E]/.test(input);
+
+      if (input.includes('²') && input.includes('x')) {
+        math("quadratic", `${leftSide} = ${rightSide || '0'}`);
+      } else if (hasSymbols || input.includes('/')) {
+        math("expression", input);
+      } else {
+        const solution = solveEquation(leftSide, rightSide || '0');
+        appendLog(
+          `Equation: \\\\(${leftSide} = ${rightSide || '0'}\\\\), Solution: \\\\(x = ${solution}\\\\)`,
+          'log',
+          true
+        );
+        playSound('success');
+      }
+    } else if (window.editElement && /\d+\s/.test(input)) {
+      window.editElement(input);
+    } else {
+      const result = eval(input);
+      if (typeof result !== 'undefined') console.log(`Result: ${result}`);
+      playSound('execute');
+    }
+    gtag('event', 'execute_code', { 'event_category': 'Console', 'event_label': input });
+  } catch (e) {
+    appendLog('Error: ' + e.message, 'error');
+    playSound('error');
+  }
+  document.getElementById('inputField').value = '';
+  hideAutocomplete();
+}
 
   function solveEquation(left, right) {
     function parseSide(side) {
@@ -228,12 +228,12 @@ document.addEventListener('DOMContentLoaded', function() {
     gtag('event', 'export_log', { 'event_category': 'Console' });
   }
 
-  const functions = [
-    'squares', 'ponies', 'sawyer', 'aiden', 'aadyn', 'eli', 'elijah', 'ronin', 'ronin1', 'ronin2',
-    'check', 'idiot', 'elements', 'elementshelp', 'list', 'snake', 'updates', 'setColor', 'tictactoe',
-    'share', 'reset', 'highscores', 'shareHighScores', 'leaderboard', 'setUsername', 'setTheme', 
-    'toggleSound', 'more', 'math', 'symbols'
-  ];
+const functions = [
+  'squares', 'ponies', 'sawyer', 'aiden', 'aadyn', 'eli', 'elijah', 'ronin', 'ronin1', 'ronin2',
+  'check', 'idiot', 'elements', 'elementshelp', 'list', 'snake', 'updates', 'setColor', 'tictactoe',
+  'share', 'reset', 'highscores', 'shareHighScores', 'leaderboard', 'setUsername', 'setTheme', 
+  'toggleSound', 'more', 'math', 'symbols' // Added 'symbols' for reference
+];
 
   function setupAutocomplete() {
     const autocomplete = document.getElementById('autocomplete');
@@ -285,188 +285,200 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  function updates() {
-    appendLog('Update Log:', 'info');
-    appendLog('v1.0 (Mar 07, 2025): Initial release with theme toggle, Snake, and more!', 'info');
-    appendLog('v1.1 (Mar 07, 2025): Added setColor, Tic-Tac-Toe, sharing, logs, reset, scores.', 'info');
-    appendLog('v1.2 (Mar 07, 2025): Fixed title overlap and Tic-Tac-Toe score bug.', 'info');
-    appendLog('v1.3 (Mar 07, 2025): Scores persist after reset; added shareHighScores().', 'info');
-    appendLog('v1.4 (Mar 07, 2025): Added leaderboard() for global scores.', 'info');
-    appendLog('v1.5 (Mar 07, 2025): Added Pong (later removed).', 'info');
-    appendLog('v1.6 (Mar 07, 2025): Added setUsername() for profiles.', 'info');
-    appendLog('v1.7 (Mar 07, 2025): Added setTheme() for custom colors.', 'info');
-    appendLog('v1.8 (Mar 07, 2025): Added toggleSound() for sound control.', 'info');
-    appendLog('v1.9 (Mar 07, 2025): Removed Pong, fixed setTheme(), prioritized bookmarks, added PWA support.', 'info');
-    appendLog('v2.0 (Mar 09, 2025): Enhanced PWA support with "Install App" button, fixed manifest and service worker paths.', 'info');
-    appendLog('v2.1 (Mar 11, 2025): Organized bookmarks into categorized folders.', 'info');
-    appendLog('v2.2 (Mar 19, 2025): Added App Launcher with JS-Console button, fixed duplicate button issue.', 'info');
-    appendLog('v2.3 (Mar 19, 2025): Updated launcher to dark theme (#1a2525) for eye comfort, restored JS-Console light theme (#f4f4f4) as default.', 'info');
-    appendLog('v2.4 (Mar 19, 2025): Fixed caching issue with service worker (v4), ensuring consistent updates across navigation.', 'info');
-    appendLog('v2.5 (Mar 19, 2025): Expanded launcher with Flappy Bird, Bookmarklets, Hextris, Pacman, Space Invaders, HexGL, and 2048.', 'info');
-    appendLog('Type "list();" to see all commands.', 'info');
+ function updates() {
+  appendLog('Update Log:', 'info');
+  appendLog('v1.0 (Mar 07, 2025): Initial release with theme toggle, Snake, and more!', 'info');
+  appendLog('v1.1 (Mar 07, 2025): Added setColor, Tic-Tac-Toe, sharing, logs, reset, scores.', 'info');
+  appendLog('v1.2 (Mar 07, 2025): Fixed title overlap and Tic-Tac-Toe score bug.', 'info');
+  appendLog('v1.3 (Mar 07, 2025): Scores persist after reset; added shareHighScores().', 'info');
+  appendLog('v1.4 (Mar 07, 2025): Added leaderboard() for global scores.', 'info');
+  appendLog('v1.5 (Mar 07, 2025): Added Pong (later removed).', 'info');
+  appendLog('v1.6 (Mar 07, 2025): Added setUsername() for profiles.', 'info');
+  appendLog('v1.7 (Mar 07, 2025): Added setTheme() for custom colors.', 'info');
+  appendLog('v1.8 (Mar 07, 2025): Added toggleSound() for sound control.', 'info');
+  appendLog('v1.9 (Mar 07, 2025): Removed Pong, fixed setTheme(), prioritized bookmarks, added PWA support.', 'info');
+  appendLog('v2.0 (Mar 09, 2025): Enhanced PWA support with "Install App" button, fixed manifest and service worker paths.', 'info');
+  appendLog('v2.1 (Mar 11, 2025): Organized bookmarks into categorized folders.', 'info');
+  appendLog('v2.2 (Mar 19, 2025): Added App Launcher with JS-Console button, fixed duplicate button issue.', 'info');
+  appendLog('v2.3 (Mar 19, 2025): Updated launcher to dark theme (#1a2525) for eye comfort, restored JS-Console light theme (#f4f4f4) as default.', 'info');
+  appendLog('v2.4 (Mar 19, 2025): Fixed caching issue with service worker (v4), ensuring consistent updates across navigation.', 'info');
+  appendLog('v2.5 (Mar 19, 2025): Expanded launcher with Flappy Bird, Bookmarklets, Hextris, Pacman, Space Invaders, HexGL, and 2048.', 'info');
+  appendLog('Type "list();" to see all commands.', 'info');
+}
+function math(type = "list", input = "") {
+  appendLog('Math Formulas and Solvers:', 'info');
+
+  if (type === "list") {
+    appendLog('Type "math(\'type\', \'input\')" to solve specific problems (e.g., math(\'quadratic\', \'x² + 5x + 6 = 0\')).', 'info');
+    appendLog('Available formulas and solvers:', 'info');
+    appendLog('Linear Equation (Slope-Intercept): y = mx + b (m = slope, b = y-intercept)', 'info');
+    appendLog('Point-Slope Form: y - y₁ = m(x - x₁) (m = slope, (x₁, y₁) = point)', 'info');
+    appendLog('Standard Form: Ax + By = C (A, B, C = constants)', 'info');
+    appendLog('  Solver: math(\'linear\', \'2x + 3 = 7\')', 'info');
+    appendLog('Quadratic Equation: y = ax² + bx + c (a, b, c = constants)', 'info');
+    appendLog('Quadratic Formula: x = [-b ± √(b² - 4ac)] / (2a)', 'info');
+    appendLog('  Solver: math(\'quadratic\', \'x² + 5x + 6 = 0\')', 'info');
+    appendLog('Area of Rectangle: A = l * w (l = length, w = width)', 'info');
+    appendLog('Area of Triangle: A = (1/2) * b * h (b = base, h = height)', 'info');
+    appendLog('Area of Circle: A = πr² (r = radius)', 'info');
+    appendLog('Circumference of Circle: C = 2πr (r = radius)', 'info');
+    appendLog('Pythagorean Theorem: a² + b² = c² (a, b = legs, c = hypotenuse)', 'info');
+    appendLog('Volume of Cylinder: V = πr²h (r = radius, h = height)', 'info');
+    appendLog('Surface Area of Sphere: A = 4πr² (r = radius)', 'info');
+    appendLog('  Solver: math(\'area\', \'circle 5\') or math(\'volume\', \'cylinder 3 10\')', 'info');
+    appendLog('See solvers below or type "math(\'prompts\')" for examples!', 'info');
+    return;
   }
 
-  function math(type = "list", input = "") {
-    appendLog('Math Formulas and Solvers:', 'info');
-
-    if (type === "list") {
-      appendLog('Type "math(\'type\', \'input\')" to solve specific problems (e.g., math(\'quadratic\', \'x² + 5x + 6 = 0\')).', 'info');
-      appendLog('Available formulas and solvers:', 'info');
-      appendLog('Linear Equation (Slope-Intercept): y = mx + b (m = slope, b = y-intercept)', 'info');
-      appendLog('Point-Slope Form: y - y₁ = m(x - x₁) (m = slope, (x₁, y₁) = point)', 'info');
-      appendLog('Standard Form: Ax + By = C (A, B, C = constants)', 'info');
-      appendLog('  Solver: math(\'linear\', \'2x + 3 = 7\')', 'info');
-      appendLog('Quadratic Equation: y = ax² + bx + c (a, b, c = constants)', 'info');
-      appendLog('Quadratic Formula: x = [-b ± √(b² - 4ac)] / (2a)', 'info');
-      appendLog('  Solver: math(\'quadratic\', \'x² + 5x + 6 = 0\')', 'info');
-      appendLog('Area of Rectangle: A = l * w (l = length, w = width)', 'info');
-      appendLog('Area of Triangle: A = (1/2) * b * h (b = base, h = height)', 'info');
-      appendLog('Area of Circle: A = πr² (r = radius)', 'info');
-      appendLog('Circumference of Circle: C = 2πr (r = radius)', 'info');
-      appendLog('Pythagorean Theorem: a² + b² = c² (a, b = legs, c = hypotenuse)', 'info');
-      appendLog('Volume of Cylinder: V = πr²h (r = radius, h = height)', 'info');
-      appendLog('Surface Area of Sphere: A = 4πr² (r = radius)', 'info');
-      appendLog('  Solver: math(\'area\', \'circle 5\') or math(\'volume\', \'cylinder 3 10\')', 'info');
-      appendLog('See solvers below or type "math(\'prompts\')" for examples!', 'info');
-      return;
-    }
-
-    if (type === "prompts") {
-      appendLog('Example Prompts for Math Solvers:', 'info');
-      appendLog('Copy these into the input field and press "Execute Code":', 'info');
-      appendLog('Linear Equation:', 'info');
-      appendLog('  math("linear", "2x + 5 = 9") → Solves for x in y = 2x + 5', 'info');
-      appendLog('Quadratic Equation:', 'info');
-      appendLog('  math("quadratic", "x² + 5x + 6 = 0") → Solves ax² + bx + c = 0', 'info');
-      appendLog('Geometry - Area:', 'info');
-      appendLog('  math("area", "circle 5") → A = π * 5²', 'info');
-      appendLog('Expressions:', 'info');
-      appendLog('  √4 → Evaluates to 2', 'info');
-      appendLog('  2 × π → Evaluates to ~6.2832', 'info');
-      appendLog('  2³ → Evaluates to 8', 'info');
-      appendLog('  2 ± 3 → Evaluates both 5 and -1', 'info');
-      appendLog('  2/3 → Evaluates to ~0.6667', 'info');
-      appendLog('Use the Symbols dropdown in the top nav for easier input!', 'info');
-      return;
-    }
-
-    try {
-      if (type === "linear") {
-        const [left, right] = input.split('=').map(part => part.trim());
-        const solution = solveEquation(left, right);
-        appendLog(`Linear: \\\\(${left} = ${right}\\\\), Solution: \\\\(x = ${solution}\\\\)`, 'log', true);
-        playSound('success');
-      } else if (type === "quadratic") {
-        const [left, right] = input.split('=').map(part => part.trim());
-        if (right !== "0") throw new Error("Quadratic solver requires form ax² + bx + c = 0");
-        const coeffs = parseQuadratic(left);
-        const [x1, x2] = solveQuadratic(coeffs.a, coeffs.b, coeffs.c);
-        appendLog(`Quadratic: \\\\(${left} = 0\\\\), Solutions: \\\\(x = ${x1}, x = ${x2}\\\\)`, 'log', true);
-        playSound('success');
-      } else if (type === "area") {
-        const [shape, ...params] = input.split(' ');
-        const result = calculateArea(shape, params.map(Number));
-        appendLog(`Area of ${shape}: \\\\(A = ${result}\\\\)`, 'log', true);
-        playSound('success');
-      } else if (type === "volume") {
-        const [shape, ...params] = input.split(' ');
-        const result = calculateVolume(shape, params.map(Number));
-        appendLog(`Volume of ${shape}: \\\\(V = ${result}\\\\)`, 'log', true);
-        playSound('success');
-      } else if (type === "expression") {
-        const result = evaluateExpression(input);
-        appendLog(`Expression: \\\\(${input}\\\\), Result: \\\\(${result}\\\\)`, 'log', true);
-        playSound('success');
-      } else {
-        appendLog(`Error: Unknown math type "${type}". Type "math()" for a list or "math(\'prompts\')" for examples.`, 'error');
-      }
-    } catch (e) {
-      appendLog(`Error: ${e.message}`, 'error');
-      playSound('error');
-    }
-    gtag('event', 'run_function', { 'event_category': 'Math', 'event_label': type });
+  if (type === "prompts") {
+    appendLog('Example Prompts for Math Solvers:', 'info');
+    appendLog('Copy these into the input field and press "Execute Code":', 'info');
+    appendLog('Linear Equation:', 'info');
+    appendLog('  math("linear", "2x + 5 = 9") → Solves for x in y = 2x + 5', 'info');
+    appendLog('Quadratic Equation:', 'info');
+    appendLog('  math("quadratic", "x² + 5x + 6 = 0") → Solves ax² + bx + c = 0', 'info');
+    appendLog('Geometry - Area:', 'info');
+    appendLog('  math("area", "circle 5") → A = π * 5²', 'info');
+    appendLog('Expressions:', 'info');
+    appendLog('  √4 → Evaluates to 2', 'info');
+    appendLog('  2 × π → Evaluates to ~6.2832', 'info');
+    appendLog('  2³ → Evaluates to 8', 'info');
+    appendLog('  2 ± 3 → Evaluates both 5 and -1', 'info');
+    appendLog('  2/3 → Evaluates to ~0.6667', 'info');
+    appendLog('Use the Symbols button for easier input!', 'info');
+    return;
   }
 
-  function evaluateExpression(expr) {
-    let cleanedExpr = expr.replace(/\s+/g, '')
-      .replace('π', Math.PI)
-      .replace('∞', Infinity)
-      .replace('÷', '/')
-      .replace('×', '*');
-
-    if (cleanedExpr.includes('±')) {
-      const [left, right] = cleanedExpr.split('±').map(part => part.trim());
-      const numLeft = parseFloat(left) || 0;
-      const numRight = parseFloat(right) || 0;
-      return `${(numLeft + numRight).toFixed(4)} or ${(numLeft - numRight).toFixed(4)}`;
+  try {
+    if (type === "linear") {
+      const [left, right] = input.split('=').map(part => part.trim());
+      const solution = solveEquation(left, right);
+      appendLog(`Linear: \\\\(${left} = ${right}\\\\), Solution: \\\\(x = ${solution}\\\\)`, 'log', true);
+      playSound('success');
+    } else if (type === "quadratic") {
+      const [left, right] = input.split('=').map(part => part.trim());
+      if (right !== "0") throw new Error("Quadratic solver requires form ax² + bx + c = 0");
+      const coeffs = parseQuadratic(left);
+      const [x1, x2] = solveQuadratic(coeffs.a, coeffs.b, coeffs.c);
+      appendLog(`Quadratic: \\\\(${left} = 0\\\\), Solutions: \\\\(x = ${x1}, x = ${x2}\\\\)`, 'log', true);
+      playSound('success');
+    } else if (type === "area") {
+      const [shape, ...params] = input.split(' ');
+      const result = calculateArea(shape, params.map(Number));
+      appendLog(`Area of ${shape}: \\\\(A = ${result}\\\\)`, 'log', true);
+      playSound('success');
+    } else if (type === "volume") {
+      const [shape, ...params] = input.split(' ');
+      const result = calculateVolume(shape, params.map(Number));
+      appendLog(`Volume of ${shape}: \\\\(V = ${result}\\\\)`, 'log', true);
+      playSound('success');
+    } else if (type === "expression") {
+      const result = evaluateExpression(input);
+      appendLog(`Expression: \\\\(${input}\\\\), Result: \\\\(${result}\\\\)`, 'log', true);
+      playSound('success');
+    } else {
+      appendLog(`Error: Unknown math type "${type}". Type "math()" for a list or "math(\'prompts\')" for examples.`, 'error');
     }
-    if (cleanedExpr.includes('√')) {
-      const sqrtMatch = cleanedExpr.match(/√(\d+\.?\d*)/);
-      if (sqrtMatch) {
-        const num = parseFloat(sqrtMatch[1]);
-        return Math.sqrt(num).toFixed(4);
-      }
-    }
-    if (cleanedExpr.includes('³')) {
-      const cubeMatch = cleanedExpr.match(/(\d+\.?\d*)³/);
-      if (cubeMatch) {
-        const num = parseFloat(cubeMatch[1]);
-        return Math.pow(num, 3).toFixed(4);
-      }
-    }
-    if (cleanedExpr.includes('²')) {
-      const squareMatch = cleanedExpr.match(/(\d+\.?\d*)²/);
-      if (squareMatch) {
-        const num = parseFloat(squareMatch[1]);
-        return Math.pow(num, 2).toFixed(4);
-      }
-    }
-    const result = eval(cleanedExpr); // Handles fractions and basic arithmetic
-    return Number.isFinite(result) ? result.toFixed(4) : result;
+  } catch (e) {
+    appendLog(`Error: ${e.message}`, 'error');
+    playSound('error');
   }
+  gtag('event', 'run_function', { 'event_category': 'Math', 'event_label': type });
+}
 
-  function parseQuadratic(expr) {
-    expr = expr.replace(/\s+/g, '').replace(/−/g, '-');
-    let a = 0, b = 0, c = 0;
-    const terms = expr.match(/([+-]?\d*\.?\d*x²|[+-]?\d*\.?\d*x|[+-]?\d*\.?\d*)/g).filter(Boolean);
-    terms.forEach(term => {
-      if (term.includes('x²')) {
-        a = parseFloat(term.replace('x²', '')) || (term === 'x²' ? 1 : term === '-x²' ? -1 : 0);
-      } else if (term.includes('x')) {
-        b = parseFloat(term.replace('x', '')) || (term === 'x' ? 1 : term === '-x' ? -1 : 0);
-      } else {
-        c = parseFloat(term) || 0;
-      }
-    });
-    return { a, b, c };
+function evaluateExpression(expr) {
+  let cleanedExpr = expr.replace(/\s+/g, '')
+    .replace('π', Math.PI)
+    .replace('∞', Infinity)
+    .replace('÷', '/')
+    .replace('×', '*');
+
+  if (cleanedExpr.includes('±')) {
+    const [left, right] = cleanedExpr.split('±').map(part => part.trim());
+    const numLeft = parseFloat(left) || 0;
+    const numRight = parseFloat(right) || 0;
+    return `${(numLeft + numRight).toFixed(4)} or ${(numLeft - numRight).toFixed(4)}`;
   }
-
-  function solveQuadratic(a, b, c) {
-    if (a === 0) throw new Error("Not a quadratic equation (a cannot be 0)");
-    const discriminant = b * b - 4 * a * c;
-    if (discriminant < 0) throw new Error("No real solutions (discriminant < 0)");
-    const sqrtD = Math.sqrt(discriminant);
-    const x1 = (-b + sqrtD) / (2 * a);
-    const x2 = (-b - sqrtD) / (2 * a);
-    return [x1.toFixed(4), x2.toFixed(4)];
-  }
-
-  function calculateArea(shape, params) {
-    switch (shape.toLowerCase()) {
-      case 'rectangle': return params[0] * params[1];
-      case 'triangle': return 0.5 * params[0] * params[1];
-      case 'circle': return Math.PI * params[0] * params[0];
-      default: throw new Error("Supported shapes: rectangle, triangle, circle");
+  if (cleanedExpr.includes('√')) {
+    const sqrtMatch = cleanedExpr.match(/√(\d+\.?\d*)/);
+    if (sqrtMatch) {
+      const num = parseFloat(sqrtMatch[1]);
+      return Math.sqrt(num).toFixed(4);
     }
   }
-
-  function calculateVolume(shape, params) {
-    switch (shape.toLowerCase()) {
-      case 'cylinder': return Math.PI * params[0] * params[0] * params[1];
-      default: throw new Error("Supported shapes: cylinder");
+  if (cleanedExpr.includes('³')) {
+    const cubeMatch = cleanedExpr.match(/(\d+\.?\d*)³/);
+    if (cubeMatch) {
+      const num = parseFloat(cubeMatch[1]);
+      return Math.pow(num, 3).toFixed(4);
     }
   }
+  if (cleanedExpr.includes('²')) {
+    const squareMatch = cleanedExpr.match(/(\d+\.?\d*)²/);
+    if (squareMatch) {
+      const num = parseFloat(squareMatch[1]);
+      return Math.pow(num, 2).toFixed(4);
+    }
+  }
+  const result = eval(cleanedExpr); // Handles fractions and basic arithmetic
+  return Number.isFinite(result) ? result.toFixed(4) : result;
+}
+// Helper for quadratic parsing
+function parseQuadratic(expr) {
+  expr = expr.replace(/\s+/g, '').replace(/−/g, '-'); // Clean up spaces and minus signs
+  let a = 0, b = 0, c = 0;
+  const terms = expr.match(/([+-]?\d*\.?\d*x²|[+-]?\d*\.?\d*x|[+-]?\d*\.?\d*)/g).filter(Boolean);
+  terms.forEach(term => {
+    if (term.includes('x²')) {
+      a = parseFloat(term.replace('x²', '')) || (term === 'x²' ? 1 : term === '-x²' ? -1 : 0);
+    } else if (term.includes('x')) {
+      b = parseFloat(term.replace('x', '')) || (term === 'x' ? 1 : term === '-x' ? -1 : 0);
+    } else {
+      c = parseFloat(term) || 0;
+    }
+  });
+  return { a, b, c };
+}
 
+// Helper for quadratic formula
+function solveQuadratic(a, b, c) {
+  if (a === 0) throw new Error("Not a quadratic equation (a cannot be 0)");
+  const discriminant = b * b - 4 * a * c;
+  if (discriminant < 0) throw new Error("No real solutions (discriminant < 0)");
+  const sqrtD = Math.sqrt(discriminant);
+  const x1 = (-b + sqrtD) / (2 * a);
+  const x2 = (-b - sqrtD) / (2 * a);
+  return [x1.toFixed(4), x2.toFixed(4)];
+}
+
+// Helper for area calculations
+function calculateArea(shape, params) {
+  switch (shape.toLowerCase()) {
+    case 'rectangle': return params[0] * params[1]; // l * w
+    case 'triangle': return 0.5 * params[0] * params[1]; // (1/2) * b * h
+    case 'circle': return Math.PI * params[0] * params[0]; // πr²
+    default: throw new Error("Supported shapes: rectangle, triangle, circle");
+  }
+}
+
+// Helper for volume calculations
+function calculateVolume(shape, params) {
+  switch (shape.toLowerCase()) {
+    case 'cylinder': return Math.PI * params[0] * params[0] * params[1]; // πr²h
+    default: throw new Error("Supported shapes: cylinder");
+  }
+}
+
+// Helper for trigonometry (degrees to radians)
+function calculateTrig(func, angle) {
+  const rad = angle * Math.PI / 180;
+  switch (func.toLowerCase()) {
+    case 'sin': return Math.sin(rad).toFixed(4);
+    case 'cos': return Math.cos(rad).toFixed(4);
+    case 'tan': return Math.tan(rad).toFixed(4);
+    default: throw new Error("Supported functions: sin, cos, tan");
+  }
+}
   function setColor(type, color) {
     const validTypes = ['log', 'error', 'warn', 'info'];
     if (!validTypes.includes(type)) {
@@ -934,7 +946,7 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
     appendLog(`Editing item [${index}] - "${el.tagName.toLowerCase()}"`, 'info');
-    appendLog('What would you like to do? Pick an option by typing it below and press "Execute Code":', 'info');
+    appendLog('What would you like to do? Pick an option by typing it below and pressing "Execute Code":', 'info');
     appendLog(`  1. Change text to: "Your text here"`, 'info');
     appendLog(`  2. Change color to: "red" (or any color)`, 'info');
     appendLog(`  3. Make it disappear`, 'info');
@@ -1112,29 +1124,31 @@ document.addEventListener('DOMContentLoaded', function() {
   saveBookmarksBtn.addEventListener('click', saveBookmarks);
   bookmarksBar.appendChild(saveBookmarksBtn);
 
-  function handleBookmark(type, value) {
-    if (type === 'url') {
-      window.open(value, '_blank');
-    } else if (type === 'bookmarklet') {
-      try {
-        let decodedValue = decodeURIComponent(value.trim());
-        if (decodedValue.startsWith('javascript:')) {
-          decodedValue = decodedValue.replace('javascript:', '');
-        }
-        if (!decodedValue.endsWith(';')) {
-          decodedValue += ';';
-        }
-        eval(decodedValue);
-        appendLog(`Bookmarklet "${decodedValue.slice(0, 20)}..." executed successfully!`, 'info');
-      } catch (e) {
-        appendLog('Bookmarklet Error: ' + e.message, 'error');
+ function handleBookmark(type, value) {
+  if (type === 'url') {
+    window.open(value, '_blank');
+  } else if (type === 'bookmarklet') {
+    try {
+      // Decode URL-encoded bookmarklet and clean up
+      let decodedValue = decodeURIComponent(value.trim());
+      // Remove 'javascript:' prefix if present and ensure it ends with a semicolon
+      if (decodedValue.startsWith('javascript:')) {
+        decodedValue = decodedValue.replace('javascript:', '');
       }
-    } else {
-      appendLog(`Unknown bookmark type: ${type}`, 'error');
+      if (!decodedValue.endsWith(';')) {
+        decodedValue += ';';
+      }
+      // Execute the cleaned, decoded bookmarklet
+      eval(decodedValue);
+      appendLog(`Bookmarklet "${decodedValue.slice(0, 20)}..." executed successfully!`, 'info');
+    } catch (e) {
+      appendLog('Bookmarklet Error: ' + e.message, 'error');
     }
-    gtag('event', 'use_bookmark', { 'event_category': 'UI', 'event_label': value });
+  } else {
+    appendLog(`Unknown bookmark type: ${type}`, 'error');
   }
-
+  gtag('event', 'use_bookmark', { 'event_category': 'UI', 'event_label': value });
+}
   let customBookmarks = JSON.parse(localStorage.getItem('customBookmarks') || '[]');
 
   function addBookmark() {
@@ -1204,21 +1218,62 @@ document.addEventListener('DOMContentLoaded', function() {
     bookmarksBar.insertBefore(bookmark, saveBookmarksBtn);
   });
 
-  // Bookmarks dropdown setup in nav
-  const bookmarkDropdown = document.getElementById('bookmarkDropdown');
-  Object.entries(categorizedBookmarks).forEach(([category, bookmarks]) => {
-    const categoryItem = document.createElement('button');
-    categoryItem.textContent = category;
-    categoryItem.className = 'dropdown-item';
-    categoryItem.addEventListener('click', () => {
-      document.getElementById('inputField').value = `// ${category} Bookmarks: ${bookmarks.map(bm => bm.name).join(', ')}`;
-      bookmarkDropdown.style.display = 'none';
-      document.getElementById('inputField').focus();
-    });
-    bookmarkDropdown.appendChild(categoryItem);
-  });
+  let hasShownWelcome = false;
 
-  // Symbols dropdown setup in nav
+  const urlParams = new URLSearchParams(window.location.search);
+  const sharedLogs = urlParams.get('logs');
+  if (sharedLogs) {
+    const logs = JSON.parse(decodeURIComponent(sharedLogs));
+    logs.forEach(log => appendLog(log.message, log.type, log.isHtml));
+  } else {
+    const savedLogs = JSON.parse(localStorage.getItem('logs') || '[]');
+    savedLogs.forEach(log => appendLog(log.message, log.type, log.isHtml));
+  }
+  if (!hasShownWelcome) {
+    appendLog('Welcome to the JavaScript Console v2.5 on GitHub Pages!', 'info');
+    appendLog('Type "updates();" for what’s new or "list();" for all commands.', 'info');
+    hasShownWelcome = true;
+  }
+
+  // Theme setup
+  const customTheme = JSON.parse(localStorage.getItem('customTheme'));
+  const savedTheme = localStorage.getItem('theme');
+  
+  if (customTheme) {
+    // Apply custom theme if set
+    document.body.classList.remove('dark');
+    document.documentElement.style.setProperty('--bg-color', customTheme.bgColor);
+    document.documentElement.style.setProperty('--text-color', customTheme.textColor);
+  } else if (savedTheme === 'dark') {
+    // Apply dark mode if explicitly saved
+    document.body.classList.add('dark');
+  } else {
+    // Default to light theme (no class, uses :root CSS)
+    document.body.classList.remove('dark');
+    document.documentElement.style.removeProperty('--bg-color');
+    document.documentElement.style.removeProperty('--text-color');
+  }
+
+  setupInput();
+  setupAutocomplete();
+  installPWA();
+
+  document.getElementById('executeBtn').addEventListener('click', executeCode);
+  document.getElementById('clearBtn').addEventListener('click', clearConsole);
+  document.getElementById('exportBtn').addEventListener('click', exportLog);
+  document.getElementById('themeBtn').addEventListener('click', toggleTheme);
+  document.getElementById('launcherBtn').addEventListener('click', () => {
+    console.log('Launcher button clicked');
+    window.location.assign('https://criminalpear.github.io/JS-Console/launcher.html');
+  });
+ document.addEventListener('DOMContentLoaded', function() {
+  // Existing code...
+
+  // Bookmarks dropdown setup (already present)
+  const bookmarkDropdown = document.getElementById('bookmarkDropdown');
+  // ... (existing bookmark logic)
+
+  // Symbols dropdown setup
   const symbolsDropdown = document.getElementById('symbolsDropdown');
   const inputField = document.getElementById('inputField');
   const symbols = ['±', '√', 'π', '²', '³', '×', '÷', '∞'];
@@ -1235,98 +1290,21 @@ document.addEventListener('DOMContentLoaded', function() {
     symbolsDropdown.appendChild(symbolItem);
   });
 
-  // Toggle dropdowns
-  const menuDropdown = document.getElementById('dropdown');
-  document.getElementById('menuBtn').addEventListener('click', () => {
-    menuDropdown.style.display = menuDropdown.style.display === 'block' ? 'none' : 'block';
-    bookmarkDropdown.style.display = 'none';
-    symbolsDropdown.style.display = 'none';
-  });
-
-  document.querySelector('nav .dropdown:nth-child(2) .dropbtn').addEventListener('click', () => {
-    bookmarkDropdown.style.display = bookmarkDropdown.style.display === 'block' ? 'none' : 'block';
-    menuDropdown.style.display = 'none';
-    symbolsDropdown.style.display = 'none';
-  });
-
-  document.querySelector('nav .dropdown:nth-child(3) .dropbtn').addEventListener('click', () => {
+  // Toggle Symbols dropdown
+  const symbolsBtn = document.querySelector('nav .dropdown:nth-child(3) .dropbtn'); // Third dropdown is Symbols
+  symbolsBtn.addEventListener('click', () => {
     symbolsDropdown.style.display = symbolsDropdown.style.display === 'block' ? 'none' : 'block';
-    menuDropdown.style.display = 'none';
-    bookmarkDropdown.style.display = 'none';
   });
 
   // Hide dropdowns when clicking outside
   document.addEventListener('click', (e) => {
-    if (!e.target.closest('.dropdown') && !e.target.closest('#menuBtn') && !e.target.closest('.dropbtn')) {
-      menuDropdown.style.display = 'none';
+    if (!e.target.closest('.dropdown')) {
       bookmarkDropdown.style.display = 'none';
       symbolsDropdown.style.display = 'none';
+      document.getElementById('dropdown').style.display = 'none';
     }
   });
 
-  // Event listeners for buttons
-  document.getElementById('executeBtn').addEventListener('click', executeCode);
-  document.getElementById('clearBtn').addEventListener('click', clearConsole);
-  document.getElementById('exportBtn').addEventListener('click', exportLog);
-  document.getElementById('themeBtn').addEventListener('click', toggleTheme);
-  document.getElementById('launcherBtn').addEventListener('click', () => window.location.href = '/JS-Console/launcher.html');
-
-  // Theme setup
-  const savedTheme = localStorage.getItem('theme');
-  const customTheme = JSON.parse(localStorage.getItem('customTheme'));
-  if (savedTheme === 'dark') {
-    document.body.classList.add('dark');
-  } else if (customTheme) {
-    setTheme(customTheme.bgColor, customTheme.textColor);
-  }
-
-  // Sound setup
-  window.soundEnabled = localStorage.getItem('soundEnabled') !== 'false';
-
-  // Initialize
-  installPWA();
-  setupAutocomplete();
-  setupInput();
-
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('logs')) {
-    const logs = JSON.parse(decodeURIComponent(urlParams.get('logs')));
-    logs.forEach(log => appendLog(log.message, log.type));
-    appendLog('Loaded shared console logs!', 'info');
-  }
-}); // Added the missing closing brace for DOMContentLoaded
-
-function appendLog(message, type, isMath = false) {
-  const consoleDiv = document.getElementById('jsConsole');
-  const line = document.createElement('div');
-  line.className = type;
-  line.textContent = message;
-  if (isMath) {
-    line.classList.add('math');
-    setTimeout(() => MathJax.typesetPromise([line]), 0);
-  }
-  consoleDiv.appendChild(line);
-  consoleDiv.scrollTop = consoleDiv.scrollHeight;
-
-  const logs = JSON.parse(localStorage.getItem('consoleLogs') || '[]');
-  logs.push({ message, type });
-  localStorage.setItem('consoleLogs', JSON.stringify(logs));
-}
-
-function clearConsole() {
-  const consoleDiv = document.getElementById('jsConsole');
-  consoleDiv.innerHTML = '';
-  localStorage.setItem('consoleLogs', '[]');
-  appendLog('Console cleared!', 'info');
-}
-
-function playSound(type) {
-  if (!window.soundEnabled) return;
-  const sounds = {
-    execute: '/JS-Console/sounds/execute.mp3',
-    error: '/JS-Console/sounds/error.mp3',
-    success: '/JS-Console/sounds/success.mp3'
-  };
-  const sound = new Audio(sounds[type]);
-  sound.play().catch(() => {});
-}
+  // Rest of existing code...
+});
+});
