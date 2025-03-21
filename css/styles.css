@@ -337,3 +337,8 @@ button:hover {
 .fraction-add-btn:hover {
   background-color: var(--button-hover);
 }
+.fraction-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
