@@ -107,16 +107,15 @@ function executeCode() {
       appendLog('Bookmarklet executed successfully!', 'info');
       playSound('execute');
     } else if (/[\u00B1\u221A\u03C0\u00B2\u00B3\u00D7\u00F7\u221E\u03A3\u222B\u2206\u03B8]/.test(input) || /^[+-]?\d*\.?\d*x\s*[+-=]/.test(input) || /sin|cos|tan/.test(input)) {
-      // Handle math inputs with symbols, x, or trig functions
       const [leftSide, rightSide] = input.split('=').map(part => part.trim());
-      const hasSymbols = /[\u221A\u03C0\u00B2\u00B3\u00D7\u00F7\u221E\u03A3\u222B\u2206]/.test(input);
+      const hasSymbols = /[\u00B1\u221A\u03C0\u00B2\u00B3\u00D7\u00F7\u221E\u03A3\u222B\u2206\u03B8]/.test(input);
       const hasTrig = /sin|cos|tan/.test(input);
 
-      if (input.includes('²')) {
+      if (input.includes('²') || input.includes('³')) {
         math("quadratic", `${leftSide} = ${rightSide || '0'}`);
       } else if (hasTrig && !input.includes('x')) {
         math("trig", input.replace('=', '').trim());
-      } else if (hasSymbols && !input.includes('x')) {
+      } else if (hasSymbols || input.includes('/')) {
         math("expression", input);
       } else {
         const solution = solveEquation(leftSide, rightSide || '0');
@@ -374,11 +373,13 @@ function math(type = "list", input = "") {
     appendLog('  math("volume", "cylinder 3 10") → V = π * 3² * 10', 'info');
     appendLog('Trigonometry:', 'info');
     appendLog('  math("trig", "sin 30") → sin(30°)', 'info');
-    appendLog('  math("trig", "cos 45") → cos(45°)', 'info');
-    appendLog('  math("trig", "tan 60") → tan(60°)', 'info');
+    appendLog('  math("trig", "cos θ = 0.5") → cos(60°)', 'info');
     appendLog('Expressions:', 'info');
     appendLog('  √4 → Evaluates to 2', 'info');
     appendLog('  2 × π → Evaluates to ~6.2832', 'info');
+    appendLog('  2³ → Evaluates to 8', 'info');
+    appendLog('  2 ± 3 → Evaluates both 5 and -1', 'info');
+    appendLog('  2/3 → Evaluates to ~0.6667', 'info');
     appendLog('Use the Symbols button for easier input!', 'info');
     return;
   }
@@ -407,9 +408,15 @@ function math(type = "list", input = "") {
       appendLog(`Volume of ${shape}: \\\\(V = ${result}\\\\)`, 'log', true);
       playSound('success');
     } else if (type === "trig") {
-      const [func, angle] = input.split(' ').map(part => part.trim());
-      const result = calculateTrig(func, Number(angle));
-      appendLog(`${func}(${angle}°): \\\\(${result}\\\\)`, 'log', true);
+      const parts = input.split(' ').map(part => part.trim());
+      if (parts.length === 1) {
+        const result = calculateTrig(parts[0], undefined);
+        appendLog(`${parts[0]}: \\\\(${result}\\\\)`, 'log', true);
+      } else {
+        const [func, angle] = parts;
+        const result = calculateTrig(func, Number(angle));
+        appendLog(`${func}(${angle}°): \\\\(${result}\\\\)`, 'log', true);
+      }
       playSound('success');
     } else if (type === "expression") {
       const result = evaluateExpression(input);
@@ -425,9 +432,21 @@ function math(type = "list", input = "") {
   gtag('event', 'run_function', { 'event_category': 'Math', 'event_label': type });
 }
 
-// New helper function to evaluate expressions with symbols
 function evaluateExpression(expr) {
-  let cleanedExpr = expr.replace(/\s+/g, '').replace('π', Math.PI).replace('∞', Infinity).replace('÷', '/').replace('×', '*');
+  let cleanedExpr = expr.replace(/\s+/g, '')
+    .replace('π', Math.PI)
+    .replace('∞', Infinity)
+    .replace('÷', '/')
+    .replace('×', '*')
+    .replace('∆', 'x') // Treat ∆ as a variable for now
+    .replace('θ', 'x'); // Treat θ as a variable (use in trig context)
+
+  if (cleanedExpr.includes('±')) {
+    const [left, right] = cleanedExpr.split('±').map(part => part.trim());
+    const numLeft = parseFloat(left) || 0;
+    const numRight = parseFloat(right) || 0;
+    return `${(numLeft + numRight).toFixed(4)} or ${(numLeft - numRight).toFixed(4)}`;
+  }
   if (cleanedExpr.includes('√')) {
     const sqrtMatch = cleanedExpr.match(/√(\d+\.?\d*)/);
     if (sqrtMatch) {
@@ -449,7 +468,13 @@ function evaluateExpression(expr) {
       return Math.pow(num, 2).toFixed(4);
     }
   }
-  const result = eval(cleanedExpr); // Safe here since we're controlling input
+  if (cleanedExpr.includes('∑')) {
+    throw new Error("Summation (∑) not yet supported in expressions");
+  }
+  if (cleanedExpr.includes('∫')) {
+    throw new Error("Integration (∫) not yet supported in expressions");
+  }
+  const result = eval(cleanedExpr); // Safe for basic arithmetic and fractions
   return Number.isFinite(result) ? result.toFixed(4) : result;
 }
 // Helper for quadratic parsing
@@ -1311,6 +1336,7 @@ function calculateTrig(func, angle) {
 
       if (symbol === 'Fractions') {
         symbolItem.addEventListener('click', () => {
+          symbolsDropdown.innerHTML = ''; // Clear dropdown
           const fractionDiv = document.createElement('div');
           const numInput = document.createElement('input');
           numInput.type = 'text';
@@ -1322,6 +1348,7 @@ function calculateTrig(func, angle) {
           denomInput.className = 'fraction-input';
           const addBtn = document.createElement('button');
           addBtn.textContent = 'Add';
+          addBtn.className = 'fraction-add-btn'; // Add class for styling
           addBtn.addEventListener('click', () => {
             const num = numInput.value.trim();
             const denom = denomInput.value.trim();
@@ -1337,7 +1364,6 @@ function calculateTrig(func, angle) {
           fractionDiv.appendChild(document.createTextNode(' / '));
           fractionDiv.appendChild(denomInput);
           fractionDiv.appendChild(addBtn);
-          symbolsDropdown.innerHTML = '';
           symbolsDropdown.appendChild(fractionDiv);
         });
       } else {
@@ -1352,7 +1378,6 @@ function calculateTrig(func, angle) {
     symbolsDropdown.style.display = symbolsDropdown.style.display === 'none' ? 'block' : 'none';
   });
 
-  // Hide dropdown when clicking outside
   document.addEventListener('click', (e) => {
     if (!symbolsBtn.contains(e.target) && !symbolsDropdown.contains(e.target)) {
       symbolsDropdown.style.display = 'none';
