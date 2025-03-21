@@ -282,3 +282,45 @@ button:hover {
 .launcher-container button:hover {
   background-color: #5a7373; /* Lighter teal on hover */
 }
+/* Dropdown styling for symbols and fractions */
+.dropdown {
+  position: absolute;
+  bottom: 60px;
+  right: 10px;
+  background-color: var(--bookmark-bg);
+  border: 1px solid var(--border-color);
+  padding: 10px;
+  z-index: 1500;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Symbol items */
+.symbol-item {
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 2px;
+  cursor: pointer;
+  background-color: var(--button-bg);
+  color: white;
+  border-radius: 3px;
+}
+
+.symbol-item:hover {
+  background-color: var(--button-hover);
+}
+
+/* Fraction inputs */
+.fraction-input {
+  width: 60px;
+  padding: 5px;
+  margin: 0 5px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bookmark-bg);
+  color: var(--text-color);
+}
+
+#fractionsInput button {
+  padding: 5px 10px;
+  margin-left: 5px;
+}
