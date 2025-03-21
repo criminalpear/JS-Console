@@ -324,3 +324,16 @@ button:hover {
   padding: 5px 10px;
   margin-left: 5px;
 }
+.fraction-add-btn {
+  padding: 5px 10px;
+  margin-left: 5px;
+  background-color: var(--button-bg);
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.fraction-add-btn:hover {
+  background-color: var(--button-hover);
+}
