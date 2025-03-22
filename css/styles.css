@@ -328,7 +328,290 @@ button:hover {
   padding: 5px 10px;
   margin-left: 5px;
   background-color: var(--button-bg);
+  color: white;/* Reset and global styles */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  overflow: auto;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Default to light theme for JS-Console */
+:root {
+  --bg-color: #f4f4f4; /* Original light gray */
+  --text-color: black; /* Original black text */
+  --border-color: #ccc;
+  --bar-bg: #f1f1f1;
+  --bookmark-bg: #e0e0e0;
+  --bookmark-hover: #d0d0d0;
+  --button-bg: #4CAF50; /* Original green buttons */
+  --button-hover: #45a049;
+}
+
+/* Dark mode toggle for JS-Console */
+body.dark {
+  --bg-color: #000000;
+  --text-color: #ffffff;
+  --border-color: #555;
+  --bar-bg: #000000;
+  --bookmark-bg: #000000;
+  --bookmark-hover: #333333;
+}
+
+/* Apply defaults globally unless overridden */
+html, body, .console, #inputField, #autocomplete, button, .bookmark {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+/* Bookmarks Bar (JS-Console) */
+#bookmarksBar {
+  background-color: var(--bar-bg);
+  padding: 5px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 50px;
+  overflow-x: auto;
+  overflow-y: visible;
+  z-index: 2000;
+  box-sizing: border-box;
+  white-space: nowrap;
+  isolation: isolate;
+}
+
+/* Bookmark Styling */
+.bookmark {
+  padding: 5px 10px;
+  margin: 2px 5px;
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  z-index: 2000;
+  background-color: var(--bookmark-bg);
+}
+
+.bookmark:hover {
+  background-color: var(--bookmark-hover);
+}
+
+.bookmark .remove {
+  margin-left: 5px;
+  color: red;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.bookmark .remove:hover {
+  color: darkred;
+}
+
+/* Container and Console (JS-Console) */
+.container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 60px);
+  margin-top: 50px;
+  box-sizing: border-box;
+}
+
+.console-container {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.console {
+  flex: 1;
+  border: 1px solid var(--border-color);
+  padding: 10px;
+  font-family: monospace;
+  white-space: pre-wrap;
+  overflow-y: auto;
+  box-sizing: border-box;
+  z-index: 1000;
+}
+
+.console .log { color: var(--text-color); }
+.console .error { color: #ff5555; }
+.console .warn { color: #ffff55; }
+.console .info { color: #00ccff; }
+
+.input-container {
+  display: flex;
+  flex-shrink: 0;
+  padding: 10px;
+  box-sizing: border-box;
+  position: relative;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+#inputField {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+  margin-right: 10px;
+  box-sizing: border-box;
+  font-family: monospace;
+  border: 1px solid var(--border-color);
+  resize: vertical;
+  min-height: 40px;
+  background-color: var(--bookmark-bg);
+  color: var(--text-color);
+}
+
+button {
+  padding: 10px;
+  background-color: var(--button-bg);
   color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 0 5px;
+  flex-shrink: 0;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: var(--button-hover);
+}
+
+#installBtn {
+  padding: 10px;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 0 5px;
+  flex-shrink: 0;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+#installBtn:hover {
+  background-color: #1976D2;
+}
+
+.element-link {
+  color: #00ccff;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-left: 5px;
+}
+
+.element-link:hover {
+  color: #77ccff;
+}
+
+#autocomplete {
+  position: absolute;
+  bottom: 60px;
+  left: 10px;
+  border: 1px solid var(--border-color);
+  max-height: 150px;
+  overflow-y: auto;
+  display: none;
+  z-index: 1500;
+  background-color: var(--bookmark-bg);
+}
+
+.autocomplete-item {
+  padding: 5px;
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+.autocomplete-item:hover {
+  background-color: var(--bookmark-hover);
+}
+
+#gameCanvas {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid var(--border-color);
+  display: none;
+  z-index: 4000;
+}
+
+.bookmark-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: var(--bookmark-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  min-width: 150px;
+  z-index: 3000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.bookmark-dropdown .dropdown-item {
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-color);
+}
+
+.bookmark-dropdown .dropdown-item:hover {
+  background-color: var(--bookmark-hover);
+}
+
+.bookmark.active .bookmark-dropdown,
+.bookmark:hover .bookmark-dropdown {
+  display: block;
+}
+
+/* Launcher Styles (dark theme for eye comfort) */
+.launcher-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #1a2525; /* Dark blue-black */
+  color: #e0e0e0; /* Light gray text */
+}
+
+.launcher-container h1 {
+  font-size: 32px;
+  margin-bottom: 20px;
+  color: #e0e0e0;
+}
+
+.launcher-container button {
+  padding: 15px 30px;
+  background-color: #4a6363; /* Dark teal */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 10px 0;
+  transition: background-color 0.3s;
+}
+
+.launcher-container button:hover {
+  background-color: #5a7373; /* Lighter teal on hover */
+}
   border: none;
   border-radius: 3px;
   cursor: pointer;
