@@ -100,29 +100,15 @@ function executeCode() {
       } else {
         appendLog('Error: Invalid math() syntax. Use math("type", "input")', 'error');
       }
-    } else if (input.startsWith('javascript:')) {
-      let decodedValue = decodeURIComponent(input.replace('javascript:', '').trim());
-      if (!decodedValue.endsWith(';')) decodedValue += ';';
-      eval(decodedValue);
-      appendLog('Bookmarklet executed successfully!', 'info');
-      playSound('execute');
-    } else if (/[\u00B1\u221A\u03C0\u00B2\u00B3\u00D7\u00F7\u221E]/.test(input) || /^[+-]?\d*\.?\d*x\s*[+-=]/.test(input) || input.includes('/')) {
+    } else if (input.includes('=') && input.includes('x')) {
       const [leftSide, rightSide] = input.split('=').map(part => part.trim());
-      const hasSymbols = /[\u00B1\u221A\u03C0\u00B2\u00B3\u00D7\u00F7\u221E]/.test(input);
-
-      if (input.includes('²') && input.includes('x')) {
-        math("quadratic", `${leftSide} = ${rightSide || '0'}`);
-      } else if (hasSymbols || input.includes('/')) {
-        math("expression", input);
-      } else {
-        const solution = solveEquation(leftSide, rightSide || '0');
-        appendLog(
-          `Equation: \\\\(${leftSide} = ${rightSide || '0'}\\\\), Solution: \\\\(x = ${solution}\\\\)`,
-          'log',
-          true
-        );
-        playSound('success');
-      }
+      const solution = solveEquation(leftSide, rightSide);
+      appendLog(
+        `Equation: \\\\(${leftSide} = ${rightSide}\\\\), Solution: \\\\(x = ${solution}\\\\)`,
+        'log',
+        true
+      );
+      playSound('success');
     } else if (window.editElement && /\d+\s/.test(input)) {
       window.editElement(input);
     } else {
@@ -232,7 +218,7 @@ const functions = [
   'squares', 'ponies', 'sawyer', 'aiden', 'aadyn', 'eli', 'elijah', 'ronin', 'ronin1', 'ronin2',
   'check', 'idiot', 'elements', 'elementshelp', 'list', 'snake', 'updates', 'setColor', 'tictactoe',
   'share', 'reset', 'highscores', 'shareHighScores', 'leaderboard', 'setUsername', 'setTheme', 
-  'toggleSound', 'more', 'math', 'symbols' // Added 'symbols' for reference
+  'toggleSound', 'more', 'math'
 ];
 
   function setupAutocomplete() {
@@ -308,16 +294,30 @@ const functions = [
 function math(type = "list", input = "") {
   appendLog('Math Formulas and Solvers:', 'info');
 
+  // List of all formulas if type is "list" or no specific solver is matched
   if (type === "list") {
     appendLog('Type "math(\'type\', \'input\')" to solve specific problems (e.g., math(\'quadratic\', \'x² + 5x + 6 = 0\')).', 'info');
     appendLog('Available formulas and solvers:', 'info');
+
+    // Linear Equations
     appendLog('Linear Equation (Slope-Intercept): y = mx + b (m = slope, b = y-intercept)', 'info');
     appendLog('Point-Slope Form: y - y₁ = m(x - x₁) (m = slope, (x₁, y₁) = point)', 'info');
     appendLog('Standard Form: Ax + By = C (A, B, C = constants)', 'info');
     appendLog('  Solver: math(\'linear\', \'2x + 3 = 7\')', 'info');
+
+    // Quadratic Equations
     appendLog('Quadratic Equation: y = ax² + bx + c (a, b, c = constants)', 'info');
     appendLog('Quadratic Formula: x = [-b ± √(b² - 4ac)] / (2a)', 'info');
     appendLog('  Solver: math(\'quadratic\', \'x² + 5x + 6 = 0\')', 'info');
+
+    // Exponential and Logarithmic
+    appendLog('Exponential: y = a * b^x (a = initial, b = base)', 'info');
+    appendLog('Logarithmic: y = log_b(x) (b = base)', 'info');
+
+    // Binomial Theorem
+    appendLog('Binomial Theorem: (a + b)^n = Σ [nCk * a^(n-k) * b^k]', 'info');
+
+    // Geometry
     appendLog('Area of Rectangle: A = l * w (l = length, w = width)', 'info');
     appendLog('Area of Triangle: A = (1/2) * b * h (b = base, h = height)', 'info');
     appendLog('Area of Circle: A = πr² (r = radius)', 'info');
@@ -326,29 +326,39 @@ function math(type = "list", input = "") {
     appendLog('Volume of Cylinder: V = πr²h (r = radius, h = height)', 'info');
     appendLog('Surface Area of Sphere: A = 4πr² (r = radius)', 'info');
     appendLog('  Solver: math(\'area\', \'circle 5\') or math(\'volume\', \'cylinder 3 10\')', 'info');
-    appendLog('See solvers below or type "math(\'prompts\')" for examples!', 'info');
+
+    // Trigonometry
+    appendLog('Sine: sin(θ) = opposite / hypotenuse', 'info');
+    appendLog('Cosine: cos(θ) = adjacent / hypotenuse', 'info');
+    appendLog('Tangent: tan(θ) = opposite / adjacent', 'info');
+    appendLog('Pythagorean Identity: sin²(θ) + cos²(θ) = 1', 'info');
+    appendLog('Law of Sines: a / sin(A) = b / sin(B) = c / sin(C)', 'info');
+    appendLog('Law of Cosines: c² = a² + b² - 2ab * cos(C)', 'info');
+    appendLog('  Solver: math(\'trig\', \'sin 30\')', 'info');
+
+    // Calculus
+    appendLog('Power Rule: d/dx [x^n] = n * x^(n-1)', 'info');
+    appendLog('Product Rule: d/dx [u * v] = u * dv/dx + v * du/dx', 'info');
+    appendLog('Chain Rule: d/dx [f(g(x))] = f\'(g(x)) * g\'(x)', 'info');
+    appendLog('Definite Integral: ∫(a to b) f(x) dx', 'info');
+    appendLog('Fundamental Theorem: ∫(a to b) f(x) dx = F(b) - F(a)', 'info');
+
+    // Statistics/Probability
+    appendLog('Mean: μ = (Σx) / n', 'info');
+    appendLog('Standard Deviation: σ = √[Σ(x - μ)² / n]', 'info');
+    appendLog('Probability: P(E) = favorable / total', 'info');
+    appendLog('Binomial Probability: P(x) = nCx * p^x * (1-p)^(n-x)', 'info');
+
+    // Other
+    appendLog('Distance Formula: d = √[(x₂ - x₁)² + (y₂ - y₁)²]', 'info');
+    appendLog('Slope Formula: m = (y₂ - y₁) / (x₂ - x₁)', 'info');
+    appendLog('Arithmetic Sequence: a_n = a_1 + (n-1)d', 'info');
+    appendLog('Geometric Sequence: a_n = a_1 * r^(n-1)', 'info');
+    appendLog('See solvers below for usage examples!', 'info');
     return;
   }
 
-  if (type === "prompts") {
-    appendLog('Example Prompts for Math Solvers:', 'info');
-    appendLog('Copy these into the input field and press "Execute Code":', 'info');
-    appendLog('Linear Equation:', 'info');
-    appendLog('  math("linear", "2x + 5 = 9") → Solves for x in y = 2x + 5', 'info');
-    appendLog('Quadratic Equation:', 'info');
-    appendLog('  math("quadratic", "x² + 5x + 6 = 0") → Solves ax² + bx + c = 0', 'info');
-    appendLog('Geometry - Area:', 'info');
-    appendLog('  math("area", "circle 5") → A = π * 5²', 'info');
-    appendLog('Expressions:', 'info');
-    appendLog('  √4 → Evaluates to 2', 'info');
-    appendLog('  2 × π → Evaluates to ~6.2832', 'info');
-    appendLog('  2³ → Evaluates to 8', 'info');
-    appendLog('  2 ± 3 → Evaluates both 5 and -1', 'info');
-    appendLog('  2/3 → Evaluates to ~0.6667', 'info');
-    appendLog('Use the Symbols button for easier input!', 'info');
-    return;
-  }
-
+  // Solvers
   try {
     if (type === "linear") {
       const [left, right] = input.split('=').map(part => part.trim());
@@ -372,12 +382,13 @@ function math(type = "list", input = "") {
       const result = calculateVolume(shape, params.map(Number));
       appendLog(`Volume of ${shape}: \\\\(V = ${result}\\\\)`, 'log', true);
       playSound('success');
-    } else if (type === "expression") {
-      const result = evaluateExpression(input);
-      appendLog(`Expression: \\\\(${input}\\\\), Result: \\\\(${result}\\\\)`, 'log', true);
+    } else if (type === "trig") {
+      const [func, angle] = input.split(' ');
+      const result = calculateTrig(func, Number(angle));
+      appendLog(`${func}(${angle}°): \\\\(${result}\\\\)`, 'log', true);
       playSound('success');
     } else {
-      appendLog(`Error: Unknown math type "${type}". Type "math()" for a list or "math(\'prompts\')" for examples.`, 'error');
+      appendLog(`Error: Unknown math type "${type}". Type "math()" for a list.`, 'error');
     }
   } catch (e) {
     appendLog(`Error: ${e.message}`, 'error');
@@ -386,43 +397,6 @@ function math(type = "list", input = "") {
   gtag('event', 'run_function', { 'event_category': 'Math', 'event_label': type });
 }
 
-function evaluateExpression(expr) {
-  let cleanedExpr = expr.replace(/\s+/g, '')
-    .replace('π', Math.PI)
-    .replace('∞', Infinity)
-    .replace('÷', '/')
-    .replace('×', '*');
-
-  if (cleanedExpr.includes('±')) {
-    const [left, right] = cleanedExpr.split('±').map(part => part.trim());
-    const numLeft = parseFloat(left) || 0;
-    const numRight = parseFloat(right) || 0;
-    return `${(numLeft + numRight).toFixed(4)} or ${(numLeft - numRight).toFixed(4)}`;
-  }
-  if (cleanedExpr.includes('√')) {
-    const sqrtMatch = cleanedExpr.match(/√(\d+\.?\d*)/);
-    if (sqrtMatch) {
-      const num = parseFloat(sqrtMatch[1]);
-      return Math.sqrt(num).toFixed(4);
-    }
-  }
-  if (cleanedExpr.includes('³')) {
-    const cubeMatch = cleanedExpr.match(/(\d+\.?\d*)³/);
-    if (cubeMatch) {
-      const num = parseFloat(cubeMatch[1]);
-      return Math.pow(num, 3).toFixed(4);
-    }
-  }
-  if (cleanedExpr.includes('²')) {
-    const squareMatch = cleanedExpr.match(/(\d+\.?\d*)²/);
-    if (squareMatch) {
-      const num = parseFloat(squareMatch[1]);
-      return Math.pow(num, 2).toFixed(4);
-    }
-  }
-  const result = eval(cleanedExpr); // Handles fractions and basic arithmetic
-  return Number.isFinite(result) ? result.toFixed(4) : result;
-}
 // Helper for quadratic parsing
 function parseQuadratic(expr) {
   expr = expr.replace(/\s+/g, '').replace(/−/g, '-'); // Clean up spaces and minus signs
@@ -1266,45 +1240,4 @@ function calculateTrig(func, angle) {
     console.log('Launcher button clicked');
     window.location.assign('https://criminalpear.github.io/JS-Console/launcher.html');
   });
- document.addEventListener('DOMContentLoaded', function() {
-  // Existing code...
-
-  // Bookmarks dropdown setup (already present)
-  const bookmarkDropdown = document.getElementById('bookmarkDropdown');
-  // ... (existing bookmark logic)
-
-  // Symbols dropdown setup
-  const symbolsDropdown = document.getElementById('symbolsDropdown');
-  const inputField = document.getElementById('inputField');
-  const symbols = ['±', '√', 'π', '²', '³', '×', '÷', '∞'];
-
-  symbols.forEach(symbol => {
-    const symbolItem = document.createElement('button');
-    symbolItem.textContent = symbol;
-    symbolItem.className = 'dropdown-item';
-    symbolItem.addEventListener('click', () => {
-      inputField.value += symbol;
-      symbolsDropdown.style.display = 'none';
-      inputField.focus();
-    });
-    symbolsDropdown.appendChild(symbolItem);
-  });
-
-  // Toggle Symbols dropdown
-  const symbolsBtn = document.querySelector('nav .dropdown:nth-child(3) .dropbtn'); // Third dropdown is Symbols
-  symbolsBtn.addEventListener('click', () => {
-    symbolsDropdown.style.display = symbolsDropdown.style.display === 'block' ? 'none' : 'block';
-  });
-
-  // Hide dropdowns when clicking outside
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.dropdown')) {
-      bookmarkDropdown.style.display = 'none';
-      symbolsDropdown.style.display = 'none';
-      document.getElementById('dropdown').style.display = 'none';
-    }
-  });
-
-  // Rest of existing code...
-});
 });
